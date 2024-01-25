@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import GoogleLoginImage from "../../assets/images/googleSignup.png";
 
 export const Container = styled.div`
   max-width: 100%;
@@ -11,7 +12,6 @@ export const Container = styled.div`
 export const InnerContainer = styled.div`
   display: flex;
   align-items: center;
-  justify-content: center;
   flex-direction: column;
   width: 500px;
   height: 600px;
@@ -22,14 +22,14 @@ export const MainLogoArea = styled.div`
   align-items: center;
   justify-content: center;
   width: 100%;
-  height: 150px;
+  height: 200px;
+  overflow: hidden;
 `;
 
 export const MainLogo = styled.img`
-  width: 120px;
-  height: 120px;
-  border-radius: 50%;
-  background-color: #999;
+  width: 300px;
+  height: 300px;
+  border-radius: 12px;
 `;
 
 export const IntroTextArea = styled.div`
@@ -42,6 +42,7 @@ export const IntroText = styled.div`
   font-size: 30px;
   font-weight: bold;
   margin-bottom: 20px;
+  color: #5271ff;
 `;
 
 export const InnerContent = styled.div``;
@@ -76,7 +77,7 @@ const LoginButtonDesign = styled.button`
   border-radius: 12px;
   border: none;
   background-color: #eee;
-  font-size: 15px;
+  font-size: 20px;
   font-weight: bold;
   cursor: pointer;
 `;
@@ -90,9 +91,16 @@ export const LoginButtonArea = styled.div`
   margin-bottom: 20px;
 `;
 
-export const DefaultLoginButton = styled(LoginButtonDesign)``;
+export const DefaultLoginButton = styled(LoginButtonDesign)`
+  background-color: #5271ff;
+  color: #fff;
+`;
 
-export const GoogleLoginButton = styled(LoginButtonDesign)``;
+export const GoogleLoginButton = styled(LoginButtonDesign)`
+  background-image: url(${GoogleLoginImage});
+  background-size: 100% 100%;
+  border: 2px solid #eee;
+`;
 
 const RegisterFindAccountButtonDesign = styled.button`
   border: none;

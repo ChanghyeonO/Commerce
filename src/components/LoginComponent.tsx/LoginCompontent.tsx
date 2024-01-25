@@ -1,4 +1,5 @@
 import React from "react";
+import FUNDITLOGO from "../../assets/icons/FUNDIT.png";
 
 import {
   Container,
@@ -26,7 +27,7 @@ const LoginComponent = () => {
     <Container>
       <InnerContainer>
         <MainLogoArea>
-          <MainLogo />
+          <MainLogo src={FUNDITLOGO} alt="FUNDIT 로고" />
         </MainLogoArea>
         <IntroTextArea>
           <IntroText>만나서 반가워요!</IntroText>
@@ -42,7 +43,7 @@ const LoginComponent = () => {
           </FindAccountArea>
           <LoginButtonArea>
             <DefaultLoginButton>로그인</DefaultLoginButton>
-            <GoogleLoginButton>구글 로그인</GoogleLoginButton>
+            <GoogleLoginButton />
           </LoginButtonArea>
           <RegisterArea>
             <RegisterButton>회원가입</RegisterButton>

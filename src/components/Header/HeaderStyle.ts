@@ -16,14 +16,14 @@ export const LeftContainer = styled.div`
   justify-content: center;
   width: 100px;
   height: 100%;
-  background-color: #eee;
+  overflow: hidden;
 `;
 
 export const MainLogo = styled.img`
-  width: 70px;
-  height: 70px;
-  border-radius: 50%;
-  background-color: #999;
+  width: 130px;
+  height: 130px;
+  border-radius: 12px;
+  cursor: pointer;
 `;
 
 export const RightContainer = styled.div`
@@ -32,7 +32,6 @@ export const RightContainer = styled.div`
   justify-content: space-between;
   width: 250px;
   height: 100%;
-  background-color: #eee;
 `;
 
 export const LoginContent = styled.div`
@@ -63,13 +62,13 @@ export const UserContent = styled.div`
   justify-content: center;
   width: 35%;
   height: 100%;
-  background-color: #eee;
 `;
 
 export const UserLogo = styled.img`
-  width: 70px;
-  height: 70px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
-  background-color: #999;
+  background-size: 100% 100%;
+  border: 2px solid #eee;
   cursor: pointer;
 `;

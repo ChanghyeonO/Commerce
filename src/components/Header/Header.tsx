@@ -1,4 +1,6 @@
 import React from "react";
+import FUNDITLOGO from "../../assets/icons/FUNDITHEADERFOOTER.png";
+import UserImage from "../../assets/icons/UserLogo.png";
 
 import {
   Container,
@@ -16,7 +18,7 @@ const Header = () => {
   return (
     <Container>
       <LeftContainer>
-        <MainLogo />
+        <MainLogo src={FUNDITLOGO} alt="FUNDIT 로고" />
       </LeftContainer>
       <RightContainer>
         <LoginContent>
@@ -24,7 +26,7 @@ const Header = () => {
           <RegisterButton>회원가입</RegisterButton>
         </LoginContent>
         <UserContent>
-          <UserLogo />
+          <UserLogo src={UserImage} alt="유저 이미지" />
         </UserContent>
       </RightContainer>
     </Container>
