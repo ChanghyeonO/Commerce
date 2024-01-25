@@ -1,16 +1,12 @@
-import { useState } from "react";
+import { Routes, Route } from "react-router-dom";
+import Login from "./pages/Login/Login";
 
 function App() {
-  const [count, setCount] = useState(0);
-
   return (
     <>
-      <div className="card">
-        <h1>기본 세팅 끝</h1>
-        <button onClick={() => setCount(count => count + 1)}>
-          count is {count}
-        </button>
-      </div>
+      <Routes>
+        <Route path="/login" element={<Login />} />
+      </Routes>
     </>
   );
 }
