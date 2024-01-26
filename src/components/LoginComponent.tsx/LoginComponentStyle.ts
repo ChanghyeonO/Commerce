@@ -43,7 +43,7 @@ export const IntroText = styled.div`
   font-size: 30px;
   font-weight: bold;
   margin-bottom: 20px;
-  color: #5271ff;
+  color: #000;
 `;
 
 export const InnerContent = styled.div``;

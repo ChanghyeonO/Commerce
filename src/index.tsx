@@ -5,10 +5,14 @@ import GlobalStyles from "./styles/GlobalStyles";
 import GlobalFont from "./styles/GlobalFont";
 import Login from "./pages/Login/Login";
 import RegisterTerms from "./pages/Register/RegisterTerms";
+import RegisterDetail from "./pages/Register/RegisterDetail";
+import RegisterSuccess from "./pages/Register/RegisterSuccess";
 
 const router = createBrowserRouter([
   { path: "/login", element: <Login /> },
   { path: "/register-terms", element: <RegisterTerms /> },
+  { path: "/register-detail", element: <RegisterDetail /> },
+  { path: "/register-success", element: <RegisterSuccess /> },
 ]);
 
 const rootElement = document.getElementById("root");

@@ -35,8 +35,8 @@ const LoginComponent = () => {
         </IntroTextArea>
         <InnerContent>
           <InputContainer>
-            <EmailInput type="text" placeholder="example@example.com" />
-            <PasswordInput type="password" placeholder="password" />
+            <EmailInput type="text" placeholder="이메일" />
+            <PasswordInput type="password" placeholder="패스워드" />
           </InputContainer>
           <FindAccountArea>
             <FindEmail>이메일</FindEmail>|<FindPassword>비밀번호</FindPassword>

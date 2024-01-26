@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import CheckedImage from "../../../assets/images/CheckBox.png";
 
 export const Container = styled.div`
   max-width: 100%;
@@ -65,7 +66,6 @@ export const TermsTextArea = styled.textarea`
   resize: none;
   border-radius: 12px;
   font-size: 15px;
-  font-weight: bold;
   padding: 30px;
 `;
 
@@ -77,8 +77,28 @@ export const AgreeInputArea = styled.div`
   justify-content: flex-end;
   gap: 5px;
 `;
+const checkbox = styled.input.attrs({ type: "checkbox" })`
+  appearance: none;
+  width: 12px;
+  height: 12px;
+  border: 1px solid #999;
+  border-radius: 3px;
+  margin-right: 5px;
+  cursor: pointer;
+  &:checked {
+    width: 23px;
+    height: 23px;
+    margin-right: 2px;
+    margin-bottom: 4px;
+    border: none;
+    background-image: url(${CheckedImage});
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+`;
 
-export const AgreeInput = styled.input`
+export const AgreeInput = styled(checkbox)`
   width: 20px;
   height: 20px;
 `;

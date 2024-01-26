@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import FUNDITLOGO from "../../../assets/icons/FUNDIT.png";
 
 import {
@@ -299,11 +300,13 @@ const RegisterTermsComponent = () => {
             <TermsTextArea readOnly value={Terms} />
           </TermsTextAreaContainer>
           <AgreeInputArea>
-            <AgreeInput type="checkbox" />
+            <AgreeInput />
             <AgreeText>위 사항에 대해 모두 이해 했으며 동의합니다.</AgreeText>
           </AgreeInputArea>
           <NextButtonArea>
-            <NextButton>다음</NextButton>
+            <Link to="/register-detail">
+              <NextButton>다음</NextButton>
+            </Link>
           </NextButtonArea>
         </InnerContent>
       </InnerContainer>
