@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import FUNDITLOGO from "../../assets/icons/FUNDIT.png";
 
 import {
@@ -46,7 +47,9 @@ const LoginComponent = () => {
             <GoogleLoginButton />
           </LoginButtonArea>
           <RegisterArea>
-            <RegisterButton>회원가입</RegisterButton>
+            <Link to="/register-terms">
+              <RegisterButton>회원가입</RegisterButton>
+            </Link>
           </RegisterArea>
         </InnerContent>
       </InnerContainer>

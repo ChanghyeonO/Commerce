@@ -12,9 +12,10 @@ export const Container = styled.div`
 export const InnerContainer = styled.div`
   display: flex;
   align-items: center;
+  justify-content: center;
   flex-direction: column;
   width: 500px;
-  height: 600px;
+  height: 800px;
 `;
 
 export const MainLogoArea = styled.div`

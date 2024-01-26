@@ -1,16 +1,24 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { BrowserRouter as Router } from "react-router-dom";
-import App from "./App.tsx";
-import GlobalStyles from "./styles/GlobalStyles.ts";
-import GlobalFont from "./styles/GlobalFont.ts";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import GlobalStyles from "./styles/GlobalStyles";
+import GlobalFont from "./styles/GlobalFont";
+import Login from "./pages/Login/Login";
+import RegisterTerms from "./pages/Register/RegisterTerms";
 
-ReactDOM.createRoot(document.getElementById("root")!).render(
-  <React.StrictMode>
-    <Router>
+const router = createBrowserRouter([
+  { path: "/login", element: <Login /> },
+  { path: "/register-terms", element: <RegisterTerms /> },
+]);
+
+const rootElement = document.getElementById("root");
+
+if (rootElement) {
+  ReactDOM.createRoot(rootElement).render(
+    <React.StrictMode>
       <GlobalStyles />
       <GlobalFont />
-      <App />
-    </Router>
-  </React.StrictMode>,
-);
+      <RouterProvider router={router} />
+    </React.StrictMode>,
+  );
+}
