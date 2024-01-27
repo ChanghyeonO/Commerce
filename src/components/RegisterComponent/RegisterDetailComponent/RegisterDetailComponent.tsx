@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom"; // React Router의 Link 컴포넌트를 import
+import { Link } from "react-router-dom";
 import FUNDITLOGO from "../../../assets/icons/FUNDIT.png";
 
 import {
@@ -47,7 +47,6 @@ const RegisterDetailComponent = () => {
               <EmailInput type="text" placeholder="이메일" />
               <EmailCheckButton>인증요청</EmailCheckButton>
             </EmailInputArea>
-
             <PasswordInput type="password" placeholder="패스워드" />
             <PasswordCheckInput type="password" placeholder="패스워드 확인" />
             <NameInput type="text" placeholder="이름" />
