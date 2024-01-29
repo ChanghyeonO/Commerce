@@ -1,5 +1,5 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import FUNDITLOGO from "../../../assets/icons/FUNDIT.png";
 
 import {
@@ -20,6 +20,22 @@ import {
 } from "./RegisterTermsComponentsStyle";
 
 const RegisterTermsComponent = () => {
+  const [termsChecked, setTermsChecked] = useState(false);
+
+  const Navigate = useNavigate();
+
+  const TermsAgree = () => {
+    setTermsChecked(true);
+  };
+
+  const GoNextPage = () => {
+    if (termsChecked) {
+      Navigate("/register-detail");
+    } else {
+      alert("약관에 동의해주세요.");
+    }
+  };
+
   const Terms = `서비스 이용약관 (상품, 서비스 등 이용 일반 회원용)
 
 
@@ -300,13 +316,11 @@ const RegisterTermsComponent = () => {
             <TermsTextArea readOnly value={Terms} />
           </TermsTextAreaContainer>
           <AgreeInputArea>
-            <AgreeInput />
+            <AgreeInput onClick={TermsAgree} />
             <AgreeText>위 사항에 대해 모두 이해 했으며 동의합니다.</AgreeText>
           </AgreeInputArea>
           <NextButtonArea>
-            <Link to="/register-detail">
-              <NextButton>다음</NextButton>
-            </Link>
+            <NextButton onClick={GoNextPage}>다음</NextButton>
           </NextButtonArea>
         </InnerContent>
       </InnerContainer>
