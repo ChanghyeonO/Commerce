@@ -1,6 +1,6 @@
 export const fetchItems = async (page = 1) => {
-  const itemsPerPage = 12;
-  const totalItems = 60;
+  const itemsPerPage = 4;
+  const totalItems = 61;
   const start = (page - 1) * itemsPerPage;
   const end = start + itemsPerPage;
 
@@ -16,6 +16,8 @@ export const fetchItems = async (page = 1) => {
     imageUrl5: `https://via.placeholder.com/150?text=Product+${index + 1}_5`,
     imageUrl6: `https://via.placeholder.com/150?text=Product+${index + 1}_6`,
   }));
+
+  console.log("전체 데이터:", items);
 
   return {
     items: items.slice(start, Math.min(end, totalItems)),

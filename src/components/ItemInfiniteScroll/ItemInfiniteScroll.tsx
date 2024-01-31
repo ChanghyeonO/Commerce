@@ -27,8 +27,10 @@ const ItemInfiniteScroll = () => {
   const loadItems = async (page: number) => {
     const response = await fetchItems(page);
     setItems(prevItems => {
-      response.items.forEach(item => console.log(item.id));
-      return [...prevItems, ...response.items];
+      const newItems = response.items.filter(
+        newItem => !prevItems.some(prevItem => prevItem.id === newItem.id),
+      );
+      return [...prevItems, ...newItems];
     });
     setHasMore(response.hasMore);
   };
