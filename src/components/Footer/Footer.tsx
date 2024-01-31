@@ -11,6 +11,7 @@ import {
   MainLogo,
   RightContainer,
   Contact,
+  ContactInfomationText,
   Instagram,
   Email,
   TelephoneNumber,
@@ -26,6 +27,7 @@ const Footer = () => {
         </Link>
       </LeftContainer>
       <RightContainer>
+        <ContactInfomationText>Contact</ContactInfomationText>
         <Contact>
           <a
             href="https://www.instagram.com/5_changhyeon/"

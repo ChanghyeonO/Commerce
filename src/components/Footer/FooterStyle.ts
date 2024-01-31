@@ -30,21 +30,25 @@ export const MainLogo = styled.img`
 export const RightContainer = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-end;
   justify-content: space-between;
   width: 250px;
   height: 100%;
 `;
 
+export const ContactInfomationText = styled.h1`
+  font-size: 20px;
+`;
+
 export const Contact = styled.div`
   display: flex;
   gap: 50px;
-  margin-top: 80px;
+  margin-bottom: 30px;
 `;
 
 const ContactLogoDesign = styled.img`
-  width: 30px;
-  height: 30px;
+  width: 40px;
+  height: 40px;
   cursor: pointer;
 `;
 
@@ -55,5 +59,6 @@ export const Email = styled(ContactLogoDesign)``;
 export const TelephoneNumber = styled(ContactLogoDesign)``;
 
 export const CopyRight = styled.div`
+  font-size: 12.5px;
   margin-bottom: 10px;
 `;
