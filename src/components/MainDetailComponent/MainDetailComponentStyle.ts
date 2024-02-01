@@ -151,12 +151,12 @@ export const ProductIntroArea = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 100px;
+  gap: 20px;
 `;
 
 export const ProductImage = styled.img`
-  width: 450px;
-  height: 80%;
+  width: 480px;
+  height: 90%;
   object-fit: cover;
   border-radius: 12px;
 `;

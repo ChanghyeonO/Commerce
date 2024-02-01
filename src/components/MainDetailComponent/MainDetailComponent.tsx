@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-
+import Swal from "sweetalert2";
+import alertList from "../../utils/Swal";
 import ImageSlider from "../ImageSlider/ImageSlider";
 import { fetchItems } from "../DummyDataFetch";
 
@@ -40,6 +41,13 @@ interface Item {
   }[];
 }
 
+interface CartItem {
+  id: number;
+  name: string;
+  count: number;
+  totalPrice: number;
+}
+
 const MainDetailComponent = () => {
   const [item, setItem] = useState<Item>();
   const [totalPrice, setTotalPrice] = useState(0);
@@ -70,6 +78,37 @@ const MainDetailComponent = () => {
     const newCount = parseInt(e.target.value);
     if (!isNaN(newCount) && newCount > 0) {
       setItemCount(newCount);
+    }
+  };
+
+  const addToCart = () => {
+    if (item) {
+      const newItem = {
+        id: item.id,
+        name: item.name,
+        count: itemCount,
+        totalPrice: parseInt(item.price) * itemCount,
+      };
+
+      const currentCart: CartItem[] = JSON.parse(
+        sessionStorage.getItem("cart") || "[]",
+      );
+
+      const existingItemIndex = currentCart.findIndex(
+        cartItem => cartItem.id === item.id,
+      );
+
+      if (existingItemIndex !== -1) {
+        currentCart[existingItemIndex].count += newItem.count;
+        currentCart[existingItemIndex].totalPrice += newItem.totalPrice;
+      } else {
+        currentCart.push(newItem);
+      }
+
+      sessionStorage.setItem("cart", JSON.stringify(currentCart));
+      Swal.fire(
+        alertList.infoMessage(`${item.name} ${itemCount}개가 추가되었습니다.`),
+      );
     }
   };
 
@@ -111,7 +150,9 @@ const MainDetailComponent = () => {
             <TotalPrice>{totalPrice} 원</TotalPrice>
           </TotalPriceArea>
           <CheckoutButtonArea>
-            <ShoppingBasketButton>장바구니</ShoppingBasketButton>
+            <ShoppingBasketButton onClick={addToCart}>
+              장바구니
+            </ShoppingBasketButton>
             <PurchaseButton>구매</PurchaseButton>
           </CheckoutButtonArea>
         </RightContent>
