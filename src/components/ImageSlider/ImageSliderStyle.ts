@@ -9,12 +9,14 @@ export const Container = styled.div`
   width: 100%;
   height: 100%;
   overflow: hidden;
+  background-color: #eee;
 `;
 
 export const SlideImage = styled.img`
-  width: 100%;
+  width: 0%;
   height: 100%;
   object-fit: cover;
+  background-color: #eee;
 `;
 
 export const Pagination = styled.div`

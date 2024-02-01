@@ -35,6 +35,7 @@ export const EndMessage = styled.div`
   height: 50px;
   text-align: center;
   grid-column: 1 / -1;
-  font-size: 15px;
+  font-size: 20px;
   font-weight: bold;
+  color: #bbb;
 `;

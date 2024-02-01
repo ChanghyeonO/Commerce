@@ -7,7 +7,6 @@ export const Container = styled.div`
   max-width: 100%;
   height: 200px;
   border-top: 2px solid #eee;
-  border-bottom: 2px solid #eee;
   padding: 0 5%;
 `;
 
@@ -38,6 +37,7 @@ export const RightContainer = styled.div`
 
 export const ContactInfomationText = styled.h1`
   font-size: 20px;
+  border-bottom: 1px solid #ddd;
 `;
 
 export const Contact = styled.div`

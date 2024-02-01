@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { useInView } from "react-intersection-observer";
 import { fetchItems } from "../DummyDataFetch";
 
@@ -15,7 +16,11 @@ interface Item {
   id: number;
   name: string;
   price: string;
-  imageUrl1: string;
+  description: string;
+  itemDescription: {
+    imageUrl: string;
+    description: string;
+  }[];
 }
 
 const ItemInfiniteScroll = () => {
@@ -23,6 +28,11 @@ const ItemInfiniteScroll = () => {
   const [page, setPage] = useState<number>(1);
   const [hasMore, setHasMore] = useState<boolean>(true);
   const { ref, inView } = useInView();
+  const navigate = useNavigate();
+
+  const handleItemClick = (id: number) => {
+    navigate(`/detail/${id}`);
+  };
 
   const loadItems = async (page: number) => {
     const response = await fetchItems(page);
@@ -34,6 +44,7 @@ const ItemInfiniteScroll = () => {
     });
     setHasMore(response.hasMore);
   };
+
   useEffect(() => {
     if (inView && hasMore) {
       setPage(prevPage => prevPage + 1);
@@ -47,8 +58,15 @@ const ItemInfiniteScroll = () => {
   return (
     <Container>
       {items.map(item => (
-        <ItemBox key={item.id} style={{ marginBottom: "20px" }}>
-          <ItemImage src={item.imageUrl1} alt={`Product ${item.id}`} />
+        <ItemBox
+          key={item.id}
+          style={{ marginBottom: "20px" }}
+          onClick={() => handleItemClick(item.id)}
+        >
+          <ItemImage
+            src={item.itemDescription[0].imageUrl}
+            alt={`Product ${item.id}`}
+          />
           <ItemName>{item.name}</ItemName>
           <ItemPrice>{item.price}</ItemPrice>
         </ItemBox>
