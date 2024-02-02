@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import GoogleLoginImage from "../../assets/images/googleSignup.png";
+import GoogleLoginImage from "../../assets/images/GoogleSignup.png";
 
 export const Container = styled.div`
   max-width: 100%;
