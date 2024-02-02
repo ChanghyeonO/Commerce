@@ -87,6 +87,7 @@ const MainDetailComponent = () => {
       const newItem = {
         id: item.id,
         name: item.name,
+        price: item.price,
         image: item.itemDescription[0].imageUrl,
         description: item.description,
         count: itemCount,
