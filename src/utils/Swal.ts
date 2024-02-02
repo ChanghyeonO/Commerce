@@ -5,28 +5,28 @@ const alertList = {
     title: `${title}`,
     icon: "success" as SweetAlertIcon,
     confirmButtonText: "확인",
-    confirmButtonColor: "#4EC1BF",
+    confirmButtonColor: "#5271ff",
   }),
 
   errorMessage: (title: string) => ({
     title: `${title}`,
     icon: "error" as SweetAlertIcon,
     confirmButtonText: "확인",
-    confirmButtonColor: "#4EC1BF",
+    confirmButtonColor: "#5271ff",
   }),
 
   infoMessage: (title: string) => ({
     title: `${title}`,
     icon: "info" as SweetAlertIcon,
     confirmButtonText: "확인",
-    confirmButtonColor: "#4EC1BF",
+    confirmButtonColor: "#5271ff",
   }),
 
   doubleCheckMessage: (title: string) => ({
     title: `${title}`,
     icon: "info" as SweetAlertIcon,
     showCancelButton: true,
-    confirmButtonColor: "#4EC1BF",
+    confirmButtonColor: "#5271ff",
     cancelButtonColor: "#2F2F2F",
     confirmButtonText: "네",
     cancelButtonText: "아니요",
@@ -37,7 +37,7 @@ const alertList = {
     text: `${text}`,
     icon: "info" as SweetAlertIcon,
     showCancelButton: true,
-    confirmButtonColor: "#4EC1BF",
+    confirmButtonColor: "#5271ff",
     cancelButtonColor: "#2F2F2F",
     confirmButtonText: "네",
     cancelButtonText: "아니요",
@@ -48,7 +48,7 @@ const alertList = {
     html: `${text}`,
     icon: "success" as SweetAlertIcon,
     confirmButtonText: "확인",
-    confirmButtonColor: "#4EC1BF",
+    confirmButtonColor: "#5271ff",
   }),
 };
 

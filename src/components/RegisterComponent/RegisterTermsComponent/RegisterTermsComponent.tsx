@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
+import alertList from "../../../utils/Swal";
 import FUNDITLOGO from "../../../assets/icons/FUNDIT.png";
 
 import {
@@ -32,7 +34,7 @@ const RegisterTermsComponent = () => {
     if (termsChecked) {
       Navigate("/register-detail");
     } else {
-      alert("약관에 동의해주세요.");
+      Swal.fire(alertList.infoMessage("약관에 동의해주세요."));
     }
   };
 
