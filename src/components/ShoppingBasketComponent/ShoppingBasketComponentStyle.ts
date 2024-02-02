@@ -25,10 +25,10 @@ export const ItemArea = styled.div`
   max-width: 100%;
   height: 150px;
   padding: 0 10%;
-  background-color: #eee;
   display: flex;
   align-items: center;
   justify-content: space-around;
+  border-bottom: 1px solid #eee;
 `;
 
 export const ItemImage = styled.img`
@@ -106,3 +106,24 @@ export const CountInput = styled.input`
 `;
 
 export const PlusButton = styled(PlusMinusButtonDesign)``;
+
+export const DeleteButton = styled.button`
+  background-color: red;
+  color: white;
+  border: none;
+  border-radius: 7px;
+  cursor: pointer;
+  padding: 5px 10px;
+  margin-left: auto;
+`;
+
+export const EmptyInfomation = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 500px;
+  font-size: 30px;
+  font-weight: bold;
+  color: #bbb;
+`;
