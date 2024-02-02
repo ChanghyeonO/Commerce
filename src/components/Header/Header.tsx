@@ -1,4 +1,3 @@
-import React from "react";
 import { Link } from "react-router-dom";
 import FUNDITLOGO from "../../assets/icons/FUNDITHEADERFOOTER.png";
 import UserImage from "../../assets/icons/UserLogo.png";

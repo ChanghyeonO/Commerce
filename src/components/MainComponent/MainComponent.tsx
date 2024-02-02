@@ -1,4 +1,3 @@
-import React from "react";
 import ImageSlider from "../ImageSlider/ImageSlider";
 import ItemInfiniteScroll from "../ItemInfiniteScroll/ItemInfiniteScroll";
 import { Container, TopContent, BottomContent } from "./MainComponentStyle";
