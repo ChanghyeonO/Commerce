@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import alertList from "../../utils/Swal";
 import ImageSlider from "../ImageSlider/ImageSlider";
@@ -53,6 +53,7 @@ const MainDetailComponent = () => {
   const [totalPrice, setTotalPrice] = useState(0);
   const [itemCount, setItemCount] = useState(1);
   const { id } = useParams();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchItemDetails = async () => {
@@ -81,11 +82,13 @@ const MainDetailComponent = () => {
     }
   };
 
-  const addToCart = () => {
+  const addToCart = (navigateToCart: boolean) => {
     if (item) {
       const newItem = {
         id: item.id,
         name: item.name,
+        image: item.itemDescription[0].imageUrl,
+        description: item.description,
         count: itemCount,
         totalPrice: parseInt(item.price) * itemCount,
       };
@@ -106,10 +109,29 @@ const MainDetailComponent = () => {
       }
 
       sessionStorage.setItem("cart", JSON.stringify(currentCart));
-      Swal.fire(
-        alertList.infoMessage(`${item.name} ${itemCount}개가 추가되었습니다.`),
-      );
+      if (navigateToCart) {
+        navigate("/cart");
+      } else {
+        Swal.fire({
+          ...alertList.doubleCheckMessage("장바구니에 추가되었습니다."),
+          title: `${item.name}가 장바구니에 추가되었습니다.`,
+          confirmButtonText: "장바구니 이동",
+          cancelButtonText: "쇼핑 계속하기",
+        }).then(result => {
+          if (result.isConfirmed) {
+            navigate("/cart");
+          }
+        });
+      }
     }
+  };
+
+  const addToCartHandler = () => {
+    addToCart(false);
+  };
+
+  const purchaseHandler = () => {
+    addToCart(true);
   };
 
   return (
@@ -150,10 +172,10 @@ const MainDetailComponent = () => {
             <TotalPrice>{totalPrice} 원</TotalPrice>
           </TotalPriceArea>
           <CheckoutButtonArea>
-            <ShoppingBasketButton onClick={addToCart}>
+            <ShoppingBasketButton onClick={addToCartHandler}>
               장바구니
             </ShoppingBasketButton>
-            <PurchaseButton>구매</PurchaseButton>
+            <PurchaseButton onClick={purchaseHandler}>구매</PurchaseButton>
           </CheckoutButtonArea>
         </RightContent>
       </TopContent>
