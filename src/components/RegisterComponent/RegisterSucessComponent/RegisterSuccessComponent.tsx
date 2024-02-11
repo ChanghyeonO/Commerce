@@ -21,6 +21,7 @@ const RegisterSuccessComponent = () => {
         </MainLogoArea>
         <IntroTextArea>
           <IntroText>회원가입 완료!</IntroText>
+          <IntroText>이메일 인증을 완료해주세요!</IntroText>
         </IntroTextArea>
         <InnerContent>
           <Link to="/login">

@@ -90,11 +90,12 @@ const InputAreaDesign = styled.div`
   gap: 10px;
 `;
 
-export const EmailInputArea = styled(InputAreaDesign)``;
+export const WarningMessage = styled.div`
+  color: red;
+  font-size: 14px;
+`;
 
 export const EmailInput = styled(InputDesign)``;
-
-export const EmailCheckButton = styled(CheckButtonDesign)``;
 
 export const PasswordInput = styled(InputDesign)``;
 
@@ -105,14 +106,6 @@ export const NameInput = styled(InputDesign)``;
 export const PhoneNumberInputArea = styled(InputAreaDesign)``;
 
 export const PhoneNumberInput = styled(InputDesign)``;
-
-export const SendCertificationButton = styled(CheckButtonDesign)``;
-
-export const CertificationCheckArea = styled(InputAreaDesign)``;
-
-export const CertificationCheckInput = styled(InputDesign)``;
-
-export const CertificationCheckButton = styled(CheckButtonDesign)``;
 
 export const FindAdressArea = styled(InputAreaDesign)``;
 

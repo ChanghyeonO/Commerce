@@ -1,7 +1,9 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useInView } from "react-intersection-observer";
-import { fetchItems } from "../DummyDataFetch";
+import { fetchItems } from "../../api/api";
+import { Item } from "../../types/ItemType";
+import { QueryDocumentSnapshot, DocumentData } from "firebase/firestore";
 
 import {
   Container,
@@ -12,63 +14,55 @@ import {
   EndMessage,
 } from "./ItemInfiniteScrollStyle";
 
-interface Item {
-  id: number;
-  name: string;
-  price: string;
-  description: string;
-  itemDescription: {
-    imageUrl: string;
-    description: string;
-  }[];
-}
-
 const ItemInfiniteScroll = () => {
   const [items, setItems] = useState<Item[]>([]);
-  const [page, setPage] = useState<number>(1);
+  const [lastVisible, setLastVisible] =
+    useState<QueryDocumentSnapshot<DocumentData> | null>(null);
   const [hasMore, setHasMore] = useState<boolean>(true);
   const { ref, inView } = useInView();
   const navigate = useNavigate();
 
-  const handleItemClick = (id: number) => {
+  const handleItemClick = (id: string) => {
     navigate(`/detail/${id}`);
   };
 
-  const loadItems = async (page: number) => {
-    const response = await fetchItems(page);
-    setItems(prevItems => {
-      const newItems = response.items.filter(
-        newItem => !prevItems.some(prevItem => prevItem.id === newItem.id),
-      );
-      return [...prevItems, ...newItems];
-    });
-    setHasMore(response.hasMore);
+  const loadMoreItems = async () => {
+    if (!hasMore) return;
+
+    const {
+      items: newItems,
+      lastVisible: newLastVisible,
+      hasMore: newHasMore,
+    } = await fetchItems(lastVisible);
+
+    setItems(prevItems => [...prevItems, ...newItems]);
+    setLastVisible(newLastVisible);
+    setHasMore(newHasMore);
   };
 
   useEffect(() => {
     if (inView && hasMore) {
-      setPage(prevPage => prevPage + 1);
+      loadMoreItems();
     }
   }, [inView, hasMore]);
 
   useEffect(() => {
-    loadItems(page);
-  }, [page]);
-
+    items.forEach(item => console.log(item.itemDescription));
+  }, [items]);
   return (
     <Container>
       {items.map(item => (
-        <ItemBox
-          key={item.id}
-          style={{ marginBottom: "20px" }}
-          onClick={() => handleItemClick(item.id)}
-        >
+        <ItemBox key={item.id} onClick={() => handleItemClick(item.id)}>
           <ItemImage
-            src={item.itemDescription[0].imageUrl}
+            src={
+              item.itemDescription && item.itemDescription.length > 0
+                ? item.itemDescription[0].imageUrl
+                : "https://bunny-pit-image.s3.ap-northeast-2.amazonaws.com/image.png"
+            }
             alt={`Product ${item.id}`}
           />
           <ItemName>{item.name}</ItemName>
-          <ItemPrice>{item.price}</ItemPrice>
+          <ItemPrice>{item.price}원</ItemPrice>
         </ItemBox>
       ))}
       <EndMessage ref={ref}>

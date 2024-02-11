@@ -14,6 +14,7 @@ export const ItemBox = styled.div`
   padding: 20px;
   text-align: center;
   cursor: pointer;
+  margin-bottom: 20px;
 `;
 
 export const ItemImage = styled.img`
