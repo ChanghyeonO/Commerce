@@ -30,7 +30,6 @@ export const RightContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  width: 250px;
   height: 100%;
 `;
 
@@ -48,7 +47,7 @@ const LoginRegisterButtonDesign = styled.button`
   background-color: transparent;
 `;
 
-export const LoginButton = styled(LoginRegisterButtonDesign)`
+export const LoginLogoutButton = styled(LoginRegisterButtonDesign)`
   margin-right: 10px;
 `;
 
