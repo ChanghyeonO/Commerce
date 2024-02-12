@@ -30,13 +30,18 @@ const Header = () => {
   }, [auth]);
 
   const handleLogout = async () => {
-    try {
-      await signOut(auth);
-      Swal.fire(alertList.successMessage("로그아웃 되었습니다."));
-      navigate("/");
-    } catch (error) {
-      console.error("로그아웃 실패:", error);
-      Swal.fire(alertList.errorMessage("로그아웃에 실패했습니다."));
+    const result = await Swal.fire(
+      alertList.doubleCheckMessage("로그아웃 하시겠습니까?"),
+    );
+    if (result.isConfirmed) {
+      try {
+        await signOut(auth);
+        Swal.fire(alertList.successMessage("로그아웃 되었습니다."));
+        navigate("/");
+      } catch (error) {
+        console.error("로그아웃 실패:", error);
+        Swal.fire(alertList.errorMessage("로그아웃에 실패했습니다."));
+      }
     }
   };
 

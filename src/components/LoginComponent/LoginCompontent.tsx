@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { auth } from "../../api/firebase";
+import { getFirestore, doc, getDoc } from "firebase/firestore";
 import { FirebaseError } from "firebase/app";
 import Swal from "sweetalert2";
 import alertList from "../../utils/Swal";
@@ -41,6 +41,21 @@ const LoginComponent = () => {
   const navigate = useNavigate();
   const auth = getAuth();
 
+  const fetchUserData = async (userId: string) => {
+    const db = getFirestore();
+    const docRef = doc(db, "users", userId);
+    try {
+      const docSnap = await getDoc(docRef);
+      if (docSnap.exists()) {
+        console.log("User data:", docSnap.data());
+      } else {
+        console.log("No user data found for user:", userId);
+      }
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+    }
+  };
+
   const handleLogin = async () => {
     try {
       const userCredential = await signInWithEmailAndPassword(
@@ -52,6 +67,7 @@ const LoginComponent = () => {
         Swal.fire(alertList.infoMessage("이메일 인증 후 이용 가능합니다."));
       } else {
         console.log("로그인 성공:", userCredential.user);
+        fetchUserData(userCredential.user.uid);
         Swal.fire(alertList.successMessage("로그인에 성공했습니다."));
         navigate("/");
       }
@@ -83,13 +99,34 @@ const LoginComponent = () => {
     const provider = new GoogleAuthProvider();
     try {
       const result = await signInWithPopup(auth, provider);
-      // Google 로그인 성공, 사용자 정보는 result.user에 담겨 있음
       console.log("Google 계정으로 로그인 성공:", result.user);
-      // 로그인 성공 후 리디렉션, 예: 홈 페이지로
+      fetchUserData(result.user.uid);
+      Swal.fire(alertList.successMessage("로그인에 성공했습니다."));
       navigate("/");
     } catch (error) {
+      let errorMessage = "Google 로그인에 실패했습니다.";
+      if (error instanceof FirebaseError) {
+        switch (error.code) {
+          case "auth/account-exists-with-different-credential":
+            errorMessage =
+              "이미 다른 인증 방법으로 가입된<br>이메일 주소입니다.";
+            break;
+          case "auth/popup-closed-by-user":
+            errorMessage = "로그인 팝업 창이 사용자에 의해<br>닫혔습니다.";
+            break;
+          case "auth/cancelled-popup-request":
+            errorMessage = "팝업 요청이 취소되었습니다.<br>다시 시도해 주세요.";
+            break;
+          case "auth/popup-blocked":
+            errorMessage =
+              "팝업 창이 차단되었습니다.<br>팝업 차단을 해제하고 다시 시도해 주세요.";
+            break;
+          default:
+            errorMessage = error.message;
+        }
+      }
       console.error("Google 로그인 실패:", error);
-      // 적절한 에러 처리
+      Swal.fire(alertList.errorMessage(errorMessage));
     }
   };
 

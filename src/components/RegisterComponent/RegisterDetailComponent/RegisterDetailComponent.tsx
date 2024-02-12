@@ -1,6 +1,7 @@
 import { ChangeEvent, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { auth } from "../../../api/firebase";
+import { getFirestore, doc, setDoc } from "firebase/firestore";
 import { FirebaseError } from "firebase/app";
 import {
   createUserWithEmailAndPassword,
@@ -9,6 +10,7 @@ import {
 
 import Swal from "sweetalert2";
 import alertList from "../../../utils/Swal";
+import { User } from "../../../types/UserDataType";
 import FUNDITLOGO from "../../../assets/icons/FUNDIT.png";
 
 import {
@@ -48,7 +50,9 @@ const RegisterDetailComponent = () => {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [address, setAddress] = useState("");
   const [addressDetail, setAddressDetail] = useState("");
+
   const navigate = useNavigate();
+  const db = getFirestore();
 
   const validateEmail = (email: string) => {
     const re = /\S+@\S+\.\S+/;
@@ -110,6 +114,20 @@ const RegisterDetailComponent = () => {
     setPhoneNumber(formattedInput);
   };
 
+  const saveUserData = async (userData: User) => {
+    try {
+      await setDoc(doc(db, "users", userData.userId), {
+        name: userData.name,
+        phoneNumber: userData.phoneNumber,
+        address: userData.address,
+        addressDetail: userData.addressDetail,
+      });
+      console.log("사용자 정보 저장 성공");
+    } catch (error) {
+      console.error("사용자 정보 저장 실패", error);
+    }
+  };
+
   const handleRegister = async () => {
     if (!validateEmail(email)) {
       setEmailError("*인증 후 로그인이 가능하니 형식에 맞게 작성해주세요.");
@@ -129,11 +147,17 @@ const RegisterDetailComponent = () => {
         password,
       );
       await sendEmailVerification(userCredential.user);
-      Swal.fire(
-        alertList.successMessage(
-          "회원가입 성공! 인증 이메일이 발송되었습니다.",
-        ),
-      );
+
+      const userData: User = {
+        userId: userCredential.user.uid,
+        name,
+        phoneNumber,
+        address,
+        addressDetail,
+      };
+
+      await saveUserData(userData);
+
       navigate("/register-success");
     } catch (error) {
       let errorMessage = "회원가입 중 오류가 발생했습니다.";
