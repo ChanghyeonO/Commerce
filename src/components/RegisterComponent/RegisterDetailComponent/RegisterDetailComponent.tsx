@@ -47,8 +47,13 @@ const RegisterDetailComponent = () => {
   const [passwordCheckError, setPasswordCheckError] = useState("");
 
   const [name, setName] = useState("");
+  const [nameError, setNameError] = useState("");
+
   const [phoneNumber, setPhoneNumber] = useState("");
+  const [phoneNumberError, setPhoneNumberError] = useState("");
+
   const [address, setAddress] = useState("");
+  const [addressError, setAddressError] = useState("");
   const [addressDetail, setAddressDetail] = useState("");
 
   const navigate = useNavigate();
@@ -112,6 +117,11 @@ const RegisterDetailComponent = () => {
     }
 
     setPhoneNumber(formattedInput);
+    if (input.length === 11) {
+      setPhoneNumberError("");
+    } else {
+      setPhoneNumberError("정확한 전화번호를 입력해주세요.");
+    }
   };
 
   const saveUserData = async (userData: User) => {
@@ -121,6 +131,7 @@ const RegisterDetailComponent = () => {
         phoneNumber: userData.phoneNumber,
         address: userData.address,
         addressDetail: userData.addressDetail,
+        admin: false,
       });
       console.log("사용자 정보 저장 성공");
     } catch (error) {
@@ -128,15 +139,64 @@ const RegisterDetailComponent = () => {
     }
   };
 
-  const handleRegister = async () => {
+  const getAddress = () => {
+    new window.daum.Postcode({
+      oncomplete: function (data) {
+        setAddress(data.address);
+      },
+    }).open();
+  };
+
+  const validateInputs = () => {
+    let isValid = true;
+
     if (!validateEmail(email)) {
       setEmailError("*인증 후 로그인이 가능하니 형식에 맞게 작성해주세요.");
-      return;
-    } else if (!validatePassword(password)) {
+      isValid = false;
+    } else {
+      setEmailError("");
+    }
+
+    if (!validatePassword(password)) {
       setPasswordError("*패스워드는 8자 이상, 특수문자를 포함해주세요.");
-      return;
-    } else if (password !== passwordCheck) {
+      isValid = false;
+    } else {
+      setPasswordError("");
+    }
+
+    if (password !== passwordCheck) {
       setPasswordCheckError("*패스워드를 다시 확인해주세요.");
+      isValid = false;
+    } else {
+      setPasswordCheckError("");
+    }
+
+    if (!name.trim()) {
+      setNameError("이름을 입력해주세요.");
+      isValid = false;
+    } else {
+      setNameError("");
+    }
+
+    if (!phoneNumber.trim()) {
+      setPhoneNumberError("전화번호를 입력해주세요.");
+      isValid = false;
+    } else {
+      setPhoneNumberError("");
+    }
+
+    if (!address.trim()) {
+      setAddressError("주소를 입력해주세요.");
+      isValid = false;
+    } else {
+      setAddressError("");
+    }
+
+    return isValid;
+  };
+
+  const handleRegister = async () => {
+    if (!validateInputs()) {
       return;
     }
 
@@ -214,8 +274,14 @@ const RegisterDetailComponent = () => {
               type="text"
               placeholder="이름"
               value={name}
-              onChange={e => setName(e.target.value)}
+              onChange={e => {
+                setName(e.target.value);
+                if (e.target.value.trim()) {
+                  setNameError("");
+                }
+              }}
             />
+            {nameError && <WarningMessage>{nameError}</WarningMessage>}
             <PhoneNumberInputArea>
               <PhoneNumberInput
                 type="text"
@@ -224,15 +290,25 @@ const RegisterDetailComponent = () => {
                 onChange={handlePhoneNumberChange}
               />
             </PhoneNumberInputArea>
+            {phoneNumberError && (
+              <WarningMessage>{phoneNumberError}</WarningMessage>
+            )}
             <FindAdressArea>
               <FindAdressInput
                 type="text"
                 placeholder="주소"
                 value={address}
-                onChange={e => setAddress(e.target.value)}
+                onChange={e => {
+                  setAddress(e.target.value);
+                  if (e.target.value.trim()) {
+                    setAddressError("");
+                  }
+                }}
+                readOnly
               />
-              <FindAdressButton>주소검색</FindAdressButton>
+              <FindAdressButton onClick={getAddress}>주소검색</FindAdressButton>
             </FindAdressArea>
+            {addressError && <WarningMessage>{addressError}</WarningMessage>}
             <FindAdressDetailInput
               type="text"
               placeholder="상세 주소"

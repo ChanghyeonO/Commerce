@@ -33,29 +33,31 @@ export const MainLogo = styled.img`
 
 export const IntroTextArea = styled.div`
   width: 100%;
+  height: 30px;
   display: flex;
+  align-items: center;
   justify-content: center;
 `;
 
 export const IntroText = styled.div`
   font-size: 30px;
   font-weight: bold;
-  margin-bottom: 20px;
   color: #000;
 `;
 
 export const InnerContent = styled.div`
   width: 100%;
-  height: 600px;
+  min-height: 600px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  margin-left: 80px;
+  margin-left: 90px;
 `;
 
 export const InputContainer = styled.div`
   width: 62%;
+  min-height: 600px;
   display: flex;
   flex-direction: column;
   justify-content: center;
