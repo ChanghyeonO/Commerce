@@ -3,7 +3,9 @@ import { useParams, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import alertList from "../../utils/Swal";
 import ImageSlider from "../ImageSlider/ImageSlider";
-import { fetchItems } from "../DummyDataFetch";
+import { doc, getDoc } from "firebase/firestore";
+import { db } from "../../api/firebase";
+import { Item, CartItem } from "../../types/ItemType";
 
 import {
   Container,
@@ -30,24 +32,6 @@ import {
   ProductDescription,
 } from "./MainDetailComponentStyle";
 
-interface Item {
-  id: number;
-  name: string;
-  price: string;
-  description: string;
-  itemDescription: {
-    imageUrl: string;
-    description: string;
-  }[];
-}
-
-interface CartItem {
-  id: number;
-  name: string;
-  count: number;
-  totalPrice: number;
-}
-
 const MainDetailComponent = () => {
   const [item, setItem] = useState<Item>();
   const [totalPrice, setTotalPrice] = useState(0);
@@ -58,10 +42,17 @@ const MainDetailComponent = () => {
   useEffect(() => {
     const fetchItemDetails = async () => {
       if (typeof id === "string") {
-        const response = await fetchItems();
-        const item = response.items.find(item => item.id === parseInt(id));
-        if (item) {
-          setItem(item);
+        try {
+          const itemDoc = doc(db, "items", id);
+          const itemSnapshot = await getDoc(itemDoc);
+          if (itemSnapshot.exists()) {
+            const itemData = itemSnapshot.data();
+            setItem(itemData as Item);
+          } else {
+            console.log("No such document!");
+          }
+        } catch (error) {
+          console.error("Error getting document:", error);
         }
       }
     };
@@ -71,7 +62,7 @@ const MainDetailComponent = () => {
 
   useEffect(() => {
     if (item) {
-      setTotalPrice(parseInt(item.price) * itemCount);
+      setTotalPrice(item.price * itemCount);
     }
   }, [item, itemCount]);
 
@@ -91,7 +82,7 @@ const MainDetailComponent = () => {
         image: item.itemDescription[0].imageUrl,
         description: item.description,
         count: itemCount,
-        totalPrice: parseInt(item.price) * itemCount,
+        totalPrice: item.price * itemCount,
       };
 
       const currentCart: CartItem[] = JSON.parse(
@@ -181,7 +172,7 @@ const MainDetailComponent = () => {
         </RightContent>
       </TopContent>
       <BottomContent>
-        {item?.itemDescription.map((desc, index) => (
+        {item?.itemDescription?.map((desc, index) => (
           <ProductIntroArea key={index}>
             <ProductImage src={desc.imageUrl} />
             <ProductDescription>{desc.description}</ProductDescription>

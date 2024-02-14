@@ -10,6 +10,7 @@ import {
   Container,
   LeftContainer,
   MainLogo,
+  PageLinkButton,
   RightContainer,
   LoginContent,
   LoginLogoutButton,
@@ -50,6 +51,12 @@ const Header = () => {
       <LeftContainer>
         <Link to={"/"}>
           <MainLogo src={FUNDITLOGO} alt="FUNDIT 로고" />
+        </Link>
+        <Link to={"/funding"}>
+          <PageLinkButton>펀딩 상품 모아보기</PageLinkButton>
+        </Link>
+        <Link to={"/other"}>
+          <PageLinkButton>기타 상품 모아보기</PageLinkButton>
         </Link>
       </LeftContainer>
       <RightContainer>

@@ -4,6 +4,8 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import GlobalStyles from "./styles/GlobalStyles";
 import GlobalFont from "./styles/GlobalFont";
 import Main from "./pages/Main/Main";
+import OtherProduct from "./pages/Main/OtherProduct";
+import FundingProduct from "./pages/Main/FundingProduct";
 import MainDetail from "./pages/MainDetail/MainDetail";
 import ShoppingBasket from "./pages/ShoppingBasket/ShoppingBasket";
 import Login from "./pages/Login/Login";
@@ -13,6 +15,8 @@ import RegisterSuccess from "./pages/Register/RegisterSuccess";
 
 const router = createBrowserRouter([
   { path: "/", element: <Main /> },
+  { path: "/funding", element: <FundingProduct /> },
+  { path: "/other", element: <OtherProduct /> },
   { path: "/detail/:id", element: <MainDetail /> },
   { path: "/cart", element: <ShoppingBasket /> },
   { path: "/login", element: <Login /> },

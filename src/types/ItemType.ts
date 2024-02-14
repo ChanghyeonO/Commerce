@@ -8,3 +8,10 @@ export interface Item {
     description: string;
   }[];
 }
+
+export interface CartItem {
+  id: string;
+  name: string;
+  count: number;
+  totalPrice: number;
+}

@@ -15,11 +15,12 @@ export const ItemBox = styled.div`
   text-align: center;
   cursor: pointer;
   margin-bottom: 20px;
+  width: 300px;
 `;
 
 export const ItemImage = styled.img`
   width: 100%;
-  height: auto;
+  height: 300px;
   border-radius: 12px;
 `;
 

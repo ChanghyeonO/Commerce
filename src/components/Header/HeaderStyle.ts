@@ -13,10 +13,11 @@ export const Container = styled.div`
 export const LeftContainer = styled.div`
   display: flex;
   align-items: center;
-  justify-content: center;
-  width: 100px;
+  justify-content: flex-start;
+  width: 540px;
   height: 100%;
   overflow: hidden;
+  gap: 30px;
 `;
 
 export const MainLogo = styled.img`
@@ -24,6 +25,22 @@ export const MainLogo = styled.img`
   height: 130px;
   border-radius: 12px;
   cursor: pointer;
+`;
+
+export const PageLinkButton = styled.button`
+  width: 160px;
+  height: 81px;
+  border: none;
+  cursor: pointer;
+  color: #999;
+  font-size: 20px;
+  font-weight: bold;
+  background-color: transparent;
+  transition: border-bottom 0.3s ease-in;
+  &:hover {
+    border-bottom: 3px solid #5271ff;
+    color: #000;
+  }
 `;
 
 export const RightContainer = styled.div`
