@@ -1,12 +1,20 @@
 import ImageSlider from "../ImageSlider/ImageSlider";
-import ItemInfiniteScroll from "../ItemInfiniteScroll/ItemInfiniteScroll";
 import {
   Container,
   TopContent,
   BottomContent,
-  AddItemButtonArea,
-  AddItemButton,
+  ItemContent,
+  IntroArea,
+  IntroTitle,
+  ItemArea,
+  GoProductPageButton,
 } from "./MainComponentStyle";
+import {
+  ItemBox,
+  ItemImage,
+  ItemName,
+  ItemPrice,
+} from "../ItemInfiniteScroll/ItemInfiniteScrollStyle";
 
 const MainComponent = () => {
   return (
@@ -15,10 +23,62 @@ const MainComponent = () => {
         <ImageSlider />
       </TopContent>
       <BottomContent>
-        {/* <AddItemButtonArea>
-          <AddItemButton>상품 등록</AddItemButton>
-        </AddItemButtonArea> */}
-        <ItemInfiniteScroll />
+        <ItemContent>
+          <IntroArea>
+            <IntroTitle>펀딩 상품 목록</IntroTitle>
+            <GoProductPageButton>더보기 {">"}</GoProductPageButton>
+          </IntroArea>
+          <ItemArea>
+            <ItemBox>
+              <ItemImage />
+              <ItemName>더미</ItemName>
+              <ItemPrice>15000 원</ItemPrice>
+            </ItemBox>
+            <ItemBox>
+              <ItemImage />
+              <ItemName>더미</ItemName>
+              <ItemPrice>15000 원</ItemPrice>
+            </ItemBox>
+            <ItemBox>
+              <ItemImage />
+              <ItemName>더미</ItemName>
+              <ItemPrice>15000 원</ItemPrice>
+            </ItemBox>
+            <ItemBox>
+              <ItemImage />
+              <ItemName>더미</ItemName>
+              <ItemPrice>15000 원</ItemPrice>
+            </ItemBox>
+          </ItemArea>
+        </ItemContent>
+        <ItemContent>
+          <IntroArea>
+            <IntroTitle>기타 상품 목록</IntroTitle>
+            <GoProductPageButton>더보기 {">"}</GoProductPageButton>
+          </IntroArea>
+          <ItemArea>
+            <ItemBox>
+              <ItemImage />
+              <ItemName>더미</ItemName>
+              <ItemPrice>15000 원</ItemPrice>
+            </ItemBox>
+            <ItemBox>
+              <ItemImage />
+              <ItemName>더미</ItemName>
+              <ItemPrice>15000 원</ItemPrice>
+            </ItemBox>
+            <ItemBox>
+              <ItemImage />
+              <ItemName>더미</ItemName>
+              <ItemPrice>15000 원</ItemPrice>
+            </ItemBox>
+            <ItemBox>
+              <ItemImage />
+              <ItemName>더미</ItemName>
+              <ItemPrice>15000 원</ItemPrice>
+            </ItemBox>
+          </ItemArea>
+        </ItemContent>
       </BottomContent>
     </Container>
   );

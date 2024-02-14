@@ -30,9 +30,9 @@ import {
   ProductIntroArea,
   ProductImage,
   ProductDescription,
-} from "./MainDetailComponentStyle";
+} from "./ProductDetailComponentStyle";
 
-const MainDetailComponent = () => {
+const ProductDetailComponent = () => {
   const [item, setItem] = useState<Item>();
   const [totalPrice, setTotalPrice] = useState(0);
   const [itemCount, setItemCount] = useState(1);
@@ -183,4 +183,4 @@ const MainDetailComponent = () => {
   );
 };
 
-export default MainDetailComponent;
+export default ProductDetailComponent;

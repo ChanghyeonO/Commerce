@@ -17,6 +17,45 @@ export const BottomContent = styled.div`
   padding: 50px;
 `;
 
+export const ItemContent = styled.div`
+  width: 100%;
+  height: 600px;
+  margin-bottom: 50px;
+`;
+
+export const IntroArea = styled.div`
+  width: 100%;
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+`;
+
+export const IntroTitle = styled.h2`
+  font-size: 25px;
+`;
+
+export const ItemArea = styled.div`
+  width: 100%;
+  height: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+`;
+
+export const GoProductPageButton = styled.button`
+  border: none;
+  font-size: 20px;
+  font-weight: bold;
+  color: #38b6ff;
+  transition: 0.2s;
+  cursor: pointer;
+  background-color: transparent;
+  &:hover {
+    font-size: 22px;
+  }
+`;
+
 export const AddItemButtonArea = styled.div`
   width: 100%;
   height: 50px;

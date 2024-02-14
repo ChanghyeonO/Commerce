@@ -9,7 +9,7 @@ export const Container = styled.div`
 `;
 
 export const ItemBox = styled.div`
-  border: 1px solid #eee;
+  border: 1.5px solid #eee;
   border-radius: 12px;
   padding: 20px;
   text-align: center;
@@ -29,7 +29,9 @@ export const ItemName = styled.h3`
 `;
 
 export const ItemPrice = styled.p`
-  font-size: 15px;
+  font-size: 20px;
+  font-weight: bold;
+  color: #bbb;
 `;
 
 export const EndMessage = styled.div`
