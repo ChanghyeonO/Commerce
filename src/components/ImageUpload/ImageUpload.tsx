@@ -37,43 +37,52 @@ interface Props {
 const ImageUpload = ({ onClose }: Props) => {
   const [image, setImage] = useState<File | null>(null);
   const [uploadedImages, setUploadedImages] = useState<string[]>([]);
-  const [previewImages, setPreviewImages] = useState<string[]>([]);
+  const [previewImages, setPreviewImages] = useState<File[]>([]);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      const file = e.target.files[0];
-      setImage(file);
-
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        const result = reader.result as string;
-        if (typeof result === "string") {
-          setPreviewImages(prev => [...prev, result]);
-        }
-      };
-      reader.readAsDataURL(file);
+    const files = e.target.files;
+    if (files) {
+      const newFiles = Array.from(files);
+      setImage(newFiles[0]);
+      setPreviewImages(prev => [...prev, ...newFiles]);
     }
   };
+
   const handleUpload = async () => {
-    if (!image) {
-      Swal.fire("이미지를 추가해주세요.");
+    if (previewImages.length === 0) {
+      Swal.fire(alertList.infoMessage("업로드할 이미지를 추가해주세요."));
       return;
     }
 
-    const imageRef = ref(storage, `images/${image.name}`);
-    try {
-      const snapshot = await uploadBytes(imageRef, image);
-      const downloadURL = await getDownloadURL(snapshot.ref);
+    const uploadPromises = previewImages.map(async (file, index) => {
+      const imageRef = ref(storage, `images/${file.name}_${Date.now()}`);
+      try {
+        const snapshot = await uploadBytes(imageRef, file); // File 객체를 직접 전달
+        const downloadURL = await getDownloadURL(snapshot.ref);
 
-      const mainDocRef = doc(db, "slideImages", "main");
-      await updateDoc(mainDocRef, { images: arrayUnion(downloadURL) });
+        const mainDocRef = doc(db, "slideImages", "main");
+        await updateDoc(mainDocRef, { images: arrayUnion(downloadURL) });
 
-      setUploadedImages(prevImages => [...prevImages, downloadURL]);
-      setPreviewImages([]);
-      Swal.fire(alertList.successMessage("이미지 업로드에 성공했습니다."));
-    } catch (error) {
-      Swal.fire(alertList.errorMessage("이미지 업로드에 실패했습니다."));
-    }
+        return downloadURL;
+      } catch (error) {
+        console.error("Upload error", error);
+        throw new Error("Image upload failed");
+      }
+    });
+
+    Promise.all(uploadPromises)
+      .then(urls => {
+        setUploadedImages(prev => [...prev, ...urls]);
+        setPreviewImages([]);
+        Swal.fire(
+          alertList.successMessage(
+            "모든 이미지가 성공적으로 업로드되었습니다.",
+          ),
+        );
+      })
+      .catch(error => {
+        Swal.fire(alertList.errorMessage("일부 이미지 업로드에 실패했습니다."));
+      });
   };
 
   const handleDelete = async (urlToDelete: string) => {
@@ -121,16 +130,21 @@ const ImageUpload = ({ onClose }: Props) => {
           </ImageContainer>
         ))}
 
-        {previewImages.map((src, index) => (
+        {previewImages.map((file, index) => (
           <ImageContainer key={index}>
-            <UploadedImage src={src} alt={`Preview ${index}`} />
-            <DeleteButton onClick={() => handleDeletePreview(index)} />
+            <UploadedImage
+              src={URL.createObjectURL(file)}
+              alt={`Preview ${index}`}
+            />
+            <DeleteButton onClick={() => handleDeletePreview(index)}>
+              삭제
+            </DeleteButton>
           </ImageContainer>
         ))}
       </ImageUploadArea>
 
       <AddLabel htmlFor="file-upload" />
-      <AddInput id="file-upload" type="file" onChange={handleChange} />
+      <AddInput id="file-upload" type="file" multiple onChange={handleChange} />
       <CloseButtonArea>
         <ImageUploadButton onClick={handleUpload}>업로드</ImageUploadButton>
         <CloseButton onClick={onClose}>닫기</CloseButton>

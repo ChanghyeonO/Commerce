@@ -13,7 +13,7 @@ export const Container = styled.div`
 `;
 
 export const SlideImage = styled.img`
-  width: 0%;
+  width: 100%;
   height: 100%;
   object-fit: cover;
   background-color: #eee;
