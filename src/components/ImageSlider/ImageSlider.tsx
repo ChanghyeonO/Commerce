@@ -1,7 +1,6 @@
-import { useState, useEffect } from "react";
-
+import React, { useState, useEffect } from "react";
 import { db } from "../../api/firebase";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, onSnapshot } from "firebase/firestore";
 import {
   Container,
   SlideImage,
@@ -11,29 +10,28 @@ import {
 
 const ImageSlider = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [images, setImages] = useState([]);
+  const [images, setImages] = useState<string[]>([]);
 
   useEffect(() => {
-    const fetchImages = async () => {
-      const docRef = doc(db, "slideImages", "main");
-      const docSnap = await getDoc(docRef);
-
-      if (docSnap.exists()) {
-        console.log("Retrieved images:", docSnap.data().images);
-        setImages(docSnap.data().images || []);
+    const docRef = doc(db, "slideImages", "main");
+    const unsubscribe = onSnapshot(docRef, doc => {
+      if (doc.exists()) {
+        setImages(doc.data().images || []);
       } else {
         console.log("No such document!");
       }
-    };
+    });
 
-    fetchImages();
+    return () => unsubscribe();
+  }, []);
 
-    const slideInterval = setInterval(() => {
-      setCurrentSlide(prev => (prev + 1) % images.length);
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentSlide(prev => (prev + 1) % (images.length || 1));
     }, 5000);
 
-    return () => clearInterval(slideInterval);
-  }, [images.length]);
+    return () => clearInterval(interval);
+  }, [images]);
 
   const goToSlide = (index: number) => {
     setCurrentSlide(index);
