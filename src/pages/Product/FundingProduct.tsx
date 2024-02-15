@@ -1,12 +1,12 @@
 import Header from "../../components/Header/Header";
-import FundingProductComponent from "../../components/ProductComponent/FundingProductComponent";
+import ProductComponent from "../../components/ProductComponent/ProductComponent";
 import Footer from "../../components/Footer/Footer";
 
 const FundingProduct = () => {
   return (
     <>
       <Header />
-      <FundingProductComponent />
+      <ProductComponent />
       <Footer />
     </>
   );

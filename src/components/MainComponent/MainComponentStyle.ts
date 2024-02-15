@@ -65,7 +65,7 @@ export const AddItemButtonArea = styled.div`
   gap: 20px;
 `;
 
-export const AddItemButton = styled.button`
+const ButtonDesign = styled.button`
   width: 220px;
   height: 50px;
   border-radius: 12px;
@@ -74,5 +74,12 @@ export const AddItemButton = styled.button`
   font-size: 20px;
   font-weight: bold;
   cursor: pointer;
+`;
+
+export const AddImageButton = styled(ButtonDesign)`
+  background-color: #38b6ff;
+`;
+
+export const AddItemButton = styled(ButtonDesign)`
   background-color: #5271ff;
 `;

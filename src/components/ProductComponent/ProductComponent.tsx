@@ -5,10 +5,11 @@ import {
   TopContent,
   BottomContent,
   AddItemButtonArea,
+  AddImageButton,
   AddItemButton,
 } from "../MainComponent/MainComponentStyle";
 
-const FundingProductComponent = () => {
+const ProductComponent = () => {
   return (
     <Container>
       <TopContent>
@@ -16,6 +17,7 @@ const FundingProductComponent = () => {
       </TopContent>
       <BottomContent>
         <AddItemButtonArea>
+          <AddImageButton>슬라이드 사진 수정</AddImageButton>
           <AddItemButton>상품 등록</AddItemButton>
         </AddItemButtonArea>
         <ItemInfiniteScroll />
@@ -24,4 +26,4 @@ const FundingProductComponent = () => {
   );
 };
 
-export default FundingProductComponent;
+export default ProductComponent;
