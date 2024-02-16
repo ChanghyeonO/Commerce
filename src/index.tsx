@@ -7,6 +7,8 @@ import GlobalFont from "./styles/GlobalFont";
 import Main from "./pages/Main/Main";
 import FundingProduct from "./pages/Product/FundingProduct";
 import OtherProduct from "./pages/Product/OtherProduct";
+import FundingProductCreator from "./pages/ProductCreator/FundingProductCreator";
+import OtherProductCreator from "./pages/ProductCreator/OtherProductCreator";
 import ProductDetail from "./pages/ProductDetail/ProductDetail";
 import ShoppingBasket from "./pages/ShoppingBasket/ShoppingBasket";
 import Login from "./pages/Login/Login";
@@ -21,6 +23,8 @@ const router = createBrowserRouter([
   { path: "/funding", element: <FundingProduct /> },
   { path: "/other", element: <OtherProduct /> },
   { path: "/detail/:id", element: <ProductDetail /> },
+  { path: "/funding-create", element: <FundingProductCreator /> },
+  { path: "other/-create", element: <OtherProductCreator /> },
   { path: "/cart", element: <ShoppingBasket /> },
   { path: "/login", element: <Login /> },
   { path: "/register-terms", element: <RegisterTerms /> },

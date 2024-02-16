@@ -1,5 +1,6 @@
 import ImageSlider from "../ImageSlider/ImageSlider";
 import ItemInfiniteScroll from "../ItemInfiniteScroll/ItemInfiniteScroll";
+import { Link } from "react-router-dom";
 import {
   Container,
   TopContent,
@@ -18,7 +19,9 @@ const ProductComponent = () => {
       <BottomContent>
         <AddItemButtonArea>
           <AddImageButton>슬라이드 사진 수정</AddImageButton>
-          <AddItemButton>상품 등록</AddItemButton>
+          <Link to="/other/-create">
+            <AddItemButton>상품 등록</AddItemButton>
+          </Link>
         </AddItemButtonArea>
         <ItemInfiniteScroll />
       </BottomContent>
