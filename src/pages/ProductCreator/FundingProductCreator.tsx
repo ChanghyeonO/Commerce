@@ -1,12 +1,12 @@
 import Header from "../../components/Header/Header";
-import MainDetailComponent from "../../components/ProductDetailComponent/ProductDetailComponent";
+import ProductCreatorComponent from "../../components/ProductCreatorComponent/ProductCreatorComponent";
 import Footer from "../../components/Footer/Footer";
 
 const FundingProductCreator = () => {
   return (
     <>
       <Header />
-      <MainDetailComponent />
+      <ProductCreatorComponent />
       <Footer />
     </>
   );
