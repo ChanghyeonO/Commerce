@@ -19,11 +19,11 @@ export const fetchItems = async (
   const itemsQuery = lastFetchedItem
     ? query(
         itemsRef,
-        orderBy("name"),
+        orderBy("createdAt", "desc"),
         startAfter(lastFetchedItem),
         limit(itemsPerPage),
       )
-    : query(itemsRef, orderBy("name"), limit(itemsPerPage));
+    : query(itemsRef, orderBy("createdAt", "desc"), limit(itemsPerPage));
 
   try {
     const querySnapshot = await getDocs(itemsQuery);
