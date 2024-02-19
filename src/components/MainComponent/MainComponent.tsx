@@ -1,6 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import ImageSlider from "../ImageSlider/ImageSlider";
 import { Link } from "react-router-dom";
+import { db } from "../../api/firebase";
+import { collection, query, orderBy, limit, getDocs } from "firebase/firestore";
 import ImageUpload from "../ImageUpload/ImageUpload";
 import {
   Container,
@@ -20,12 +23,54 @@ import {
   ItemName,
   ItemPrice,
 } from "../ItemInfiniteScroll/ItemInfiniteScrollStyle";
+import { Item } from "../../types/ItemType";
 
 const MainComponent = () => {
   const [showImageUpload, setShowImageUpload] = useState(false);
+  const [fundingItems, setFundingItems] = useState<Item[]>([]);
+  const [otherItems, setOtherItems] = useState<Item[]>([]);
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchItems = async () => {
+      const fundingQuery = query(
+        collection(db, "fundingItems"),
+        orderBy("createdAt", "desc"),
+        limit(4),
+      );
+      const otherQuery = query(
+        collection(db, "otherItems"),
+        orderBy("createdAt", "desc"),
+        limit(4),
+      );
+
+      const fundingSnapshot = await getDocs(fundingQuery);
+      const otherSnapshot = await getDocs(otherQuery);
+
+      const fundingData = fundingSnapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data(),
+      })) as Item[];
+      const otherData = otherSnapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data(),
+      })) as Item[];
+
+      setFundingItems(fundingData);
+      setOtherItems(otherData);
+    };
+
+    fetchItems();
+  }, []);
 
   const handleShowImageUpload = () => {
     setShowImageUpload(!showImageUpload);
+  };
+
+  const handleItemClick = (isFunding: boolean, id: string) => {
+    const path = isFunding ? `/funding/detail/${id}` : `/other/detail/${id}`;
+    navigate(path);
   };
 
   return (
@@ -47,26 +92,16 @@ const MainComponent = () => {
             </Link>
           </IntroArea>
           <ItemArea>
-            <ItemBox>
-              <ItemImage />
-              <ItemName>더미</ItemName>
-              <ItemPrice>15000 원</ItemPrice>
-            </ItemBox>
-            <ItemBox>
-              <ItemImage />
-              <ItemName>더미</ItemName>
-              <ItemPrice>15000 원</ItemPrice>
-            </ItemBox>
-            <ItemBox>
-              <ItemImage />
-              <ItemName>더미</ItemName>
-              <ItemPrice>15000 원</ItemPrice>
-            </ItemBox>
-            <ItemBox>
-              <ItemImage />
-              <ItemName>더미</ItemName>
-              <ItemPrice>15000 원</ItemPrice>
-            </ItemBox>
+            {fundingItems.map(item => (
+              <ItemBox
+                key={item.id}
+                onClick={() => handleItemClick(true, item.id)}
+              >
+                <ItemImage src={item.itemDescription[0].imageUrl} />
+                <ItemName>{item.name}</ItemName>
+                <ItemPrice>{item.price} 원</ItemPrice>
+              </ItemBox>
+            ))}
           </ItemArea>
         </ItemContent>
         <ItemContent>
@@ -77,26 +112,16 @@ const MainComponent = () => {
             </Link>
           </IntroArea>
           <ItemArea>
-            <ItemBox>
-              <ItemImage />
-              <ItemName>더미</ItemName>
-              <ItemPrice>15000 원</ItemPrice>
-            </ItemBox>
-            <ItemBox>
-              <ItemImage />
-              <ItemName>더미</ItemName>
-              <ItemPrice>15000 원</ItemPrice>
-            </ItemBox>
-            <ItemBox>
-              <ItemImage />
-              <ItemName>더미</ItemName>
-              <ItemPrice>15000 원</ItemPrice>
-            </ItemBox>
-            <ItemBox>
-              <ItemImage />
-              <ItemName>더미</ItemName>
-              <ItemPrice>15000 원</ItemPrice>
-            </ItemBox>
+            {otherItems.map(item => (
+              <ItemBox
+                key={item.id}
+                onClick={() => handleItemClick(false, item.id)}
+              >
+                <ItemImage src={item.itemDescription[0].imageUrl} />
+                <ItemName>{item.name}</ItemName>
+                <ItemPrice>{item.price} 원</ItemPrice>
+              </ItemBox>
+            ))}
           </ItemArea>
         </ItemContent>
       </BottomContent>
