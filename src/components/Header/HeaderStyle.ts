@@ -59,7 +59,7 @@ export const LoginContent = styled.div`
 const LoginRegisterButtonDesign = styled.button`
   border: none;
   cursor: pointer;
-  font-size: 15px;
+  font-size: 17px;
   font-weight: bold;
   background-color: transparent;
 `;

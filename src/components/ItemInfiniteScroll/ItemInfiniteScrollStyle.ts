@@ -16,6 +16,7 @@ export const ItemBox = styled.div`
   cursor: pointer;
   margin-bottom: 20px;
   width: 300px;
+  position: relative;
 `;
 
 export const ItemImage = styled.img`
