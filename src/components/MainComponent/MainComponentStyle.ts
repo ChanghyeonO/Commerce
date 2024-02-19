@@ -58,7 +58,7 @@ export const GoProductPageButton = styled.button`
 
 export const AddItemButtonArea = styled.div`
   width: 100%;
-  height: 50px;
+  height: 100px;
   display: flex;
   justify-content: flex-end;
   align-items: center;

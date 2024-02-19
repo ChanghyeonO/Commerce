@@ -2,7 +2,7 @@ import Header from "../../components/Header/Header";
 import MainDetailComponent from "../../components/ProductDetailComponent/ProductDetailComponent";
 import Footer from "../../components/Footer/Footer";
 
-const MainDetail = () => {
+const OtherProductDetail = () => {
   return (
     <>
       <Header />
@@ -12,4 +12,4 @@ const MainDetail = () => {
   );
 };
 
-export default MainDetail;
+export default OtherProductDetail;

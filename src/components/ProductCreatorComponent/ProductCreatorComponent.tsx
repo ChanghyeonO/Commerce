@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { db, storage } from "../../api/firebase";
 import {
   getDownloadURL,
@@ -7,6 +8,8 @@ import {
   deleteObject,
 } from "firebase/storage";
 import { collection, doc, serverTimestamp, setDoc } from "firebase/firestore";
+import Swal from "sweetalert2";
+import alertList from "../../utils/Swal";
 
 import {
   Container,
@@ -48,6 +51,18 @@ const ProductCreatorComponent = () => {
   const [productName, setProductName] = useState("");
   const [productDescription, setProductDescription] = useState("");
   const [price, setPrice] = useState("");
+
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const getCollectionName = () => {
+    if (location.pathname.includes("/funding-create")) {
+      return "fundingItems";
+    } else if (location.pathname.includes("/other-create")) {
+      return "otherItems";
+    }
+    return "defaultCollection";
+  };
 
   const addOption = () => {
     if (options.length < 6) {
@@ -135,7 +150,7 @@ const ProductCreatorComponent = () => {
       !price ||
       introContents.some(content => !content.value)
     ) {
-      alert("모든 필드를 입력해주세요.");
+      Swal.fire(alertList.infoMessage("모든 내용을 입력해주세요"));
       return;
     }
 
@@ -163,13 +178,23 @@ const ProductCreatorComponent = () => {
         createdAt: serverTimestamp(),
       };
 
-      const postRef = doc(collection(db, "items"));
+      const collectionName = getCollectionName();
+      const postRef = doc(collection(db, collectionName));
       await setDoc(postRef, postData);
 
-      alert("게시글이 성공적으로 업로드되었습니다.");
+      Swal.fire(
+        alertList.successMessage("제품이 성공적으로 업로드 되었습니다."),
+      );
+      if (collectionName === "fundingItems") {
+        navigate("/funding");
+      } else if (collectionName === "otherItems") {
+        navigate("/other");
+      }
     } catch (error) {
       console.error("게시글 업로드 중 오류 발생:", error);
-      alert("게시글 업로드에 실패했습니다.");
+      Swal.fire(
+        alertList.errorMessage("게시글 업로드 중 오류가 발생했습니다."),
+      );
     }
   };
 

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import Swal from "sweetalert2";
 import alertList from "../../utils/Swal";
 import ImageSlider from "../ImageSlider/ImageSlider";
@@ -38,21 +38,31 @@ const ProductDetailComponent = () => {
   const [itemCount, setItemCount] = useState(1);
   const { id } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const getCollectionName = () => {
+    if (location.pathname.includes("funding")) {
+      return "fundingItems";
+    } else {
+      return "otherItems";
+    }
+  };
 
   useEffect(() => {
     const fetchItemDetails = async () => {
+      const collectionName = getCollectionName();
       if (typeof id === "string") {
         try {
-          const itemDoc = doc(db, "items", id);
+          const itemDoc = doc(db, collectionName, id);
           const itemSnapshot = await getDoc(itemDoc);
           if (itemSnapshot.exists()) {
             const itemData = itemSnapshot.data();
             setItem(itemData as Item);
           } else {
-            console.log("No such document!");
+            console.log("제품 정보를 불러오지 못했습니다");
           }
         } catch (error) {
-          console.error("Error getting document:", error);
+          console.error("제품 정보를 불러오는 중 오류가 발생했습니다", error);
         }
       }
     };

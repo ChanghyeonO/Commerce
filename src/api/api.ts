@@ -11,10 +11,11 @@ import {
 import { Item } from "../types/ItemType";
 
 export const fetchItems = async (
+  collectionName: string,
   lastFetchedItem: DocumentData | null,
   itemsPerPage = 4,
 ) => {
-  const itemsRef = collection(db, "items");
+  const itemsRef = collection(db, collectionName);
   const itemsQuery = lastFetchedItem
     ? query(
         itemsRef,
@@ -37,14 +38,13 @@ export const fetchItems = async (
       };
     });
 
-    console.log("Fetched items:", items);
     return {
       items,
       lastVisible,
       hasMore: querySnapshot.docs.length === itemsPerPage,
     };
   } catch (error) {
-    console.error("Error fetching items:", error);
+    console.error("Error fetching items from", collectionName, ":", error);
     throw error;
   }
 };

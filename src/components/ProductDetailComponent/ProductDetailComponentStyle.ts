@@ -155,9 +155,9 @@ export const ProductIntroArea = styled.div`
 `;
 
 export const ProductImage = styled.img`
-  width: 480px;
+  width: 60%;
   height: 90%;
-  object-fit: cover;
+  object-fit: contain;
   border-radius: 12px;
 `;
 

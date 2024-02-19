@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useInView } from "react-intersection-observer";
 import { fetchItems } from "../../api/api";
 import { Item } from "../../types/ItemType";
@@ -21,19 +21,35 @@ const ItemInfiniteScroll = () => {
   const [hasMore, setHasMore] = useState<boolean>(true);
   const { ref, inView } = useInView();
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const getCollectionName = () => {
+    if (location.pathname.includes("/funding")) {
+      return "fundingItems";
+    } else if (location.pathname.includes("/other")) {
+      return "otherItems";
+    }
+  };
 
   const handleItemClick = (id: string) => {
-    navigate(`/detail/${id}`);
+    const basePath = location.pathname.includes("/funding")
+      ? "/funding"
+      : "/other";
+    navigate(`${basePath}/detail/${id}`);
   };
 
   const loadMoreItems = async () => {
     if (!hasMore) return;
-
+    const collectionName = getCollectionName();
+    if (!collectionName) {
+      console.error("Collection name is undefined.");
+      return;
+    }
     const {
       items: newItems,
       lastVisible: newLastVisible,
       hasMore: newHasMore,
-    } = await fetchItems(lastVisible);
+    } = await fetchItems(collectionName, lastVisible);
 
     setItems(prevItems => [...prevItems, ...newItems]);
     setLastVisible(newLastVisible);
@@ -44,11 +60,8 @@ const ItemInfiniteScroll = () => {
     if (inView && hasMore) {
       loadMoreItems();
     }
-  }, [inView, hasMore]);
+  }, [inView, hasMore, location.pathname]);
 
-  useEffect(() => {
-    items.forEach(item => console.log(item.itemDescription));
-  }, [items]);
   return (
     <Container>
       {items.map(item => (

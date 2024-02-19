@@ -9,7 +9,8 @@ import FundingProduct from "./pages/Product/FundingProduct";
 import OtherProduct from "./pages/Product/OtherProduct";
 import FundingProductCreator from "./pages/ProductCreator/FundingProductCreator";
 import OtherProductCreator from "./pages/ProductCreator/OtherProductCreator";
-import ProductDetail from "./pages/ProductDetail/ProductDetail";
+import FundingProductDetail from "./pages/ProductDetail/FundingProductDetail";
+import OtherProductDetail from "./pages/ProductDetail/OtherProductDetail";
 import ShoppingBasket from "./pages/ShoppingBasket/ShoppingBasket";
 import Login from "./pages/Login/Login";
 import RegisterTerms from "./pages/Register/RegisterTerms";
@@ -22,9 +23,10 @@ const router = createBrowserRouter([
   { path: "/", element: <Main /> },
   { path: "/funding", element: <FundingProduct /> },
   { path: "/other", element: <OtherProduct /> },
-  { path: "/detail/:id", element: <ProductDetail /> },
+  { path: "/funding/detail/:id", element: <FundingProductDetail /> },
+  { path: "other/detail/:id", element: <OtherProductDetail /> },
   { path: "/funding-create", element: <FundingProductCreator /> },
-  { path: "other/-create", element: <OtherProductCreator /> },
+  { path: "other-create", element: <OtherProductCreator /> },
   { path: "/cart", element: <ShoppingBasket /> },
   { path: "/login", element: <Login /> },
   { path: "/register-terms", element: <RegisterTerms /> },
