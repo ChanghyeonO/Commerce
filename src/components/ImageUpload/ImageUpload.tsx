@@ -57,7 +57,7 @@ const ImageUpload = ({ onClose }: Props) => {
     const uploadPromises = previewImages.map(async (file, index) => {
       const imageRef = ref(storage, `images/${file.name}_${Date.now()}`);
       try {
-        const snapshot = await uploadBytes(imageRef, file); // File 객체를 직접 전달
+        const snapshot = await uploadBytes(imageRef, file);
         const downloadURL = await getDownloadURL(snapshot.ref);
 
         const mainDocRef = doc(db, "slideImages", "main");
@@ -136,9 +136,7 @@ const ImageUpload = ({ onClose }: Props) => {
               src={URL.createObjectURL(file)}
               alt={`Preview ${index}`}
             />
-            <DeleteButton onClick={() => handleDeletePreview(index)}>
-              삭제
-            </DeleteButton>
+            <DeleteButton onClick={() => handleDeletePreview(index)} />
           </ImageContainer>
         ))}
       </ImageUploadArea>

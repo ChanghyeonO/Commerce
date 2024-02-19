@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import AddButtonIcon from "../../assets/icons/add-button.png";
 
 export const Container = styled.div`
   max-width: 100%;
@@ -7,7 +8,6 @@ export const Container = styled.div`
 
 export const InnerContent = styled.div`
   width: 50%;
-  height: 100%;
   margin: 0 auto;
 `;
 
@@ -21,7 +21,6 @@ export const IntroText = styled.h3`
 
 export const Header = styled.div`
   width: 100%;
-  height: 500px;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -73,15 +72,17 @@ export const ProductDescriptionTextArea = styled(TextAreaDesign)``;
 
 export const OptionInputArea = styled.div`
   width: 100%;
-  min-height: 200px;
   display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: center;
+  align-items: center;
+  justify-content: flex-start;
   gap: 10px;
 `;
 
 export const OptionInput = styled(InputDesign)``;
+
+export const OptionDeleteButton = styled(ButtonDesign)`
+  background-color: #e01040;
+`;
 
 export const OptionAddButton = styled(ButtonDesign)``;
 
@@ -114,7 +115,8 @@ export const IntroContentArea = styled.div`
 `;
 
 export const ImageArea = styled.div`
-  width: 400px;
+  position: relative;
+  width: 70%;
   height: 300px;
   background-color: #eee;
   border-radius: 12px;
@@ -122,20 +124,43 @@ export const ImageArea = styled.div`
 
 export const DescriptionImage = styled.img`
   width: 100%;
-  height: auto;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 12px;
+`;
+
+export const AddLabel = styled.label`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 50px;
+  height: 50px;
+  background-image: url(${AddButtonIcon});
+  background-size: cover;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+`;
+
+export const AddInput = styled.input.attrs({ type: "file" })`
+  display: none;
 `;
 
 export const TextArea = styled.div``;
 
 export const DescriptionText = styled(TextAreaDesign)`
   height: 300px;
+  width: 30%;
 `;
 
 export const UploadButtonArea = styled.div`
   width: 100%;
-  height: 40px;
+  height: 100px;
   display: flex;
   justify-content: center;
+  align-items: center;
 `;
 
 export const UploadButton = styled.button`
