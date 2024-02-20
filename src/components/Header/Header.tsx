@@ -66,7 +66,9 @@ const Header = () => {
               로그아웃
             </LoginLogoutButton>
             <UserContent>
-              <UserLogo src={UserImage} alt="유저 이미지" />
+              <Link to={"/mypage/edit-profile"}>
+                <UserLogo src={UserImage} alt="유저 이미지" />
+              </Link>
             </UserContent>
           </LoginContent>
         ) : (

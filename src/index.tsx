@@ -11,7 +11,9 @@ import FundingProductCreator from "./pages/ProductCreator/FundingProductCreator"
 import OtherProductCreator from "./pages/ProductCreator/OtherProductCreator";
 import FundingProductDetail from "./pages/ProductDetail/FundingProductDetail";
 import OtherProductDetail from "./pages/ProductDetail/OtherProductDetail";
-import ShoppingBasket from "./pages/ShoppingBasket/ShoppingBasket";
+import EditProfile from "./pages/MyPage/EditProfile";
+import OrderHistory from "./pages/MyPage/OrderHistory";
+import ShoppingBasket from "./pages/MyPage/ShoppingBasket";
 import Login from "./pages/Login/Login";
 import RegisterTerms from "./pages/Register/RegisterTerms";
 import RegisterDetail from "./pages/Register/RegisterDetail";
@@ -25,9 +27,11 @@ const router = createBrowserRouter([
   { path: "/other", element: <OtherProduct /> },
   { path: "/funding/detail/:id", element: <FundingProductDetail /> },
   { path: "other/detail/:id", element: <OtherProductDetail /> },
-  { path: "/funding-create", element: <FundingProductCreator /> },
-  { path: "other-create", element: <OtherProductCreator /> },
-  { path: "/cart", element: <ShoppingBasket /> },
+  { path: "/funding/create", element: <FundingProductCreator /> },
+  { path: "other/create", element: <OtherProductCreator /> },
+  { path: "mypage/edit-profile", element: <EditProfile /> },
+  { path: "mypage/order-history", element: <OrderHistory /> },
+  { path: "mypage/cart", element: <ShoppingBasket /> },
   { path: "/login", element: <Login /> },
   { path: "/register-terms", element: <RegisterTerms /> },
   { path: "/register-detail", element: <RegisterDetail /> },

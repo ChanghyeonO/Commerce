@@ -56,9 +56,9 @@ const ProductCreatorComponent = () => {
   const navigate = useNavigate();
 
   const getCollectionName = () => {
-    if (location.pathname.includes("/funding-create")) {
+    if (location.pathname.includes("/funding/create")) {
       return "fundingItems";
-    } else if (location.pathname.includes("/other-create")) {
+    } else if (location.pathname.includes("/other/create")) {
       return "otherItems";
     }
     return "defaultCollection";

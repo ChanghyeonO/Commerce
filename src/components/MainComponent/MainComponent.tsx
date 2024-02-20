@@ -3,7 +3,17 @@ import { useNavigate } from "react-router-dom";
 import ImageSlider from "../ImageSlider/ImageSlider";
 import { Link } from "react-router-dom";
 import { db } from "../../api/firebase";
-import { collection, query, orderBy, limit, getDocs } from "firebase/firestore";
+import { getAuth } from "firebase/auth";
+import {
+  collection,
+  query,
+  orderBy,
+  limit,
+  getDocs,
+  doc,
+  getDoc,
+  getFirestore,
+} from "firebase/firestore";
 import ImageUpload from "../ImageUpload/ImageUpload";
 import {
   Container,
@@ -27,10 +37,28 @@ import { Item } from "../../types/ItemType";
 
 const MainComponent = () => {
   const [showImageUpload, setShowImageUpload] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
   const [fundingItems, setFundingItems] = useState<Item[]>([]);
   const [otherItems, setOtherItems] = useState<Item[]>([]);
 
   const navigate = useNavigate();
+  const auth = getAuth();
+  const db = getFirestore();
+
+  useEffect(() => {
+    const checkAdminStatus = async () => {
+      const user = auth.currentUser;
+      if (user) {
+        const userRef = doc(db, "users", user.uid);
+        const docSnap = await getDoc(userRef);
+        if (docSnap.exists()) {
+          setIsAdmin(docSnap.data().admin);
+        }
+      }
+    };
+
+    checkAdminStatus();
+  }, []);
 
   useEffect(() => {
     const fetchItems = async () => {
@@ -79,11 +107,13 @@ const MainComponent = () => {
         <ImageSlider />
       </TopContent>
       <BottomContent>
-        <AddItemButtonArea>
-          <AddImageButton onClick={handleShowImageUpload}>
-            슬라이드 사진 수정
-          </AddImageButton>
-        </AddItemButtonArea>
+        {isAdmin && (
+          <AddItemButtonArea>
+            <AddImageButton onClick={handleShowImageUpload}>
+              슬라이드 사진 수정
+            </AddImageButton>
+          </AddItemButtonArea>
+        )}
         <ItemContent>
           <IntroArea>
             <IntroTitle>펀딩 상품 목록</IntroTitle>

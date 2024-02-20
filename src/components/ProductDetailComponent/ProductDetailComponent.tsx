@@ -131,7 +131,7 @@ const ProductDetailComponent = () => {
       sessionStorage.setItem("cart", JSON.stringify(currentCart));
 
       if (navigateToCart) {
-        navigate("/cart");
+        navigate("/mypage/cart");
       } else {
         Swal.fire({
           ...alertList.doubleCheckMessage("장바구니에 추가되었습니다."),
@@ -140,7 +140,7 @@ const ProductDetailComponent = () => {
           cancelButtonText: "쇼핑 계속하기",
         }).then(result => {
           if (result.isConfirmed) {
-            navigate("/cart");
+            navigate("/mypage/cart");
           }
         });
       }
