@@ -22,9 +22,10 @@ export const LeftContent = styled.div`
 export const RightContent = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: space-around;
   align-items: center;
   width: 400px;
+  height: 100%;
 `;
 
 export const DescriptionArea = styled.div`
@@ -40,22 +41,42 @@ export const Description = styled.p`
 `;
 
 export const OptionArea = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-around;
-  align-content: space-around;
-  gap: 10px;
   width: 80%;
-  height: 60px;
-  padding: 10px 0;
 `;
 
-export const OptionButton = styled.button`
-  width: 100px;
-  height: 30px;
+export const DropdownContainer = styled.div`
+  position: relative;
+  user-select: none;
+  font-size: 15px;
+  font-weight: bold;
+`;
+
+export const DropdownSelected = styled.div`
+  padding: 10px;
   border: none;
-  border-radius: 10px;
   cursor: pointer;
+  background-color: #eee;
+  text-align: center;
+  border-radius: 10px;
+`;
+
+export const DropdownOptions = styled.div`
+  position: absolute;
+  top: 83%;
+  left: 0;
+  right: 0;
+  background-color: #eee;
+  z-index: 1;
+  border-radius: 0 0 10px 10px;
+`;
+
+export const DropdownOption = styled.div`
+  padding: 10px;
+  cursor: pointer;
+  border-bottom: 1px dashed #999;
+  &:last-child {
+    border-bottom: none;
+  }
 `;
 
 export const ProductCountArea = styled.div`
@@ -73,7 +94,14 @@ const PlusMinusButtonDesign = styled.button`
   border: none;
   border-radius: 10px;
   font-weight: bold;
+  font-size: 20px;
   cursor: pointer;
+  background-color: #eee;
+  transition: 0.2s ease-in;
+  &:hover {
+    background-color: #bbb;
+    color: #fff;
+  }
 `;
 
 export const MinusButton = styled(PlusMinusButtonDesign)``;
@@ -82,8 +110,8 @@ export const CountInput = styled.input`
   width: 60px;
   height: 30px;
   border: none;
-  border-radius: 12px;
   font-weight: bold;
+  font-size: 17px;
   text-align: center;
   &:focus {
     outline: none;
@@ -114,8 +142,8 @@ export const TotalPrice = styled.div`
   min-width: 100px;
   height: 30px;
   border: none;
-  // background-color: #eee;
   font-size: 20px;
+  font-weight: bold;
 `;
 
 export const CheckoutButtonArea = styled.div`
@@ -133,10 +161,17 @@ const CheckoutButton = styled.button`
   border: none;
   border-radius: 10px;
   cursor: pointer;
+  color: #fff;
+  font-weight: bold;
+  font-size: 17px;
 `;
-export const ShoppingBasketButton = styled(CheckoutButton)``;
+export const ShoppingBasketButton = styled(CheckoutButton)`
+  background-color: #38b6ff;
+`;
 
-export const PurchaseButton = styled(CheckoutButton)``;
+export const PurchaseButton = styled(CheckoutButton)`
+  background-color: #5271ff;
+`;
 
 export const BottomContent = styled.div`
   width: 100%;
@@ -151,7 +186,6 @@ export const ProductIntroArea = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 20px;
 `;
 
 export const ProductImage = styled.img`
@@ -162,10 +196,10 @@ export const ProductImage = styled.img`
 `;
 
 export const ProductDescription = styled.p`
-  width: 30%;
+  width: 40%;
   height: 100%;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: start;
   font-size: 25px;
 `;

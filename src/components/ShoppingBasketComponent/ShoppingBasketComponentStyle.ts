@@ -39,16 +39,22 @@ export const ItemImage = styled.img`
 export const CenterContent = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: space-around;
   width: 200px;
-  height: 100%;
+  height: 150px;
 `;
 
-export const ItemTitle = styled.h2`
+export const ItemTitle = styled.div`
   font-size: 18px;
+  font-weight: bold;
 `;
 
-export const ItemDescription = styled.p`
+export const ItemOption = styled.div`
+  font-size: 15px;
+  font-weight: bold;
+`;
+
+export const ItemDescription = styled.div`
   font-size: 15px;
 `;
 

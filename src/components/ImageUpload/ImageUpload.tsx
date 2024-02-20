@@ -54,7 +54,7 @@ const ImageUpload = ({ onClose }: Props) => {
       return;
     }
 
-    const uploadPromises = previewImages.map(async (file, index) => {
+    const uploadPromises = previewImages.map(async file => {
       const imageRef = ref(storage, `images/${file.name}_${Date.now()}`);
       try {
         const snapshot = await uploadBytes(imageRef, file);

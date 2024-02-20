@@ -3,6 +3,7 @@ export interface Item {
   name: string;
   price: number;
   description: string;
+  option: string[];
   itemDescription: {
     imageUrl: string;
     description: string;
@@ -12,6 +13,10 @@ export interface Item {
 export interface CartItem {
   id: string;
   name: string;
+  description: string;
+  option: string;
+  image: string;
   count: number;
+  price: number;
   totalPrice: number;
 }

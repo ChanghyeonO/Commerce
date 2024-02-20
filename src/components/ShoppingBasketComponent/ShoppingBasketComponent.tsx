@@ -8,6 +8,7 @@ import {
   ItemImage,
   CenterContent,
   ItemTitle,
+  ItemOption,
   ItemDescription,
   RightContent,
   TotalPrice,
@@ -19,15 +20,7 @@ import {
   EmptyInfomation,
 } from "./ShoppingBasketComponentStyle";
 
-interface CartItem {
-  id: number;
-  name: string;
-  description: string;
-  image: string;
-  count: number;
-  price: number;
-  totalPrice: number;
-}
+import { CartItem } from "../../types/ItemType";
 
 const ShoppingBasketComponent = () => {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
@@ -44,27 +37,35 @@ const ShoppingBasketComponent = () => {
     sessionStorage.setItem("cart", JSON.stringify(items));
   };
 
-  const handleDelete = (id: number) => {
-    const updatedCartItems = cartItems.filter(item => item.id !== id);
+  const handleDelete = (id: string, option: string) => {
+    const updatedCartItems = cartItems.filter(
+      item => !(item.id === id && item.option === option),
+    );
     updateCartItems(updatedCartItems);
   };
 
-  const handleIncrease = (id: number) => {
+  const handleIncrease = (id: string, option: string) => {
     const updatedCartItems = cartItems.map(item => {
-      if (item.id === id) {
-        const newCount = item.count + 1;
-        return { ...item, count: newCount, totalPrice: item.price * newCount };
+      if (item.id === id && item.option === option) {
+        return {
+          ...item,
+          count: item.count + 1,
+          totalPrice: (item.count + 1) * item.price,
+        };
       }
       return item;
     });
     updateCartItems(updatedCartItems);
   };
 
-  const handleDecrease = (id: number) => {
+  const handleDecrease = (id: string, option: string) => {
     const updatedCartItems = cartItems.map(item => {
-      if (item.id === id && item.count > 1) {
-        const newCount = item.count - 1;
-        return { ...item, count: newCount, totalPrice: item.price * newCount };
+      if (item.id === id && item.option === option && item.count > 1) {
+        return {
+          ...item,
+          count: item.count - 1,
+          totalPrice: (item.count - 1) * item.price,
+        };
       }
       return item;
     });
@@ -78,24 +79,31 @@ const ShoppingBasketComponent = () => {
       </TopContent>
       <BottomContent>
         {cartItems.length > 0 ? (
-          cartItems.map(item => (
-            <ItemArea key={item.id}>
+          cartItems.map((item, index) => (
+            <ItemArea key={`${item.id}-${item.option}-${index}`}>
               <ItemImage src={item.image} alt={`Product ${item.id}`} />
               <CenterContent>
                 <ItemTitle>{item.name}</ItemTitle>
+                <ItemOption>{item.option}</ItemOption>
                 <ItemDescription>{item.description}</ItemDescription>
               </CenterContent>
               <RightContent>
-                <DeleteButton onClick={() => handleDelete(item.id)}>
+                <DeleteButton
+                  onClick={() => handleDelete(item.id, item.option)}
+                >
                   X
                 </DeleteButton>
                 <TotalPrice>{`${item.totalPrice}원`}</TotalPrice>
                 <ProductCountArea>
-                  <MinusButton onClick={() => handleDecrease(item.id)}>
+                  <MinusButton
+                    onClick={() => handleDecrease(item.id, item.option)}
+                  >
                     -
                   </MinusButton>
                   <CountInput type="number" value={item.count} readOnly />
-                  <PlusButton onClick={() => handleIncrease(item.id)}>
+                  <PlusButton
+                    onClick={() => handleIncrease(item.id, item.option)}
+                  >
                     +
                   </PlusButton>
                 </ProductCountArea>

@@ -16,7 +16,10 @@ import {
   Title,
   Description,
   OptionArea,
-  OptionButton,
+  DropdownContainer,
+  DropdownSelected,
+  DropdownOptions,
+  DropdownOption,
   ProductCountArea,
   MinusButton,
   CountInput,
@@ -36,6 +39,10 @@ const ProductDetailComponent = () => {
   const [item, setItem] = useState<Item>();
   const [totalPrice, setTotalPrice] = useState(0);
   const [itemCount, setItemCount] = useState(1);
+  const [isOpen, setIsOpen] = useState(false);
+  const [selectedOption, setSelectedOption] = useState(
+    item?.option[0] || "옵션을 선택해주세요",
+  );
   const { id } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
@@ -57,7 +64,11 @@ const ProductDetailComponent = () => {
           const itemSnapshot = await getDoc(itemDoc);
           if (itemSnapshot.exists()) {
             const itemData = itemSnapshot.data();
-            setItem(itemData as Item);
+            const itemWithId = {
+              ...itemData,
+              id: itemSnapshot.id,
+            };
+            setItem(itemWithId as Item);
           } else {
             console.log("제품 정보를 불러오지 못했습니다");
           }
@@ -88,6 +99,7 @@ const ProductDetailComponent = () => {
       const newItem = {
         id: item.id,
         name: item.name,
+        option: selectedOption,
         price: item.price,
         image: item.itemDescription[0].imageUrl,
         description: item.description,
@@ -100,17 +112,24 @@ const ProductDetailComponent = () => {
       );
 
       const existingItemIndex = currentCart.findIndex(
-        cartItem => cartItem.id === item.id,
+        cartItem =>
+          cartItem.id === newItem.id && cartItem.option === newItem.option,
       );
 
       if (existingItemIndex !== -1) {
-        currentCart[existingItemIndex].count += newItem.count;
-        currentCart[existingItemIndex].totalPrice += newItem.totalPrice;
+        const updatedItem = {
+          ...currentCart[existingItemIndex],
+          count: currentCart[existingItemIndex].count + newItem.count,
+          totalPrice:
+            currentCart[existingItemIndex].totalPrice + newItem.totalPrice,
+        };
+        currentCart[existingItemIndex] = updatedItem;
       } else {
         currentCart.push(newItem);
       }
 
       sessionStorage.setItem("cart", JSON.stringify(currentCart));
+
       if (navigateToCart) {
         navigate("/cart");
       } else {
@@ -136,6 +155,15 @@ const ProductDetailComponent = () => {
     addToCart(true);
   };
 
+  const toggleDropdown = () => {
+    setIsOpen(!isOpen);
+  };
+
+  const handleOptionSelect = (option: string) => {
+    setSelectedOption(option);
+    setIsOpen(false);
+  };
+
   return (
     <Container>
       <TopContent>
@@ -148,12 +176,23 @@ const ProductDetailComponent = () => {
             <Description>{item?.description}</Description>
           </DescriptionArea>
           <OptionArea>
-            <OptionButton>옵션1</OptionButton>
-            <OptionButton>옵션2</OptionButton>
-            <OptionButton>옵션3</OptionButton>
-            <OptionButton>옵션4</OptionButton>
-            <OptionButton>옵션5</OptionButton>
-            <OptionButton>옵션6</OptionButton>
+            <DropdownContainer>
+              <DropdownSelected onClick={toggleDropdown}>
+                {selectedOption}
+              </DropdownSelected>
+              {isOpen && (
+                <DropdownOptions>
+                  {item?.option?.map((option, index) => (
+                    <DropdownOption
+                      key={index}
+                      onClick={() => handleOptionSelect(option)}
+                    >
+                      {option}
+                    </DropdownOption>
+                  ))}
+                </DropdownOptions>
+              )}
+            </DropdownContainer>
           </OptionArea>
           <ProductCountArea>
             <MinusButton
