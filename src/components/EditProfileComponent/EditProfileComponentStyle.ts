@@ -7,6 +7,7 @@ export const Container = styled.div`
   align-items: center;
   justify-content: center;
   gap: 50px;
+  background-color: #eee;
 `;
 
 export const WarningMessage = styled.div`
@@ -22,6 +23,7 @@ export const RightContent = styled.div`
   align-items: center;
   justify-content: start;
   border-radius: 12px;
+  background-color: #fff;
 `;
 
 export const Title = styled.h1`

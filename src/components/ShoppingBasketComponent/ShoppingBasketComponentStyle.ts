@@ -7,6 +7,7 @@ export const Container = styled.div`
   align-items: center;
   justify-content: center;
   gap: 50px;
+  background-color: #eee;
 `;
 
 export const RightContentArea = styled.div`
@@ -17,6 +18,7 @@ export const RightContentArea = styled.div`
   align-items: center;
   justify-content: start;
   border-radius: 12px;
+  background-color: #fff;
 `;
 
 export const Title = styled.h1`
@@ -40,7 +42,7 @@ export const ItemArea = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-around;
-  border-bottom: 3px solid #eee;
+  border-bottom: 2px solid #eee;
   background-color: #fff;
 `;
 

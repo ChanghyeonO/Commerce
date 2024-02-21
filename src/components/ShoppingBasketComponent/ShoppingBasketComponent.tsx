@@ -77,7 +77,6 @@ const ShoppingBasketComponent = () => {
   return (
     <Container>
       <MyPageNav />
-
       <RightContentArea>
         <Title>장바구니</Title>
         <BottomContent>
