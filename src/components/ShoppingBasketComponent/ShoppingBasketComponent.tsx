@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
+import MyPageNav from "../MyPageNav/MyPageNav";
+
 import {
   Container,
-  TopContent,
+  RightContentArea,
   Title,
   BottomContent,
   ItemArea,
@@ -74,46 +76,48 @@ const ShoppingBasketComponent = () => {
 
   return (
     <Container>
-      <TopContent>
+      <MyPageNav />
+
+      <RightContentArea>
         <Title>장바구니</Title>
-      </TopContent>
-      <BottomContent>
-        {cartItems.length > 0 ? (
-          cartItems.map((item, index) => (
-            <ItemArea key={`${item.id}-${item.option}-${index}`}>
-              <ItemImage src={item.image} alt={`Product ${item.id}`} />
-              <CenterContent>
-                <ItemTitle>{item.name}</ItemTitle>
-                <ItemOption>{item.option}</ItemOption>
-                <ItemDescription>{item.description}</ItemDescription>
-              </CenterContent>
-              <RightContent>
-                <DeleteButton
-                  onClick={() => handleDelete(item.id, item.option)}
-                >
-                  X
-                </DeleteButton>
-                <TotalPrice>{`${item.totalPrice}원`}</TotalPrice>
-                <ProductCountArea>
-                  <MinusButton
-                    onClick={() => handleDecrease(item.id, item.option)}
+        <BottomContent>
+          {cartItems.length > 0 ? (
+            cartItems.map((item, index) => (
+              <ItemArea key={`${item.id}-${item.option}-${index}`}>
+                <ItemImage src={item.image} alt={`Product ${item.id}`} />
+                <CenterContent>
+                  <ItemTitle>{item.name}</ItemTitle>
+                  <ItemOption>{item.option}</ItemOption>
+                  <ItemDescription>{item.description}</ItemDescription>
+                </CenterContent>
+                <RightContent>
+                  <DeleteButton
+                    onClick={() => handleDelete(item.id, item.option)}
                   >
-                    -
-                  </MinusButton>
-                  <CountInput type="number" value={item.count} readOnly />
-                  <PlusButton
-                    onClick={() => handleIncrease(item.id, item.option)}
-                  >
-                    +
-                  </PlusButton>
-                </ProductCountArea>
-              </RightContent>
-            </ItemArea>
-          ))
-        ) : (
-          <EmptyInfomation>장바구니가 비었습니다.</EmptyInfomation>
-        )}
-      </BottomContent>
+                    X
+                  </DeleteButton>
+                  <TotalPrice>{`${item.totalPrice}원`}</TotalPrice>
+                  <ProductCountArea>
+                    <MinusButton
+                      onClick={() => handleDecrease(item.id, item.option)}
+                    >
+                      -
+                    </MinusButton>
+                    <CountInput type="number" value={item.count} readOnly />
+                    <PlusButton
+                      onClick={() => handleIncrease(item.id, item.option)}
+                    >
+                      +
+                    </PlusButton>
+                  </ProductCountArea>
+                </RightContent>
+              </ItemArea>
+            ))
+          ) : (
+            <EmptyInfomation>장바구니가 비었습니다.</EmptyInfomation>
+          )}
+        </BottomContent>
+      </RightContentArea>
     </Container>
   );
 };

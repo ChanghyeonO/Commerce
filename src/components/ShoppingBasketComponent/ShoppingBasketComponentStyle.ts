@@ -1,34 +1,47 @@
 import styled from "styled-components";
 
 export const Container = styled.div`
-  max-width: 100%;
-  min-height: 100vh;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 50px;
 `;
 
-export const TopContent = styled.div`
-  max-width: 100%;
-  padding: 0 10%;
-  height: 250px;
+export const RightContentArea = styled.div`
+  width: 55%;
+  height: 800px;
   display: flex;
-  align-items: end;
-  justify-content: flex-start;
-  border-bottom: 1px solid #eee;
+  flex-direction: column;
+  align-items: center;
+  justify-content: start;
+  border-radius: 12px;
 `;
 
 export const Title = styled.h1`
-  font-size: 25px;
+  font-size: 35px;
+  margin-top: 50px;
+  margin-bottom: 50px;
 `;
 
-export const BottomContent = styled.div``;
+export const BottomContent = styled.div`
+  width: 99%;
+  height: 70%;
+  overflow: scroll;
+  border: 2px solid #eee;
+  border-radius: 12px;
+`;
 
 export const ItemArea = styled.div`
   max-width: 100%;
   height: 150px;
-  padding: 0 10%;
+  padding: 0 5%;
   display: flex;
   align-items: center;
   justify-content: space-around;
-  border-bottom: 1px solid #eee;
+  border-bottom: 3px solid #eee;
+  background-color: #fff;
 `;
 
 export const ItemImage = styled.img`
