@@ -1,7 +1,7 @@
 import { ChangeEvent, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { auth } from "../../../api/firebase";
-import { getFirestore, doc, setDoc } from "firebase/firestore";
+import { auth, db } from "../../../api/firebase";
+import { doc, setDoc } from "firebase/firestore";
 import { FirebaseError } from "firebase/app";
 import {
   createUserWithEmailAndPassword,
@@ -57,7 +57,6 @@ const RegisterDetailComponent = () => {
   const [addressDetail, setAddressDetail] = useState("");
 
   const navigate = useNavigate();
-  const db = getFirestore();
 
   const validateEmail = (email: string) => {
     const re = /\S+@\S+\.\S+/;

@@ -18,6 +18,7 @@ import Login from "./pages/Login/Login";
 import RegisterTerms from "./pages/Register/RegisterTerms";
 import RegisterDetail from "./pages/Register/RegisterDetail";
 import RegisterSuccess from "./pages/Register/RegisterSuccess";
+import CheckPassword from "./pages/MyPage/CheckPassword";
 
 const queryClient = new QueryClient();
 
@@ -29,6 +30,7 @@ const router = createBrowserRouter([
   { path: "other/detail/:id", element: <OtherProductDetail /> },
   { path: "/funding/create", element: <FundingProductCreator /> },
   { path: "other/create", element: <OtherProductCreator /> },
+  { path: "mypage/check-password", element: <CheckPassword /> },
   { path: "mypage/edit-profile", element: <EditProfile /> },
   { path: "mypage/order-history", element: <OrderHistory /> },
   { path: "mypage/cart", element: <ShoppingBasket /> },

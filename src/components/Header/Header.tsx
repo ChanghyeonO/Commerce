@@ -70,7 +70,7 @@ const Header = () => {
               로그아웃
             </LoginLogoutButton>
             <UserContent>
-              <Link to={"/mypage/edit-profile"}>
+              <Link to={"/mypage/check-password"}>
                 <UserLogo src={UserImage} alt="유저 이미지" />
               </Link>
             </UserContent>

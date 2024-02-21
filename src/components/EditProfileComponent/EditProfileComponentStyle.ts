@@ -9,6 +9,11 @@ export const Container = styled.div`
   gap: 50px;
 `;
 
+export const WarningMessage = styled.div`
+  color: red;
+  font-size: 14px;
+`;
+
 export const RightContent = styled.div`
   width: 55%;
   height: 800px;

@@ -13,7 +13,7 @@ const MyPageNav = () => {
   return (
     <Container>
       <TopArea>
-        <Link to={"/mypage/edit-profile"}>
+        <Link to={"/mypage/check-password"}>
           <EditProfile>프로필 수정</EditProfile>
         </Link>
         <Link to={"/mypage/cart"}>
