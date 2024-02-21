@@ -1,7 +1,7 @@
 import react, { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { getAuth } from "firebase/auth";
-import { doc, getDoc, getFirestore } from "firebase/firestore";
+import { db, auth } from "../../api/firebase";
+import { doc, getDoc } from "firebase/firestore";
 import ImageSlider from "../ImageSlider/ImageSlider";
 import ItemInfiniteScroll from "../ItemInfiniteScroll/ItemInfiniteScroll";
 import ImageUpload from "../ImageUpload/ImageUpload";
@@ -20,8 +20,6 @@ const ProductComponent = () => {
   const [isAdmin, setIsAdmin] = useState(false);
 
   const location = useLocation();
-  const auth = getAuth();
-  const db = getFirestore();
 
   useEffect(() => {
     const checkAdminStatus = async () => {

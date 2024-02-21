@@ -2,8 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ImageSlider from "../ImageSlider/ImageSlider";
 import { Link } from "react-router-dom";
-import { db } from "../../api/firebase";
-import { getAuth } from "firebase/auth";
+import { auth } from "../../api/firebase";
 import {
   collection,
   query,
@@ -42,7 +41,6 @@ const MainComponent = () => {
   const [otherItems, setOtherItems] = useState<Item[]>([]);
 
   const navigate = useNavigate();
-  const auth = getAuth();
   const db = getFirestore();
 
   useEffect(() => {

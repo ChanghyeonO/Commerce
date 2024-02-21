@@ -2,8 +2,8 @@ import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useInView } from "react-intersection-observer";
 import { fetchItems } from "../../api/api";
-import { db, storage } from "../../api/firebase";
-import { doc, deleteDoc } from "firebase/firestore";
+import { db, storage, auth } from "../../api/firebase";
+import { doc, getDoc, deleteDoc } from "firebase/firestore";
 import { ref as storageRef, deleteObject } from "firebase/storage";
 import Swal from "sweetalert2";
 import alertList from "../../utils/Swal";
@@ -25,9 +25,26 @@ const ItemInfiniteScroll = () => {
   const [lastVisible, setLastVisible] =
     useState<QueryDocumentSnapshot<DocumentData> | null>(null);
   const [hasMore, setHasMore] = useState<boolean>(true);
+  const [isAdmin, setIsAdmin] = useState(false);
+
   const { ref, inView } = useInView();
   const navigate = useNavigate();
   const location = useLocation();
+
+  useEffect(() => {
+    const checkAdminStatus = async () => {
+      const user = auth.currentUser;
+      if (user) {
+        const userRef = doc(db, "users", user.uid);
+        const docSnap = await getDoc(userRef);
+        if (docSnap.exists()) {
+          setIsAdmin(docSnap.data().admin);
+        }
+      }
+    };
+
+    checkAdminStatus();
+  }, []);
 
   const getCollectionName = () => {
     if (location.pathname.includes("/funding")) {
@@ -120,13 +137,14 @@ const ItemInfiniteScroll = () => {
     <Container>
       {items.map(item => (
         <ItemBox key={item.id} onClick={() => handleItemClick(item.id)}>
-          <DeleteButton
-            onClick={e => {
-              e.stopPropagation();
-              deleteItemWithImage(item.id, item.itemDescription);
-            }}
-          />
-
+          {isAdmin && (
+            <DeleteButton
+              onClick={e => {
+                e.stopPropagation();
+                deleteItemWithImage(item.id, item.itemDescription);
+              }}
+            />
+          )}
           <ItemImage
             src={
               item.itemDescription && item.itemDescription.length > 0
