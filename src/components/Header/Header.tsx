@@ -26,7 +26,11 @@ const Header = () => {
 
   useEffect(() => {
     onAuthStateChanged(auth, user => {
-      setIsLoggedIn(!!user);
+      if (user && user.emailVerified) {
+        setIsLoggedIn(true);
+      } else {
+        setIsLoggedIn(false);
+      }
     });
   }, [auth]);
 

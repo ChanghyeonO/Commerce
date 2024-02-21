@@ -21,7 +21,6 @@ const ImageSlider = () => {
         console.log("No such document!");
       }
     });
-
     return () => unsubscribe();
   }, []);
 
@@ -29,7 +28,6 @@ const ImageSlider = () => {
     const interval = setInterval(() => {
       setCurrentSlide(prev => (prev + 1) % (images.length || 1));
     }, 5000);
-
     return () => clearInterval(interval);
   }, [images]);
 
