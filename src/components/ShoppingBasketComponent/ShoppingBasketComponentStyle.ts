@@ -30,7 +30,7 @@ export const Title = styled.h1`
 export const BottomContent = styled.div`
   width: 99%;
   height: 70%;
-  overflow: scroll;
+  overflow-y: scroll;
   border: 2px solid #eee;
   border-radius: 12px;
 `;

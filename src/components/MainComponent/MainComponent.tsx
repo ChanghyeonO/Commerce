@@ -127,7 +127,7 @@ const MainComponent = () => {
               >
                 <ItemImage src={item.itemDescription[0].imageUrl} />
                 <ItemName>{item.name}</ItemName>
-                <ItemPrice>{item.price} 원</ItemPrice>
+                <ItemPrice>{item.price.toLocaleString()} 원</ItemPrice>
               </ItemBox>
             ))}
           </ItemArea>
@@ -147,7 +147,7 @@ const MainComponent = () => {
               >
                 <ItemImage src={item.itemDescription[0].imageUrl} />
                 <ItemName>{item.name}</ItemName>
-                <ItemPrice>{item.price} 원</ItemPrice>
+                <ItemPrice>{item.price.toLocaleString()} 원</ItemPrice>
               </ItemBox>
             ))}
           </ItemArea>

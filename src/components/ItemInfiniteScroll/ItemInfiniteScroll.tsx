@@ -154,7 +154,7 @@ const ItemInfiniteScroll = () => {
             alt={`Product ${item.id}`}
           />
           <ItemName>{item.name}</ItemName>
-          <ItemPrice>{item.price} 원</ItemPrice>
+          <ItemPrice>{item.price.toLocaleString()} 원</ItemPrice>
         </ItemBox>
       ))}
       <EndMessage ref={ref}>

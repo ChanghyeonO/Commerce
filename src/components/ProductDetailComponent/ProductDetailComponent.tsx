@@ -210,7 +210,7 @@ const ProductDetailComponent = () => {
             </PlusButton>
           </ProductCountArea>
           <TotalPriceArea>
-            <TotalPrice>{totalPrice} 원</TotalPrice>
+            <TotalPrice>{totalPrice.toLocaleString()} 원</TotalPrice>
           </TotalPriceArea>
           <CheckoutButtonArea>
             <ShoppingBasketButton onClick={addToCartHandler}>
