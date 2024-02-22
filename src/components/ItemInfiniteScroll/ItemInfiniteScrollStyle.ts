@@ -16,6 +16,7 @@ export const ItemBox = styled.div`
   cursor: pointer;
   margin-bottom: 20px;
   width: 300px;
+  height: 450px;
   position: relative;
 `;
 
@@ -27,12 +28,16 @@ export const ItemImage = styled.img`
 
 export const ItemName = styled.h3`
   font-size: 25px;
+  width: 100%;
+  height: 70px;
 `;
 
 export const ItemPrice = styled.p`
   font-size: 20px;
   font-weight: bold;
   color: #bbb;
+  width: 100%;
+  height: 50px;
 `;
 
 export const EndMessage = styled.div`

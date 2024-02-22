@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import MyPageNav from "../MyPageNav/MyPageNav";
 
 import {
@@ -20,6 +21,8 @@ import {
   PlusButton,
   DeleteButton,
   EmptyInfomation,
+  OrderButtonArea,
+  OrderButton,
 } from "./ShoppingBasketComponentStyle";
 
 import { CartItem } from "../../types/ItemType";
@@ -116,6 +119,11 @@ const ShoppingBasketComponent = () => {
             <EmptyInfomation>장바구니가 비었습니다.</EmptyInfomation>
           )}
         </BottomContent>
+        <OrderButtonArea>
+          <Link to={"/checkout"}>
+            <OrderButton>주문하기</OrderButton>
+          </Link>
+        </OrderButtonArea>
       </RightContentArea>
     </Container>
   );

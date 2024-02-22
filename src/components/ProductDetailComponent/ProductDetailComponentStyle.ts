@@ -179,7 +179,7 @@ export const BottomContent = styled.div`
 `;
 
 export const ProductIntroArea = styled.div`
-  max-width: 100%;
+  width: 100%;
   height: 500px;
   border-bottom: 1px solid #eee;
   overflow: hidden;
@@ -189,17 +189,17 @@ export const ProductIntroArea = styled.div`
 `;
 
 export const ProductImage = styled.img`
-  width: 60%;
-  height: 90%;
+  width: 45%;
+  height: 100%;
   object-fit: contain;
   border-radius: 12px;
 `;
 
-export const ProductDescription = styled.p`
+export const ProductDescription = styled.div`
   width: 40%;
   height: 100%;
   display: flex;
   align-items: center;
-  justify-content: start;
+  justify-content: center;
   font-size: 25px;
 `;
