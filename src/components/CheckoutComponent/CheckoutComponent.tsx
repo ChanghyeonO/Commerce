@@ -1,6 +1,8 @@
 import React, { ChangeEvent, useEffect, useState } from "react";
 import { auth, db } from "../../api/firebase";
 import { doc, getDoc } from "firebase/firestore";
+import Swal from "sweetalert2";
+import alertList from "../../utils/Swal";
 import {
   Container,
   InnerContent,
@@ -34,6 +36,7 @@ import {
 } from "../ShoppingBasketComponent/ShoppingBasketComponentStyle";
 
 import { CartItem } from "../../types/ItemType";
+import { PaymentResponse } from "../../types/PortOneType";
 
 const CheckoutComponent = () => {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
@@ -104,6 +107,49 @@ const CheckoutComponent = () => {
         }));
       },
     }).open();
+  };
+
+  const processPayment = () => {
+    const { IMP } = window;
+    const shoppingMallID = import.meta.env.VITE_SHOPPINGMALL_ID;
+    IMP.init(shoppingMallID);
+
+    let orderName = "주문명:결제테스트";
+    if (cartItems.length > 0) {
+      const additionalItemsCount = cartItems.length - 1;
+      orderName =
+        `${cartItems[0].name}` +
+        (additionalItemsCount > 0 ? ` 외 ${additionalItemsCount}건` : "");
+    }
+
+    const paymentData = {
+      pg: "tosspayments",
+      pay_method: "card",
+      merchant_uid: `mid_${new Date().getTime()}`,
+      name: orderName, // 주문명
+      amount: totalAmount, // 결제 금액
+      buyer_name: user.name, // 구매자 이름
+      buyer_tel: user.phoneNumber, // 구매자 전화번호
+      buyer_email: user.email, // 구매자 이메일
+      buyer_addr: user.address, // 구매자 주소
+      buyer_postcode: "", // 구매자 우편번호
+      m_redirect_url: "{모바일에서 결제 완료 후 리디렉션 될 URL}",
+    };
+
+    IMP.request_pay(paymentData, (response: PaymentResponse) => {
+      if (response.success) {
+        // 결제 성공 시 처리
+        console.log("결제 성공", response);
+        Swal.fire(
+          alertList.successMessage("결제가 성공적으로 완료되었습니다."),
+        );
+        // 여기서 결제 성공에 대한 추가 로직 처리 (예: 주문 정보 저장, 사용자에게 성공 알림 등)
+      } else {
+        // 결제 실패 시 처리
+        console.error("결제 실패", response);
+        Swal.fire(alertList.errorMessage(`결제 실패: ${response.error_msg}`));
+      }
+    });
   };
 
   return (
@@ -179,7 +225,7 @@ const CheckoutComponent = () => {
           />
         </ShippingAreaContainer>
         <OrderButtonArea>
-          <OrderButton>결제하기</OrderButton>
+          <OrderButton onClick={processPayment}>결제하기</OrderButton>
         </OrderButtonArea>
       </InnerContent>
     </Container>
