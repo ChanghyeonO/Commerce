@@ -53,5 +53,4 @@ build/Release
 *.tgz
 .yarn-integrity
 
-# Exclude BackEnd folder
-BackEnd/
+
