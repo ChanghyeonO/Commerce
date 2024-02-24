@@ -21,6 +21,6 @@ declare global {
 
 // 결제 완료 콜백 함수의 인자 타입 정의
 export interface PaymentResponse {
-  success: boolean;
-  error_msg?: string;
+  imp_uid: string;
+  merchant_uid: string;
 }

@@ -76,7 +76,6 @@ export const DeleteButton = styled.button`
   background-color: transparent;
   border: none;
   cursor: pointer;
-  z-index: 10;
 `;
 
 const ButtonDesign = styled.button`

@@ -1,4 +1,5 @@
 import React, { ChangeEvent, useEffect, useState } from "react";
+import axios from "axios";
 import { auth, db } from "../../api/firebase";
 import { doc, getDoc } from "firebase/firestore";
 import Swal from "sweetalert2";
@@ -109,7 +110,8 @@ const CheckoutComponent = () => {
     }).open();
   };
 
-  const processPayment = () => {
+  const processPayment = async () => {
+    // async 키워드 추가
     const { IMP } = window;
     const shoppingMallID = import.meta.env.VITE_SHOPPINGMALL_ID;
     IMP.init(shoppingMallID);
@@ -126,32 +128,66 @@ const CheckoutComponent = () => {
       pg: "tosspayments",
       pay_method: "card",
       merchant_uid: `mid_${new Date().getTime()}`,
-      name: orderName, // 주문명
-      amount: totalAmount, // 결제 금액
-      buyer_name: user.name, // 구매자 이름
-      buyer_tel: user.phoneNumber, // 구매자 전화번호
-      buyer_email: user.email, // 구매자 이메일
-      buyer_addr: user.address, // 구매자 주소
-      buyer_postcode: "", // 구매자 우편번호
+      name: orderName,
+      amount: totalAmount,
+      buyer_name: user.name,
+      buyer_tel: user.phoneNumber,
+      buyer_email: user.email,
+      buyer_addr: user.address,
+      buyer_postcode: "",
       m_redirect_url: "{모바일에서 결제 완료 후 리디렉션 될 URL}",
     };
 
-    IMP.request_pay(paymentData, (response: PaymentResponse) => {
-      if (response.success) {
-        // 결제 성공 시 처리
-        console.log("결제 성공", response);
-        Swal.fire(
-          alertList.successMessage("결제가 성공적으로 완료되었습니다."),
-        );
-        // 여기서 결제 성공에 대한 추가 로직 처리 (예: 주문 정보 저장, 사용자에게 성공 알림 등)
+    IMP.request_pay(paymentData, async (response: PaymentResponse) => {
+      if (response.imp_uid) {
+        console.log(response.imp_uid);
+        try {
+          const tokenResponse = await axios
+            .post("https://api.iamport.kr/users/getToken", {
+              imp_key: "",
+              imp_secret: "",
+            })
+            .catch(e => {
+              console.log(e.response);
+            });
+
+          // const { access_token } = tokenResponse.response;
+
+          // console.log(access_token);
+
+          // const paymentInfoResponse = await axios.get(
+          //   `https://api.iamport.kr/payments/${response.imp_uid}`,
+          //   {
+          //     headers: { Authorization: access_token },
+          //   },
+          // );
+
+          // const paymentData = paymentInfoResponse.data.response;
+
+          // if (paymentData.status === "paid") {
+          //   console.log("결제 검증 성공", paymentData);
+          //   Swal.fire(
+          //     alertList.successMessage(
+          //       "결제 검증이 성공적으로 완료되었습니다.",
+          //     ),
+          //   );
+          //   // 결제 검증 성공 후 로직 추가...
+          // } else {
+          //   // 결제 검증 실패 처리
+          //   console.error("결제 검증 실패", paymentData);
+          //   Swal.fire(alertList.errorMessage("결제 검증에 실패했습니다."));
+          // }
+        } catch (error) {
+          console.error("결제 검증 과정에서 오류 발생:", error);
+          Swal.fire(
+            alertList.errorMessage("결제 검증 과정에서 오류가 발생했습니다."),
+          );
+        }
       } else {
-        // 결제 실패 시 처리
         console.error("결제 실패", response);
-        Swal.fire(alertList.errorMessage(`결제 실패: ${response.error_msg}`));
       }
     });
   };
-
   return (
     <Container>
       <InnerContent>

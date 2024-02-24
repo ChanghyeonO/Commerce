@@ -6,19 +6,52 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
+firebase-debug.log*
+firebase-debug.*.log*
 *.env
-node_modules
-dist
-dist-ssr
-*.local
+
+# Dependency directories
+node_modules/
+bower_components/
+
+# Build directories
+dist/
+dist-ssr/
+
+# Firebase cache
+.firebase/
 
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
-.idea
+.idea/
 .DS_Store
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
 *.sw?
+
+# Runtime data
+pids/
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage reports
+coverage/
+.nyc_output/
+
+# Other directories and files
+lib-cov/
+.grunt/
+.lock-wscript
+build/Release
+.npm/
+.eslintcache
+.node_repl_history
+*.tgz
+.yarn-integrity
+
+# Exclude BackEnd folder
+BackEnd/
