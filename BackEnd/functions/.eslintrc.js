@@ -20,25 +20,10 @@ module.exports = {
   ignorePatterns: ["/lib/**/*"],
   plugins: ["@typescript-eslint", "import"],
   rules: {
-    "@typescript-eslint/naming-convention": [
-      "error",
-      {
-        selector: "variable",
-        format: ["camelCase", "UPPER_CASE"],
-        leadingUnderscore: "allow",
-        trailingUnderscore: "allow",
-      },
-      {
-        selector: "variable",
-        filter: {
-          regex: "^(imp_key|imp_secret)$",
-          match: true,
-        },
-        format: null,
-      },
-    ],
-    quotes: ["error", "double"],
-    indent: ["error", 2],
-    "quote-props": ["error", "consistent"],
+    "camelcase": "off",
+    "quotes": ["error", "double"],
+    "import/no-unresolved": 0,
+    "indent": ["error", 2],
+    "object-curly-spacing": ["error", "always"],
   },
 };
