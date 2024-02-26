@@ -3,34 +3,43 @@ import axios from "axios";
 import * as cors from "cors";
 const corsHandler = cors({ origin: true });
 
-const apiKey = functions.config().iamport.key;
-const apiSecret = functions.config().iamport.secret;
+export const getPaymentInfo = functions.https.onRequest((request, response) => {
+  corsHandler(request, response, async () => {
+    const impUid = request.query.imp_uid as string;
 
-export const getIamportToken = functions.https.onRequest(
-  (request, response) => {
-    corsHandler(request, response, async () => {
-      try {
-        const axiosResponse = await axios.post(
-          "https://api.iamport.kr/users/getToken",
-          {
-            imp_key: apiKey,
-            imp_secret: apiSecret,
+    if (!impUid) {
+      response.status(400).send("imp_uid가 필요합니다.");
+      return;
+    }
+
+    try {
+      const tokenResponse = await axios.post(
+        "https://api.iamport.kr/users/getToken",
+        {
+          imp_key: functions.config().iamport.key,
+          imp_secret: functions.config().iamport.secret,
+        },
+      );
+      const { access_token } = tokenResponse.data.response;
+
+      const paymentInfoResponse = await axios.get(
+        `https://api.iamport.kr/payments/${impUid}`,
+        {
+          headers: {
+            Authorization: `Bearer ${access_token}`,
           },
-        );
+        },
+      );
 
-        const { access_token } = axiosResponse.data.response;
-        response.send({ token: access_token });
-      } catch (error) {
-        if (axios.isAxiosError(error)) {
-          console.error("아임포트 토큰 가져오기 에러: ", error.response?.data);
-          response
-            .status(500)
-            .send("아임포트 토큰 요청 중 에러가 발생했습니다.");
-        } else {
-          console.error("알 수 없는 에러 발생: ", error);
-          response.status(500).send("알 수 없는 에러가 발생했습니다.");
-        }
+      response.send(paymentInfoResponse.data);
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        console.error("결제 정보 조회 중 에러 발생: ", error.response?.data);
+        response.status(500).send("결제 정보 조회 중 오류가 발생했습니다.");
+      } else {
+        console.error("알 수 없는 오류 발생: ", error);
+        response.status(500).send("알 수 없는 오류가 발생했습니다.");
       }
-    });
-  },
-);
+    }
+  });
+});
