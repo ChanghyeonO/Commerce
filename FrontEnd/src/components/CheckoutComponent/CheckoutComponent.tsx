@@ -1,4 +1,5 @@
 import React, { ChangeEvent, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { auth, db } from "../../api/firebase";
 import { doc, getDoc } from "firebase/firestore";
@@ -36,12 +37,14 @@ import {
   OrderButton,
 } from "../ShoppingBasketComponent/ShoppingBasketComponentStyle";
 
+import Loading from "../Loading/Loading";
 import { CartItem } from "../../types/ItemType";
 import { PaymentDetails } from "../../types/PortOneType";
 
 const CheckoutComponent = () => {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [totalAmount, setTotalAmount] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
   const [user, setUser] = useState({
     email: "",
     name: "",
@@ -50,6 +53,7 @@ const CheckoutComponent = () => {
     addressDetail: "",
     password: "",
   });
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchUserData();
@@ -111,7 +115,6 @@ const CheckoutComponent = () => {
   };
 
   const processPayment = async () => {
-    // async 키워드 추가
     const { IMP } = window;
     const shoppingMallID = import.meta.env.VITE_SHOPPINGMALL_ID;
     IMP.init(shoppingMallID);
@@ -139,7 +142,7 @@ const CheckoutComponent = () => {
     };
 
     IMP.request_pay(paymentData, async (response: PaymentDetails) => {
-      console.log(response.imp_uid);
+      setIsLoading(true);
       if (response.imp_uid) {
         try {
           const { data } = await axios.get(
@@ -147,17 +150,23 @@ const CheckoutComponent = () => {
           );
           console.log(data);
           if (data.response.status === "paid") {
-            alert("결제가 완료되었습니다.");
+            Swal.fire(alertList.successMessage("결제가 완료되었습니다."));
+            setIsLoading(false);
+            navigate("/mypage/order-history");
           } else if (data.response.status === "ready") {
-            alert("결제가 중단되었습니다.");
+            Swal.fire(alertList.infoMessage("결제가 중단되었습니다."));
+            setIsLoading(false);
           } else if (data.response.status === "failed") {
-            alert("사용자가 결제를 취소했습니다.");
+            Swal.fire(alertList.errorMessage("결제에 실패했습니다."));
+            setIsLoading(false);
           }
         } catch (error) {
           console.error("결제 검증 과정에서 오류 발생:", error);
+          setIsLoading(false);
         }
       } else {
-        alert("결제 정보가 없습니다.");
+        Swal.fire(alertList.errorMessage("결제 정보가 없습니다."));
+        setIsLoading(false);
       }
     });
   };
@@ -236,6 +245,7 @@ const CheckoutComponent = () => {
         <OrderButtonArea>
           <OrderButton onClick={processPayment}>결제하기</OrderButton>
         </OrderButtonArea>
+        {isLoading && <Loading />}
       </InnerContent>
     </Container>
   );

@@ -56,6 +56,8 @@ const RegisterDetailComponent = () => {
   const [addressError, setAddressError] = useState("");
   const [addressDetail, setAddressDetail] = useState("");
 
+  const [isLoading, setIsLoading] = useState(false);
+
   const navigate = useNavigate();
 
   const validateEmail = (email: string) => {

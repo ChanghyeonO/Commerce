@@ -16,6 +16,7 @@ import {
 import { storage, db } from "../../api/firebase";
 import Swal from "sweetalert2";
 import alertList from "../../utils/Swal";
+import Loading from "../Loading/Loading";
 
 import {
   Container,
@@ -38,6 +39,7 @@ const ImageUpload = ({ onClose }: Props) => {
   const [image, setImage] = useState<File | null>(null);
   const [uploadedImages, setUploadedImages] = useState<string[]>([]);
   const [previewImages, setPreviewImages] = useState<File[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
@@ -49,7 +51,9 @@ const ImageUpload = ({ onClose }: Props) => {
   };
 
   const handleUpload = async () => {
+    setIsLoading(true);
     if (previewImages.length === 0) {
+      setIsLoading(false);
       Swal.fire(alertList.infoMessage("업로드할 이미지를 추가해주세요."));
       return;
     }
@@ -74,26 +78,31 @@ const ImageUpload = ({ onClose }: Props) => {
       .then(urls => {
         setUploadedImages(prev => [...prev, ...urls]);
         setPreviewImages([]);
+        setIsLoading(false);
         Swal.fire(
           alertList.successMessage(
             "모든 이미지가 성공적으로 업로드되었습니다.",
           ),
         );
       })
-      .catch(error => {
+      .catch(() => {
+        setIsLoading(false);
         Swal.fire(alertList.errorMessage("일부 이미지 업로드에 실패했습니다."));
       });
   };
 
   const handleDelete = async (urlToDelete: string) => {
+    setIsLoading(true);
     const mainDocRef = doc(db, "slideImages", "main");
     try {
       await updateDoc(mainDocRef, { images: arrayRemove(urlToDelete) });
       setUploadedImages(uploadedImages.filter(url => url !== urlToDelete));
       const imageRef = ref(storage, urlToDelete);
       await deleteObject(imageRef);
+      setIsLoading(false);
       Swal.fire(alertList.successMessage("이미지 삭제에 성공했습니다."));
     } catch (error) {
+      setIsLoading(false);
       Swal.fire(alertList.errorMessage("이미지 삭제에 실패했습니다."));
     }
   };
@@ -147,6 +156,7 @@ const ImageUpload = ({ onClose }: Props) => {
         <ImageUploadButton onClick={handleUpload}>업로드</ImageUploadButton>
         <CloseButton onClick={onClose}>닫기</CloseButton>
       </CloseButtonArea>
+      {isLoading && <Loading />}
     </Container>
   );
 };

@@ -10,6 +10,7 @@ import {
 import { collection, doc, serverTimestamp, setDoc } from "firebase/firestore";
 import Swal from "sweetalert2";
 import alertList from "../../utils/Swal";
+import Loading from "../Loading/Loading";
 
 import {
   Container,
@@ -51,6 +52,7 @@ const ProductCreatorComponent = () => {
   const [productName, setProductName] = useState("");
   const [productDescription, setProductDescription] = useState("");
   const [price, setPrice] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -144,12 +146,15 @@ const ProductCreatorComponent = () => {
   };
 
   const uploadPostWithImages = async () => {
+    setIsLoading(true);
+
     if (
       !productName ||
       !productDescription ||
       !price ||
       introContents.some(content => !content.value)
     ) {
+      setIsLoading(false);
       Swal.fire(alertList.infoMessage("모든 내용을 입력해주세요"));
       return;
     }
@@ -181,7 +186,7 @@ const ProductCreatorComponent = () => {
       const collectionName = getCollectionName();
       const postRef = doc(collection(db, collectionName));
       await setDoc(postRef, postData);
-
+      setIsLoading(false);
       Swal.fire(
         alertList.successMessage("제품이 성공적으로 업로드 되었습니다."),
       );
@@ -191,6 +196,7 @@ const ProductCreatorComponent = () => {
         navigate("/other");
       }
     } catch (error) {
+      setIsLoading(false);
       console.error("게시글 업로드 중 오류 발생:", error);
       Swal.fire(
         alertList.errorMessage("게시글 업로드 중 오류가 발생했습니다."),
@@ -280,6 +286,7 @@ const ProductCreatorComponent = () => {
           </UploadButton>
         </UploadButtonArea>
       </InnerContent>
+      {isLoading && <Loading />}
     </Container>
   );
 };
