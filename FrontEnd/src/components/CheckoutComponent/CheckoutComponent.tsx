@@ -37,7 +37,7 @@ import {
 } from "../ShoppingBasketComponent/ShoppingBasketComponentStyle";
 
 import { CartItem } from "../../types/ItemType";
-import { PaymentResponse } from "../../types/PortOneType";
+import { PaymentDetails } from "../../types/PortOneType";
 
 const CheckoutComponent = () => {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
@@ -135,56 +135,29 @@ const CheckoutComponent = () => {
       buyer_email: user.email,
       buyer_addr: user.address,
       buyer_postcode: "",
-      m_redirect_url: "{모바일에서 결제 완료 후 리디렉션 될 URL}",
+      m_redirect_url: "https://web-commerce-qrd2als3zw3jc.sel5.cloudtype.app/",
     };
 
-    IMP.request_pay(paymentData, async (response: PaymentResponse) => {
+    IMP.request_pay(paymentData, async (response: PaymentDetails) => {
+      console.log(response.imp_uid);
       if (response.imp_uid) {
-        console.log(response.imp_uid);
         try {
-          const tokenResponse = await axios
-            .post("https://api.iamport.kr/users/getToken", {
-              imp_key: "",
-              imp_secret: "",
-            })
-            .catch(e => {
-              console.log(e.response);
-            });
-
-          // const { access_token } = tokenResponse.response;
-
-          // console.log(access_token);
-
-          // const paymentInfoResponse = await axios.get(
-          //   `https://api.iamport.kr/payments/${response.imp_uid}`,
-          //   {
-          //     headers: { Authorization: access_token },
-          //   },
-          // );
-
-          // const paymentData = paymentInfoResponse.data.response;
-
-          // if (paymentData.status === "paid") {
-          //   console.log("결제 검증 성공", paymentData);
-          //   Swal.fire(
-          //     alertList.successMessage(
-          //       "결제 검증이 성공적으로 완료되었습니다.",
-          //     ),
-          //   );
-          //   // 결제 검증 성공 후 로직 추가...
-          // } else {
-          //   // 결제 검증 실패 처리
-          //   console.error("결제 검증 실패", paymentData);
-          //   Swal.fire(alertList.errorMessage("결제 검증에 실패했습니다."));
-          // }
+          const { data } = await axios.get(
+            `https://us-central1-commerce-204d5.cloudfunctions.net/getPaymentInfo?imp_uid=${response.imp_uid}`,
+          );
+          console.log(data);
+          if (data.response.status === "paid") {
+            alert("결제가 완료되었습니다.");
+          } else if (data.response.status === "ready") {
+            alert("결제가 중단되었습니다.");
+          } else if (data.response.status === "failed") {
+            alert("사용자가 결제를 취소했습니다.");
+          }
         } catch (error) {
           console.error("결제 검증 과정에서 오류 발생:", error);
-          Swal.fire(
-            alertList.errorMessage("결제 검증 과정에서 오류가 발생했습니다."),
-          );
         }
       } else {
-        console.error("결제 실패", response);
+        alert("결제 정보가 없습니다.");
       }
     });
   };
