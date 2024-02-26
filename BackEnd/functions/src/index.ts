@@ -3,8 +3,8 @@ import axios from "axios";
 import * as cors from "cors";
 const corsHandler = cors({ origin: true });
 
-const apiKey = process.env.IAMPORT_API_KEY;
-const apiSecret = process.env.IAMPORT_API_SECRET;
+const apiKey = functions.config().iamport.key;
+const apiSecret = functions.config().iamport.secret;
 
 export const getIamportToken = functions.https.onRequest(
   (request, response) => {
