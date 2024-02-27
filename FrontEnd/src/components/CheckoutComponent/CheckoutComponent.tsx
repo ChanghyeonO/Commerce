@@ -2,7 +2,7 @@ import React, { ChangeEvent, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { auth, db } from "../../api/firebase";
-import { doc, getDoc } from "firebase/firestore";
+import { arrayUnion, doc, getDoc, updateDoc } from "firebase/firestore";
 import Swal from "sweetalert2";
 import alertList from "../../utils/Swal";
 import {
@@ -51,7 +51,6 @@ const CheckoutComponent = () => {
     phoneNumber: "",
     address: "",
     addressDetail: "",
-    password: "",
   });
   const navigate = useNavigate();
 
@@ -148,8 +147,14 @@ const CheckoutComponent = () => {
           const { data } = await axios.get(
             `https://us-central1-commerce-204d5.cloudfunctions.net/getPaymentInfo?imp_uid=${response.imp_uid}`,
           );
-          console.log(data);
+          console.log(data.response.imp_uid);
           if (data.response.status === "paid") {
+            if (auth.currentUser !== null) {
+              const userDocRef = doc(db, "users", auth.currentUser.uid);
+              await updateDoc(userDocRef, {
+                orderList: arrayUnion(response.imp_uid),
+              });
+            }
             Swal.fire(alertList.successMessage("결제가 완료되었습니다."));
             setIsLoading(false);
             navigate("/mypage/order-history");

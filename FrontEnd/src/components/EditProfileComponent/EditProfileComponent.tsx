@@ -267,6 +267,7 @@ const EditProfileComponent = () => {
               )}
             </MainAddressArea>
             <AddressDetailInput
+              name="addressDetail"
               type="text"
               placeholder="상세 주소"
               value={user.addressDetail}

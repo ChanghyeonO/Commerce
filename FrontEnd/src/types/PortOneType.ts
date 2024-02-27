@@ -19,3 +19,13 @@ export interface APIPaymentResponse {
   message: string | null;
   response: PaymentFailureDetails;
 }
+
+export interface OrderDetail {
+  name: string;
+  buyer_name: string;
+  amount: number;
+  pay_method: string;
+  status: string;
+  buyer_addr: string;
+  buyer_tel: string;
+}
