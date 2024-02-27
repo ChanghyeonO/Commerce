@@ -158,9 +158,7 @@ const ItemInfiniteScroll = () => {
         </ItemBox>
       ))}
       <EndMessage ref={ref}>
-        {hasMore
-          ? "제품 정보를 불러오는 중입니다."
-          : "더이상 불러올 제품 정보가 없습니다."}
+        {hasMore ? "제품 정보를 불러오는 중입니다." : ""}
       </EndMessage>
     </Container>
   );

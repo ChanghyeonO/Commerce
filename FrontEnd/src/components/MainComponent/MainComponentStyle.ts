@@ -15,6 +15,10 @@ export const BottomContent = styled.div`
   max-width: 100%;
   min-height: 500px;
   padding: 50px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 `;
 
 export const ItemContent = styled.div`
@@ -61,7 +65,7 @@ export const AddItemButtonArea = styled.div`
   height: 100px;
   display: flex;
   justify-content: flex-end;
-  align-items: center;
+  // align-items: center;
   gap: 20px;
 `;
 
