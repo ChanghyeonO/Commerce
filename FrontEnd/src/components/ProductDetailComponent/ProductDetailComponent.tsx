@@ -168,7 +168,9 @@ const ProductDetailComponent = () => {
     <Container>
       <TopContent>
         <LeftContent>
-          <ImageSlider />
+          <ImageSlider
+            images={item?.itemDescription.map(desc => desc.imageUrl)}
+          />
         </LeftContent>
         <RightContent>
           <DescriptionArea>

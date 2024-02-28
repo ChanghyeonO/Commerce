@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom"; // 현재 경로 정보를 얻기 위해 useLocation 훅을 import
 import { db } from "../../api/firebase";
 import { doc, onSnapshot } from "firebase/firestore";
 import {
@@ -8,25 +9,34 @@ import {
   NavButton,
 } from "./ImageSliderStyle";
 
-const ImageSlider = () => {
+const ImageSlider = ({ images: propImages }: { images?: string[] }) => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [images, setImages] = useState<string[]>([]);
+  const location = useLocation();
+
+  const isDetailPage = location.pathname.includes("/detail");
 
   useEffect(() => {
-    const docRef = doc(db, "slideImages", "main");
-    const unsubscribe = onSnapshot(docRef, doc => {
-      if (doc.exists()) {
-        setImages(doc.data().images || []);
-      } else {
-        console.log("No such document!");
+    if (!isDetailPage) {
+      const docRef = doc(db, "slideImages", "main");
+      const unsubscribe = onSnapshot(docRef, doc => {
+        if (doc.exists()) {
+          setImages(doc.data().images || []);
+        } else {
+          console.log("No such document!");
+        }
+      });
+      return () => unsubscribe();
+    } else {
+      if (propImages) {
+        setImages(propImages);
       }
-    });
-    return () => unsubscribe();
-  }, []);
+    }
+  }, [isDetailPage, propImages]);
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentSlide(prev => (prev + 1) % (images.length || 1));
+      setCurrentSlide(prev => (prev + 1) % images.length || 1);
     }, 5000);
     return () => clearInterval(interval);
   }, [images]);

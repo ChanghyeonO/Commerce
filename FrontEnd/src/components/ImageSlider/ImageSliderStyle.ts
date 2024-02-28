@@ -29,7 +29,7 @@ export const Pagination = styled.div`
 `;
 
 export const NavButton = styled.span<ButtonProps>`
-  padding: 5px 55px;
+  padding: 5px 35px;
   cursor: pointer;
   border-radius: 12px;
   background: ${props => (props.$isActive ? "#5271ff" : "#fff")};
