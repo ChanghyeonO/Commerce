@@ -28,7 +28,7 @@ export const Title = styled.h1`
 `;
 
 export const RightContent = styled.div`
-  width: 300px;
+  width: 45%;
   height: 100%;
   display: flex;
   flex-direction: column;

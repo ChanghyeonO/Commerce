@@ -5,6 +5,7 @@ import { reauthenticateWithCredential, EmailAuthProvider } from "firebase/auth";
 import Swal from "sweetalert2";
 import alertList from "../../utils/Swal";
 import MyPageNav from "../MyPageNav/MyPageNav";
+import Loading from "../Loading/Loading";
 
 import {
   Container,
@@ -20,6 +21,7 @@ import { FirebaseError } from "firebase/app";
 
 const CheckPasswordBeforeEdit = () => {
   const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const navigate = useNavigate();
   const handlePasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -27,6 +29,7 @@ const CheckPasswordBeforeEdit = () => {
   };
 
   const handleReauthenticate = async () => {
+    setIsLoading(true);
     if (!auth.currentUser || !auth.currentUser.email) {
       Swal.fire(alertList.errorMessage("유저 정보를 불러오는데 실패했습니다"));
       return;
@@ -37,10 +40,12 @@ const CheckPasswordBeforeEdit = () => {
     );
 
     try {
+      setIsLoading(false);
       await reauthenticateWithCredential(auth.currentUser, credential);
       Swal.fire(alertList.successMessage("인증에 성공했습니다."));
       navigate("/mypage/edit-profile");
     } catch (error) {
+      setIsLoading(false);
       if ((error as FirebaseError).code === "auth/wrong-password") {
         Swal.fire(alertList.errorMessage("잘못된 비밀번호입니다."));
       } else {
@@ -68,6 +73,7 @@ const CheckPasswordBeforeEdit = () => {
           </LoginButtonArea>
         </InnerContent>
       </RightContent>
+      {isLoading && <Loading />}
     </Container>
   );
 };

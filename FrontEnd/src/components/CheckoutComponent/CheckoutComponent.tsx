@@ -99,7 +99,16 @@ const CheckoutComponent = () => {
 
   function handleChange(event: ChangeEvent<HTMLInputElement>) {
     const { name, value } = event.target;
-    setUser(current => ({ ...current, [name]: value }));
+    if (name === "addressDetail") {
+      const fullAddress = `${user.address} ${value}`;
+      setUser(current => ({
+        ...current,
+        address: fullAddress,
+        addressDetail: value,
+      }));
+    } else {
+      setUser(current => ({ ...current, [name]: value }));
+    }
   }
 
   const getAddress = () => {
@@ -108,6 +117,7 @@ const CheckoutComponent = () => {
         setUser(prevUser => ({
           ...prevUser,
           address: data.address,
+          addressDetail: "",
         }));
       },
     }).open();
@@ -237,6 +247,7 @@ const CheckoutComponent = () => {
             <FindAddressButton onClick={getAddress}>검색</FindAddressButton>
           </MainAddressArea>
           <AddressDetailInput
+            name="addressDetail"
             type="text"
             placeholder="상세 주소"
             value={user.addressDetail}

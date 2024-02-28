@@ -47,7 +47,7 @@ export const getPaymentInfo = functions.https.onRequest((request, response) => {
 export const getMultiplePaymentInfo = functions.https.onRequest(
   (request, response) => {
     corsHandler(request, response, async () => {
-      const impUids = request.query.imp_uid;
+      const impUids = request.body.imp_uid;
 
       if (!impUids || !Array.isArray(impUids)) {
         response.status(400).send("imp_uid는 배열이어야 합니다.");
