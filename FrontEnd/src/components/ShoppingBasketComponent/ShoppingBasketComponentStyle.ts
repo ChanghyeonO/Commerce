@@ -81,10 +81,12 @@ export const RightContent = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: 25px;
 `;
 
 export const TotalPrice = styled.div`
   font-size: 18px;
+  margin-left: auto;
 `;
 
 export const ProductCountArea = styled.div`
@@ -93,7 +95,8 @@ export const ProductCountArea = styled.div`
   justify-content: center;
   gap: 10px;
   width: 80%;
-  height: 60px;
+  height: 30px;
+  margin-left: auto;
 `;
 
 const PlusMinusButtonDesign = styled.button`

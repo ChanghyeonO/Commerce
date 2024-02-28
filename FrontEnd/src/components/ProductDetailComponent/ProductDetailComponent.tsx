@@ -95,6 +95,10 @@ const ProductDetailComponent = () => {
   };
 
   const addToCart = (navigateToCart: boolean) => {
+    if (selectedOption === "옵션을 선택해주세요") {
+      Swal.fire(alertList.infoMessage("옵션을 선택해주세요."));
+      return;
+    }
     if (item) {
       const newItem = {
         id: item.id,

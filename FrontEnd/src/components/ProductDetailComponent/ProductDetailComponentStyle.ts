@@ -8,7 +8,7 @@ export const Container = styled.div`
 export const TopContent = styled.div`
   display: flex;
   justify-content: center;
-  gap: 160px;
+  gap: 17%;
   width: 100%;
   height: 500px;
   border-bottom: 1px solid #eee;
@@ -181,22 +181,21 @@ export const BottomContent = styled.div`
 export const ProductIntroArea = styled.div`
   width: 100%;
   height: 500px;
-  border-bottom: 1px solid #eee;
+  justify-content: center;
   overflow: hidden;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  gap: 17%;
+  border-bottom: 1px solid #eee;
 `;
 
 export const ProductImage = styled.img`
-  width: 45%;
+  width: 500px;
   height: 100%;
   object-fit: contain;
-  border-radius: 12px;
 `;
 
 export const ProductDescription = styled.div`
-  width: 40%;
+  width: 400px;
   height: 100%;
   display: flex;
   align-items: center;
