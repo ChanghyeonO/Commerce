@@ -59,7 +59,6 @@ const OrderHistoryComponent = () => {
     fetchOrderList();
   }, []);
 
-  console.log(orderDetails);
   return (
     <Container>
       <MyPageNav />
@@ -70,12 +69,13 @@ const OrderHistoryComponent = () => {
             orderDetails.map((order, index) => (
               <ItemArea key={index}>
                 <CenterContent>
+                  <ItemDescription>결제 상태 : {order.imp_uid}</ItemDescription>
                   <ItemTitle>{order.name}</ItemTitle>
                   <ItemDescription>
                     결제 상태 : {order.order_status}
                   </ItemDescription>
                   <ItemDescription>
-                    결제 금액 : {order.amount}원
+                    결제 금액 : {order.amount} 원
                   </ItemDescription>
                 </CenterContent>
                 <RightContent>

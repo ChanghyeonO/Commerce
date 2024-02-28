@@ -55,7 +55,7 @@ export const CenterContent = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-around;
-  width: 200px;
+  width: 205px;
   height: 150px;
 `;
 
@@ -71,6 +71,7 @@ export const ItemOption = styled.div`
 
 export const ItemDescription = styled.div`
   font-size: 15px;
+  display: flex;
 `;
 
 export const RightContent = styled.div`

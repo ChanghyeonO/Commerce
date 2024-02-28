@@ -139,7 +139,8 @@ const CheckoutComponent = () => {
       buyer_email: user.email,
       buyer_addr: `${user.address} ${user.addressDetail}`,
       buyer_postcode: "",
-      m_redirect_url: "https://web-commerce-qrd2als3zw3jc.sel5.cloudtype.app/",
+      m_redirect_url:
+        "https://web-commerce-qrd2als3zw3jc.sel5.cloudtype.app/mypage/order-history",
     };
 
     IMP.request_pay(paymentData, async (response: PaymentDetails) => {
