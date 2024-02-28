@@ -49,7 +49,6 @@ const LoginComponent = () => {
     try {
       const docSnap = await getDoc(docRef);
       if (docSnap.exists()) {
-        console.log("User data:", docSnap.data());
       } else {
         console.log("No user data found for user:", userId);
       }

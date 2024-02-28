@@ -7,10 +7,13 @@ import {
   query,
   where,
   getDocs,
+  getDoc,
+  updateDoc,
+  doc,
 } from "firebase/firestore";
 import { auth } from "../../api/firebase";
 
-import { RightContent } from "./OrderHistoryComponentStyle";
+import { RightContent, SelectArea } from "./OrderHistoryComponentStyle";
 import {
   Container,
   RightContentArea,
@@ -24,40 +27,65 @@ import {
 } from "../ShoppingBasketComponent/ShoppingBasketComponentStyle";
 
 import { OrderDetail } from "../../types/PortOneType";
+import Swal from "sweetalert2";
+import alertList from "../../utils/Swal";
 
 const OrderHistoryComponent = () => {
   const [orderDetails, setOrderDetails] = useState<OrderDetail[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  const fetchOrderList = async () => {
+    setIsLoading(true);
+    const db = getFirestore();
+    const user = auth.currentUser;
+    if (!user) {
+      console.log("로그인된 사용자가 없습니다.");
+      setIsLoading(false);
+      return;
+    }
+
+    const userRef = doc(db, "users", user.uid);
+    const docSnap = await getDoc(userRef);
+    if (docSnap.exists() && docSnap.data().admin) {
+      setIsAdmin(true);
+    } else {
+      setIsAdmin(false);
+    }
+
+    const ordersRef = collection(db, "orderItems");
+    const queryToExecute = isAdmin
+      ? query(ordersRef)
+      : query(ordersRef, where("user_id", "==", user.uid));
+    const querySnapshot = await getDocs(queryToExecute);
+
+    const orders = querySnapshot.docs.map(doc => ({
+      id: doc.id,
+      ...(doc.data() as Omit<OrderDetail, "id">),
+    }));
+
+    setOrderDetails(orders);
+    setIsLoading(false);
+  };
 
   useEffect(() => {
-    const fetchOrderList = async () => {
-      setIsLoading(true);
-      const db = getFirestore();
-      const userUID = auth.currentUser?.uid;
-
-      if (userUID) {
-        const ordersRef = collection(db, "orderItems");
-        const userOrdersQuery = query(
-          ordersRef,
-          where("user_id", "==", userUID),
-        );
-        const querySnapshot = await getDocs(userOrdersQuery);
-
-        const orders: OrderDetail[] = querySnapshot.docs.map(doc => ({
-          id: doc.id,
-          ...(doc.data() as OrderDetail),
-        }));
-
-        setOrderDetails(orders);
-        setIsLoading(false);
-      } else {
-        console.log("로그인된 사용자가 없습니다.");
-        setIsLoading(false);
-      }
-    };
-
     fetchOrderList();
   }, []);
+
+  const updateOrderStatus = async (orderId: string, newStatus: string) => {
+    const db = getFirestore();
+    const orderRef = doc(db, "orderItems", orderId);
+
+    try {
+      await updateDoc(orderRef, {
+        order_status: newStatus,
+      });
+      Swal.fire(alertList.successMessage("결제 상태 변경이 완료되었습니다."));
+      fetchOrderList();
+    } catch (error) {
+      Swal.fire(alertList.errorMessage("결제 상태 변경에 실패했습니다."));
+    }
+  };
 
   return (
     <Container>
@@ -69,13 +97,28 @@ const OrderHistoryComponent = () => {
             orderDetails.map((order, index) => (
               <ItemArea key={index}>
                 <CenterContent>
-                  <ItemDescription>결제 상태 : {order.imp_uid}</ItemDescription>
+                  <ItemDescription>주문번호 : {order.imp_uid}</ItemDescription>
                   <ItemTitle>{order.name}</ItemTitle>
                   <ItemDescription>
-                    결제 상태 : {order.order_status}
+                    결제상태 :{" "}
+                    {isAdmin ? (
+                      <SelectArea
+                        value={order.order_status}
+                        onChange={e =>
+                          updateOrderStatus(order.id, e.target.value)
+                        }
+                      >
+                        <option value="주문완료">주문완료</option>
+                        <option value="배송준비중">배송준비중</option>
+                        <option value="배송중">배송중</option>
+                        <option value="배송완료">배송완료</option>
+                      </SelectArea>
+                    ) : (
+                      order.order_status
+                    )}
                   </ItemDescription>
                   <ItemDescription>
-                    결제 금액 : {order.amount} 원
+                    결제금액 : {order.amount} 원
                   </ItemDescription>
                 </CenterContent>
                 <RightContent>

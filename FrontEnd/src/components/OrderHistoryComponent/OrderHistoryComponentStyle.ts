@@ -36,4 +36,10 @@ export const RightContent = styled.div`
   justify-content: space-around;
 `;
 
-export const InfoText = styled.p``;
+export const SelectArea = styled.select`
+  border-radius: 4px;
+  background-color: #eee;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+`;

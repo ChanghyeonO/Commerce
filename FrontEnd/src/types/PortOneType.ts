@@ -21,6 +21,7 @@ export interface APIPaymentResponse {
 }
 
 export interface OrderDetail {
+  id: string;
   amount: number;
   buyer_addr: string;
   buyer_email: string;
