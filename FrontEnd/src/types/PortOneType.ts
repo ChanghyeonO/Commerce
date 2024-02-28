@@ -21,11 +21,14 @@ export interface APIPaymentResponse {
 }
 
 export interface OrderDetail {
-  name: string;
-  buyer_name: string;
   amount: number;
-  pay_method: string;
-  status: string;
   buyer_addr: string;
+  buyer_email: string;
+  buyer_name: string;
   buyer_tel: string;
+  delivery_request: string;
+  imp_uid: string;
+  name: string;
+  order_status: string;
+  user_id: string;
 }

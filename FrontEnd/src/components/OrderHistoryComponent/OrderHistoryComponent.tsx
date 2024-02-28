@@ -1,12 +1,16 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import MyPageNav from "../MyPageNav/MyPageNav";
 import Loading from "../Loading/Loading";
-import { getFirestore, doc, getDoc } from "firebase/firestore";
-import { getAuth } from "firebase/auth";
+import {
+  getFirestore,
+  collection,
+  query,
+  where,
+  getDocs,
+} from "firebase/firestore";
+import { auth } from "../../api/firebase";
 
 import { RightContent } from "./OrderHistoryComponentStyle";
-
 import {
   Container,
   RightContentArea,
@@ -29,29 +33,26 @@ const OrderHistoryComponent = () => {
     const fetchOrderList = async () => {
       setIsLoading(true);
       const db = getFirestore();
-      const auth = getAuth();
       const userUID = auth.currentUser?.uid;
 
       if (userUID) {
-        const userRef = doc(db, "users", userUID);
-        const userSnap = await getDoc(userRef);
+        const ordersRef = collection(db, "orderItems");
+        const userOrdersQuery = query(
+          ordersRef,
+          where("user_id", "==", userUID),
+        );
+        const querySnapshot = await getDocs(userOrdersQuery);
 
-        if (userSnap.exists()) {
-          const userData = userSnap.data();
-          const orderList = userData.orderList || [];
+        const orders: OrderDetail[] = querySnapshot.docs.map(doc => ({
+          id: doc.id,
+          ...(doc.data() as OrderDetail),
+        }));
 
-          if (orderList.length > 0) {
-            const response = await axios.post(
-              `https://us-central1-commerce-204d5.cloudfunctions.net/getMultiplePaymentInfo`,
-              { imp_uid: orderList },
-            );
-            setIsLoading(false);
-            setOrderDetails(response.data.response);
-          }
-        } else {
-          setIsLoading(false);
-          console.log("불러올 데이터가 없습니다!");
-        }
+        setOrderDetails(orders);
+        setIsLoading(false);
+      } else {
+        console.log("로그인된 사용자가 없습니다.");
+        setIsLoading(false);
       }
     };
 
@@ -59,7 +60,6 @@ const OrderHistoryComponent = () => {
   }, []);
 
   console.log(orderDetails);
-
   return (
     <Container>
       <MyPageNav />
@@ -71,7 +71,9 @@ const OrderHistoryComponent = () => {
               <ItemArea key={index}>
                 <CenterContent>
                   <ItemTitle>{order.name}</ItemTitle>
-                  <ItemDescription>결제 상태 : {order.status}</ItemDescription>
+                  <ItemDescription>
+                    결제 상태 : {order.order_status}
+                  </ItemDescription>
                   <ItemDescription>
                     결제 금액 : {order.amount}원
                   </ItemDescription>
@@ -85,6 +87,9 @@ const OrderHistoryComponent = () => {
                   </ItemDescription>
                   <ItemDescription>
                     배송지 주소 : {order.buyer_addr}
+                  </ItemDescription>
+                  <ItemDescription>
+                    배송 요청사항 : {order.delivery_request}
                   </ItemDescription>
                 </RightContent>
               </ItemArea>

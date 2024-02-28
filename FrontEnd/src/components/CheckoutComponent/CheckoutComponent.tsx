@@ -43,6 +43,7 @@ import { PaymentDetails } from "../../types/PortOneType";
 
 const CheckoutComponent = () => {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
+  const [deliveryReq, setDeliveryReq] = useState<string>("");
   const [totalAmount, setTotalAmount] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [user, setUser] = useState({
@@ -99,16 +100,7 @@ const CheckoutComponent = () => {
 
   function handleChange(event: ChangeEvent<HTMLInputElement>) {
     const { name, value } = event.target;
-    if (name === "addressDetail") {
-      const fullAddress = `${user.address} ${value}`;
-      setUser(current => ({
-        ...current,
-        address: fullAddress,
-        addressDetail: value,
-      }));
-    } else {
-      setUser(current => ({ ...current, [name]: value }));
-    }
+    setUser(current => ({ ...current, [name]: value }));
   }
 
   const getAddress = () => {
@@ -145,7 +137,7 @@ const CheckoutComponent = () => {
       buyer_name: user.name,
       buyer_tel: user.phoneNumber,
       buyer_email: user.email,
-      buyer_addr: user.address,
+      buyer_addr: `${user.address} ${user.addressDetail}`,
       buyer_postcode: "",
       m_redirect_url: "https://web-commerce-qrd2als3zw3jc.sel5.cloudtype.app/",
     };
@@ -161,7 +153,7 @@ const CheckoutComponent = () => {
           if (data.response.status === "paid") {
             const orderItemRef = doc(collection(db, "orderItems"));
             await setDoc(orderItemRef, {
-              userId: auth.currentUser?.uid,
+              user_id: auth.currentUser?.uid,
               imp_uid: response.imp_uid,
               name: paymentData.name,
               amount: paymentData.amount,
@@ -169,10 +161,12 @@ const CheckoutComponent = () => {
               buyer_tel: paymentData.buyer_tel,
               buyer_email: paymentData.buyer_email,
               buyer_addr: paymentData.buyer_addr,
+              order_status: "결제완료",
+              delivery_request: deliveryReq,
             });
-
             Swal.fire(alertList.successMessage("결제가 완료되었습니다."));
             setIsLoading(false);
+            sessionStorage.removeItem("cart");
             navigate("/mypage/order-history");
           } else if (data.response.status === "ready") {
             Swal.fire(alertList.infoMessage("결제가 중단되었습니다."));
@@ -262,6 +256,8 @@ const CheckoutComponent = () => {
           <DeliveryRequestInput
             type="text"
             placeholder="배송 요청사항 ex) 배송 전 연락주세요."
+            value={deliveryReq}
+            onChange={e => setDeliveryReq(e.target.value)}
           />
         </ShippingAreaContainer>
         <OrderButtonArea>
