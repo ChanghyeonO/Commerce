@@ -2,7 +2,7 @@ import React, { ChangeEvent, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { auth, db } from "../../api/firebase";
-import { arrayUnion, doc, getDoc, updateDoc } from "firebase/firestore";
+import { collection, doc, getDoc, setDoc } from "firebase/firestore";
 import Swal from "sweetalert2";
 import alertList from "../../utils/Swal";
 import {
@@ -159,12 +159,18 @@ const CheckoutComponent = () => {
           );
           console.log(data.response.imp_uid);
           if (data.response.status === "paid") {
-            if (auth.currentUser !== null) {
-              const userDocRef = doc(db, "users", auth.currentUser.uid);
-              await updateDoc(userDocRef, {
-                orderList: arrayUnion(response.imp_uid),
-              });
-            }
+            const orderItemRef = doc(collection(db, "orderItems"));
+            await setDoc(orderItemRef, {
+              userId: auth.currentUser?.uid,
+              imp_uid: response.imp_uid,
+              name: paymentData.name,
+              amount: paymentData.amount,
+              buyer_name: paymentData.buyer_name,
+              buyer_tel: paymentData.buyer_tel,
+              buyer_email: paymentData.buyer_email,
+              buyer_addr: paymentData.buyer_addr,
+            });
+
             Swal.fire(alertList.successMessage("결제가 완료되었습니다."));
             setIsLoading(false);
             navigate("/mypage/order-history");
