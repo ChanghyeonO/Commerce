@@ -44,10 +44,11 @@ export const ItemArea = styled.div`
   justify-content: space-around;
   border-bottom: 2px solid #eee;
   background-color: #fff;
+  gap: 30px;
 `;
 
 export const ItemImage = styled.img`
-  width: 150px;
+  width: 180px;
   height: 100%;
 `;
 
