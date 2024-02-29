@@ -87,3 +87,47 @@ export const getMultiplePaymentInfo = functions.https.onRequest(
     });
   },
 );
+
+export const cancelPayment = functions.https.onRequest((request, response) => {
+  corsHandler(request, response, async () => {
+    const { imp_uid } = request.body;
+
+    if (!imp_uid) {
+      response.status(400).send("imp_uid가 필요합니다.");
+      return;
+    }
+
+    try {
+      const tokenResponse = await axios.post(
+        "https://api.iamport.kr/users/getToken",
+        {
+          imp_key: functions.config().iamport.key,
+          imp_secret: functions.config().iamport.secret,
+        },
+      );
+      const { access_token } = tokenResponse.data.response;
+
+      const cancelResponse = await axios.post(
+        "https://api.iamport.kr/payments/cancel",
+        {
+          imp_uid: imp_uid,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${access_token}`,
+          },
+        },
+      );
+
+      response.send(cancelResponse.data);
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        console.error("결제 취소 중 에러 발생: ", error.response?.data);
+        response.status(500).send("결제 취소 중 오류가 발생했습니다.");
+      } else {
+        console.error("알 수 없는 오류 발생: ", error);
+        response.status(500).send("알 수 없는 오류가 발생했습니다.");
+      }
+    }
+  });
+});

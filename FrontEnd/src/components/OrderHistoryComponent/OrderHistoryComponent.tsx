@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import axios from "axios";
 import MyPageNav from "../MyPageNav/MyPageNav";
 import Loading from "../Loading/Loading";
 import {
@@ -64,7 +65,7 @@ const OrderHistoryComponent = () => {
       : query(ordersRef, where("user_id", "==", user.uid));
     const querySnapshot = await getDocs(queryToExecute);
 
-    const orders = querySnapshot.docs.map(doc => ({
+    const orders = querySnapshot.docs.map((doc) => ({
       id: doc.id,
       ...(doc.data() as Omit<OrderDetail, "id">),
     }));
@@ -111,6 +112,41 @@ const OrderHistoryComponent = () => {
     }
   };
 
+  const handleCancelOrder = async (impUid: string, orderId: string) => {
+    const result = await Swal.fire(
+      alertList.doubleCheckMessage("정말로 주문을 취소하시겠습니까?"),
+    );
+
+    if (result.isConfirmed) {
+      const requestBody = {
+        imp_uid: impUid,
+      };
+
+      try {
+        const response = await axios.post(
+          "https://us-central1-commerce-204d5.cloudfunctions.net/cancelPayment",
+          requestBody,
+        );
+
+        if (response.data.code === 0) {
+          const orderRef = doc(db, "orderItems", orderId);
+          await updateDoc(orderRef, {
+            order_status: "주문취소",
+          });
+
+          Swal.fire(alertList.successMessage("주문 취소가 완료되었습니다."));
+          fetchOrderList();
+        } else {
+          console.error("주문 취소 실패:", response.data.message);
+          Swal.fire(alertList.errorMessage("주문 취소에 실패했습니다."));
+        }
+      } catch (error) {
+        console.error("주문 취소 실패:", error);
+        Swal.fire(alertList.errorMessage("주문 취소에 실패했습니다."));
+      }
+    }
+  };
+
   return (
     <Container>
       <MyPageNav />
@@ -128,7 +164,7 @@ const OrderHistoryComponent = () => {
                     {isAdmin ? (
                       <SelectArea
                         value={order.order_status}
-                        onChange={e =>
+                        onChange={(e) =>
                           updateOrderStatus(order.id, e.target.value)
                         }
                       >
@@ -136,6 +172,7 @@ const OrderHistoryComponent = () => {
                         <option value="배송준비중">배송준비중</option>
                         <option value="배송중">배송중</option>
                         <option value="배송완료">배송완료</option>
+                        <option value="주문취소">주문취소</option>
                       </SelectArea>
                     ) : (
                       order.order_status
@@ -166,7 +203,11 @@ const OrderHistoryComponent = () => {
                   <ItemDescription>
                     취소 요청 : (사유) 필요 없어짐
                   </ItemDescription>
-                  <CancelButton>주문 취소</CancelButton>
+                  <CancelButton
+                    onClick={() => handleCancelOrder(order.imp_uid, order.id)}
+                  >
+                    주문 취소
+                  </CancelButton>
                 </CancelDeleteContent>
               </ItemArea>
             ))
