@@ -28,7 +28,7 @@ export const Title = styled.h1`
 `;
 
 export const RightContent = styled.div`
-  width: 35%;
+  width: 29%;
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -54,11 +54,11 @@ export const CancelDeleteContent = styled.div`
 `;
 
 export const CancelButton = styled.button`
+  margin-top: auto;
   width: 80px;
   height: 35px;
   border-radius: 12px;
   border: none;
-  background-color: #eee;
   font-size: 15px;
   font-weight: bold;
   cursor: pointer;
