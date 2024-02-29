@@ -2,18 +2,23 @@ import React, { useEffect, useState } from "react";
 import MyPageNav from "../MyPageNav/MyPageNav";
 import Loading from "../Loading/Loading";
 import {
-  getFirestore,
   collection,
   query,
   where,
   getDocs,
   getDoc,
   updateDoc,
+  deleteDoc,
   doc,
 } from "firebase/firestore";
-import { auth } from "../../api/firebase";
+import { auth, db } from "../../api/firebase";
 
-import { RightContent, SelectArea } from "./OrderHistoryComponentStyle";
+import {
+  RightContent,
+  SelectArea,
+  CancelDeleteContent,
+  CancelButton,
+} from "./OrderHistoryComponentStyle";
 import {
   Container,
   RightContentArea,
@@ -24,6 +29,7 @@ import {
   ItemTitle,
   ItemDescription,
   EmptyInfomation,
+  DeleteButton,
 } from "../ShoppingBasketComponent/ShoppingBasketComponentStyle";
 
 import { OrderDetail } from "../../types/PortOneType";
@@ -37,7 +43,6 @@ const OrderHistoryComponent = () => {
 
   const fetchOrderList = async () => {
     setIsLoading(true);
-    const db = getFirestore();
     const user = auth.currentUser;
     if (!user) {
       console.log("로그인된 사용자가 없습니다.");
@@ -73,7 +78,6 @@ const OrderHistoryComponent = () => {
   }, []);
 
   const updateOrderStatus = async (orderId: string, newStatus: string) => {
-    const db = getFirestore();
     const orderRef = doc(db, "orderItems", orderId);
 
     try {
@@ -84,6 +88,26 @@ const OrderHistoryComponent = () => {
       fetchOrderList();
     } catch (error) {
       Swal.fire(alertList.errorMessage("결제 상태 변경에 실패했습니다."));
+    }
+  };
+
+  const handleDelete = async (orderId: string) => {
+    const result = await Swal.fire(
+      alertList.doubleCheckMessage("정말로 주문을 삭제하시겠습니까?"),
+    );
+    if (result.isConfirmed) {
+      const orderRef = doc(db, "orderItems", orderId);
+
+      try {
+        await deleteDoc(orderRef);
+        Swal.fire(
+          alertList.successMessage("주문이 성공적으로 삭제되었습니다."),
+        );
+        fetchOrderList();
+      } catch (error) {
+        console.error("Error deleting order: ", error);
+        Swal.fire(alertList.errorMessage("주문 삭제에 실패했습니다."));
+      }
     }
   };
 
@@ -135,6 +159,15 @@ const OrderHistoryComponent = () => {
                     배송 요청사항 : {order.delivery_request}
                   </ItemDescription>
                 </RightContent>
+                <CancelDeleteContent>
+                  <DeleteButton onClick={() => handleDelete(order.id)}>
+                    X
+                  </DeleteButton>
+                  <ItemDescription>
+                    취소 요청 : (사유) 필요 없어짐
+                  </ItemDescription>
+                  <CancelButton>주문 취소</CancelButton>
+                </CancelDeleteContent>
               </ItemArea>
             ))
           ) : (

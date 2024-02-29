@@ -28,7 +28,7 @@ export const Title = styled.h1`
 `;
 
 export const RightContent = styled.div`
-  width: 45%;
+  width: 35%;
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -42,4 +42,26 @@ export const SelectArea = styled.select`
   border: none;
   font-weight: bold;
   cursor: pointer;
+`;
+
+export const CancelDeleteContent = styled.div`
+  width: 30%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: end;
+  justify-content: space-around;
+`;
+
+export const CancelButton = styled.button`
+  width: 80px;
+  height: 35px;
+  border-radius: 12px;
+  border: none;
+  background-color: #eee;
+  font-size: 15px;
+  font-weight: bold;
+  cursor: pointer;
+  color: #fff;
+  background-color: #e01040;
 `;
