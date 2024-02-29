@@ -46,11 +46,11 @@ export const SelectArea = styled.select`
 
 export const CancelDeleteContent = styled.div`
   width: 30%;
-  height: 100%;
+  height: 90%;
   display: flex;
   flex-direction: column;
   align-items: end;
-  justify-content: space-around;
+  justify-content: space-between;
 `;
 
 export const CancelButton = styled.button`

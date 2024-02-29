@@ -53,18 +53,28 @@ const OrderHistoryComponent = () => {
 
     const userRef = doc(db, "users", user.uid);
     const docSnap = await getDoc(userRef);
-    if (docSnap.exists() && docSnap.data().admin) {
-      setIsAdmin(true);
-    } else {
-      setIsAdmin(false);
+    if (!docSnap.exists()) {
+      console.log("사용자 데이터를 찾을 수 없습니다.");
+      setIsLoading(false);
+      return;
     }
 
-    const ordersRef = collection(db, "orderItems");
-    const queryToExecute = isAdmin
-      ? query(ordersRef)
-      : query(ordersRef, where("user_id", "==", user.uid));
-    const querySnapshot = await getDocs(queryToExecute);
+    const isAdmin = docSnap.data().admin === true;
+    setIsAdmin(isAdmin);
 
+    let queryToExecute;
+    if (isAdmin) {
+      // 관리자인 경우 모든 주문 데이터를 가져옵니다.
+      queryToExecute = query(collection(db, "orderItems"));
+    } else {
+      // 일반 사용자인 경우 해당 사용자의 주문만 가져옵니다.
+      queryToExecute = query(
+        collection(db, "orderItems"),
+        where("user_id", "==", user.uid),
+      );
+    }
+
+    const querySnapshot = await getDocs(queryToExecute);
     const orders = querySnapshot.docs.map((doc) => ({
       id: doc.id,
       ...(doc.data() as Omit<OrderDetail, "id">),
@@ -137,13 +147,53 @@ const OrderHistoryComponent = () => {
           Swal.fire(alertList.successMessage("주문 취소가 완료되었습니다."));
           fetchOrderList();
         } else {
-          console.error("주문 취소 실패:", response.data.message);
-          Swal.fire(alertList.errorMessage("주문 취소에 실패했습니다."));
+          console.error("주문 취소 실패1:", response.data.message);
+          Swal.fire(alertList.errorMessage(response.data.message));
         }
       } catch (error) {
-        console.error("주문 취소 실패:", error);
+        console.error("주문 취소 실패2:", error);
         Swal.fire(alertList.errorMessage("주문 취소에 실패했습니다."));
       }
+    }
+  };
+
+  const requestOrderCancellation = async (orderId: string) => {
+    try {
+      const orderRef = doc(db, "orderItems", orderId);
+      const orderSnap = await getDoc(orderRef);
+
+      if (orderSnap.exists() && orderSnap.data().cancel_reason) {
+        Swal.fire(alertList.infoMessage("이미 취소 요청이 완료되었습니다."));
+        return;
+      }
+
+      const { value: cancelReason } = await Swal.fire({
+        title: "주문 취소 사유",
+        input: "text",
+        inputPlaceholder: "여기에 사유를 작성해 주세요",
+        showCancelButton: true,
+        cancelButtonText: "취소",
+        confirmButtonText: "제출",
+        confirmButtonColor: "#5271ff",
+        cancelButtonColor: "#2F2F2F",
+        inputValidator: (value) => {
+          if (!value) {
+            return "취소 사유는 필수로 입력해야 합니다!";
+          }
+        },
+      });
+
+      if (cancelReason) {
+        await updateDoc(orderRef, {
+          cancel_reason: cancelReason,
+          order_status: "취소요청",
+        });
+
+        Swal.fire(alertList.successMessage("취소 요청이 완료되었습니다."));
+      }
+    } catch (error) {
+      console.error("취소 요청 실패:", error);
+      Swal.fire(alertList.errorMessage("취소 요청에 실패했습니다."));
     }
   };
 
@@ -172,6 +222,7 @@ const OrderHistoryComponent = () => {
                         <option value="배송준비중">배송준비중</option>
                         <option value="배송중">배송중</option>
                         <option value="배송완료">배송완료</option>
+                        <option value="취소요청">취소요청</option>
                         <option value="주문취소">주문취소</option>
                       </SelectArea>
                     ) : (
@@ -196,19 +247,36 @@ const OrderHistoryComponent = () => {
                     배송 요청사항 : {order.delivery_request}
                   </ItemDescription>
                 </RightContent>
-                <CancelDeleteContent>
-                  <DeleteButton onClick={() => handleDelete(order.id)}>
-                    X
-                  </DeleteButton>
-                  <ItemDescription>
-                    취소 요청 : (사유) 필요 없어짐
-                  </ItemDescription>
-                  <CancelButton
-                    onClick={() => handleCancelOrder(order.imp_uid, order.id)}
-                  >
-                    주문 취소
-                  </CancelButton>
-                </CancelDeleteContent>
+                {isAdmin ? (
+                  <CancelDeleteContent>
+                    <DeleteButton onClick={() => handleDelete(order.id)}>
+                      X
+                    </DeleteButton>
+                    {order.cancel_reason && (
+                      <ItemDescription>
+                        취소 요청 (사유) : {order.cancel_reason}
+                      </ItemDescription>
+                    )}
+                    <CancelButton
+                      onClick={() => handleCancelOrder(order.imp_uid, order.id)}
+                    >
+                      주문 취소
+                    </CancelButton>
+                  </CancelDeleteContent>
+                ) : (
+                  <CancelDeleteContent>
+                    {order.cancel_reason && (
+                      <ItemDescription>
+                        취소 요청 (사유) :{order.cancel_reason}
+                      </ItemDescription>
+                    )}
+                    <CancelButton
+                      onClick={() => requestOrderCancellation(order.id)}
+                    >
+                      취소 요청
+                    </CancelButton>
+                  </CancelDeleteContent>
+                )}
               </ItemArea>
             ))
           ) : (

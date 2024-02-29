@@ -32,4 +32,5 @@ export interface OrderDetail {
   name: string;
   order_status: string;
   user_id: string;
+  cancel_reason: string;
 }
