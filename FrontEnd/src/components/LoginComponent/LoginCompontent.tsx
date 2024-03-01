@@ -158,13 +158,13 @@ const LoginComponent = () => {
               type="text"
               placeholder="이메일"
               value={email}
-              onChange={e => setEmail(e.target.value)}
+              onChange={(e) => setEmail(e.target.value)}
             />
             <PasswordInput
               type="password"
               placeholder="패스워드"
               value={password}
-              onChange={e => setPassword(e.target.value)}
+              onChange={(e) => setPassword(e.target.value)}
             />
           </InputContainer>
           <FindAccountArea>

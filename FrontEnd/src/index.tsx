@@ -14,6 +14,7 @@ import OtherProductDetail from "./pages/ProductDetail/OtherProductDetail";
 import EditProfile from "./pages/MyPage/EditProfile";
 import OrderHistory from "./pages/MyPage/OrderHistory";
 import ShoppingBasket from "./pages/MyPage/ShoppingBasket";
+import DeleteAccount from "./pages/MyPage/DeleteAccount";
 import Checkout from "./pages/Checkout/Checkout";
 import Login from "./pages/Login/Login";
 import RegisterTerms from "./pages/Register/RegisterTerms";
@@ -35,6 +36,7 @@ const router = createBrowserRouter([
   { path: "mypage/edit-profile", element: <EditProfile /> },
   { path: "mypage/order-history", element: <OrderHistory /> },
   { path: "mypage/cart", element: <ShoppingBasket /> },
+  { path: "mypage/delete-account", element: <DeleteAccount /> },
   { path: "checkout", element: <Checkout /> },
   { path: "/login", element: <Login /> },
   { path: "/register-terms", element: <RegisterTerms /> },

@@ -23,7 +23,7 @@ const MyPageNav = () => {
           <OrderHistory>주문내역</OrderHistory>
         </Link>
       </TopArea>
-      <Link to={"mypage/delete-account"}>
+      <Link to={"/mypage/delete-account"}>
         <DeleteAccount>회원탈퇴</DeleteAccount>
       </Link>
     </Container>

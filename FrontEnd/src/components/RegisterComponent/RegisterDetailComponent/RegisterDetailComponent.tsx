@@ -7,7 +7,7 @@ import {
   createUserWithEmailAndPassword,
   sendEmailVerification,
 } from "firebase/auth";
-
+import Loading from "../../Loading/Loading";
 import Swal from "sweetalert2";
 import alertList from "../../../utils/Swal";
 import { User } from "../../../types/UserDataType";
@@ -197,7 +197,9 @@ const RegisterDetailComponent = () => {
   };
 
   const handleRegister = async () => {
+    setIsLoading(true);
     if (!validateInputs()) {
+      setIsLoading(false);
       return;
     }
 
@@ -218,9 +220,10 @@ const RegisterDetailComponent = () => {
       };
 
       await saveUserData(userData);
-
+      setIsLoading(false);
       navigate("/register-success");
     } catch (error) {
+      setIsLoading(false);
       let errorMessage = "회원가입 중 오류가 발생했습니다.";
       if (error instanceof FirebaseError) {
         switch (error.code) {
@@ -275,7 +278,7 @@ const RegisterDetailComponent = () => {
               type="text"
               placeholder="이름"
               value={name}
-              onChange={e => {
+              onChange={(e) => {
                 setName(e.target.value);
                 if (e.target.value.trim()) {
                   setNameError("");
@@ -299,7 +302,7 @@ const RegisterDetailComponent = () => {
                 type="text"
                 placeholder="주소"
                 value={address}
-                onChange={e => {
+                onChange={(e) => {
                   setAddress(e.target.value);
                   if (e.target.value.trim()) {
                     setAddressError("");
@@ -314,7 +317,7 @@ const RegisterDetailComponent = () => {
               type="text"
               placeholder="상세 주소"
               value={addressDetail}
-              onChange={e => setAddressDetail(e.target.value)}
+              onChange={(e) => setAddressDetail(e.target.value)}
             />
             <SuccessButtonArea>
               <SuccessButton onClick={handleRegister}>회원가입</SuccessButton>
@@ -322,6 +325,7 @@ const RegisterDetailComponent = () => {
           </InputContainer>
         </InnerContent>
       </InnerContainer>
+      {isLoading && <Loading />}
     </Container>
   );
 };
