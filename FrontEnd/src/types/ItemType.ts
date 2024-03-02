@@ -2,6 +2,7 @@ export interface Item {
   id: string;
   name: string;
   price: number;
+  productCount: number;
   description: string;
   option: string[];
   itemDescription: {

@@ -161,8 +161,11 @@ const ProductCreatorComponent = () => {
       setIsLoading(false);
       Swal.fire(alertList.infoMessage("모든 내용을 입력해주세요"));
       return;
+    } else if (parseInt(productCount) <= 0 || !parseInt(productCount)) {
+      setIsLoading(false);
+      Swal.fire(alertList.infoMessage("제품 갯수는 1개 이상이어야 합니다."));
+      return;
     }
-
     const uploads = introContents
       .filter((content) => content.imageFile)
       .map(async (content) => {

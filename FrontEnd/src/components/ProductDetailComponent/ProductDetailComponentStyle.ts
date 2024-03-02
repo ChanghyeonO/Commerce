@@ -79,6 +79,22 @@ export const DropdownOption = styled.div`
   }
 `;
 
+export const IntroProductCountArea = styled.div`
+  width: 80%;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+`;
+
+export const IntroProductCount = styled.div`
+  border: none;
+  border: none;
+  font-size: 20px;
+  font-weight: bold;
+`;
+
 export const ProductCountArea = styled.div`
   display: flex;
   align-items: center;

@@ -75,7 +75,7 @@ const CheckoutComponent = () => {
       }
 
       const userData = userDoc.data();
-      setUser(current => ({
+      setUser((current) => ({
         ...current,
         ...userData,
         email: auth.currentUser!.email || "",
@@ -100,13 +100,13 @@ const CheckoutComponent = () => {
 
   function handleChange(event: ChangeEvent<HTMLInputElement>) {
     const { name, value } = event.target;
-    setUser(current => ({ ...current, [name]: value }));
+    setUser((current) => ({ ...current, [name]: value }));
   }
 
   const getAddress = () => {
     new window.daum.Postcode({
       oncomplete: function (data) {
-        setUser(prevUser => ({
+        setUser((prevUser) => ({
           ...prevUser,
           address: data.address,
           addressDetail: "",
@@ -165,6 +165,7 @@ const CheckoutComponent = () => {
               order_status: "결제완료",
               delivery_request: deliveryReq,
             });
+
             Swal.fire(alertList.successMessage("결제가 완료되었습니다."));
             setIsLoading(false);
             sessionStorage.removeItem("cart");
@@ -258,7 +259,7 @@ const CheckoutComponent = () => {
             type="text"
             placeholder="배송 요청사항 ex) 배송 전 연락주세요."
             value={deliveryReq}
-            onChange={e => setDeliveryReq(e.target.value)}
+            onChange={(e) => setDeliveryReq(e.target.value)}
           />
         </ShippingAreaContainer>
         <OrderButtonArea>

@@ -20,6 +20,8 @@ import {
   DropdownSelected,
   DropdownOptions,
   DropdownOption,
+  IntroProductCountArea,
+  IntroProductCount,
   ProductCountArea,
   MinusButton,
   CountInput,
@@ -88,8 +90,13 @@ const ProductDetailComponent = () => {
   }, [item, itemCount]);
 
   const handleItemCountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newCount = parseInt(e.target.value);
-    if (!isNaN(newCount) && newCount > 0) {
+    let newCount = parseInt(e.target.value);
+    if (!isNaN(newCount)) {
+      if (newCount < 1) {
+        newCount = 1;
+      } else if (newCount > (item?.productCount || 1)) {
+        newCount = item?.productCount || 1;
+      }
       setItemCount(newCount);
     }
   };
@@ -116,7 +123,7 @@ const ProductDetailComponent = () => {
       );
 
       const existingItemIndex = currentCart.findIndex(
-        cartItem =>
+        (cartItem) =>
           cartItem.id === newItem.id && cartItem.option === newItem.option,
       );
 
@@ -142,7 +149,7 @@ const ProductDetailComponent = () => {
           title: `${item.name}가 장바구니에 추가되었습니다.`,
           confirmButtonText: "장바구니 이동",
           cancelButtonText: "쇼핑 계속하기",
-        }).then(result => {
+        }).then((result) => {
           if (result.isConfirmed) {
             navigate("/mypage/cart");
           }
@@ -173,7 +180,7 @@ const ProductDetailComponent = () => {
       <TopContent>
         <LeftContent>
           <ImageSlider
-            images={item?.itemDescription.map(desc => desc.imageUrl)}
+            images={item?.itemDescription.map((desc) => desc.imageUrl)}
           />
         </LeftContent>
         <RightContent>
@@ -200,9 +207,13 @@ const ProductDetailComponent = () => {
               )}
             </DropdownContainer>
           </OptionArea>
+          <IntroProductCountArea>
+            <IntroProductCount>재고 수량</IntroProductCount>
+            <IntroProductCount>{item?.productCount} 개</IntroProductCount>
+          </IntroProductCountArea>
           <ProductCountArea>
             <MinusButton
-              onClick={() => setItemCount(prev => Math.max(1, prev - 1))}
+              onClick={() => setItemCount((prev) => Math.max(1, prev - 1))}
             >
               -
             </MinusButton>
@@ -211,7 +222,13 @@ const ProductDetailComponent = () => {
               value={itemCount}
               onChange={handleItemCountChange}
             />
-            <PlusButton onClick={() => setItemCount(prev => prev + 1)}>
+            <PlusButton
+              onClick={() =>
+                setItemCount((prev) =>
+                  Math.min(prev + 1, item?.productCount || 1),
+                )
+              }
+            >
               +
             </PlusButton>
           </ProductCountArea>
