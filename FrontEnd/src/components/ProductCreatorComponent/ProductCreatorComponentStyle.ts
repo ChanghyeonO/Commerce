@@ -100,6 +100,20 @@ export const PriceAddInput = styled(InputDesign)`
   }
 `;
 
+export const ProductCountInput = styled(InputDesign)`
+  &:focus {
+    outline: none;
+  }
+  &::-webkit-outer-spin-button,
+  &::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  &[type="number"] {
+    -moz-appearance: textfield;
+  }
+`;
+
 export const Body = styled.div`
   margin-bottom: 10px;
 `;

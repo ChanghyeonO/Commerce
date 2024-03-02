@@ -74,7 +74,7 @@ const ItemInfiniteScroll = () => {
       hasMore: newHasMore,
     } = await fetchItems(collectionName, lastVisible);
 
-    setItems(prevItems => [...prevItems, ...newItems]);
+    setItems((prevItems) => [...prevItems, ...newItems]);
     setLastVisible(newLastVisible);
     setHasMore(newHasMore);
   };
@@ -103,7 +103,7 @@ const ItemInfiniteScroll = () => {
       try {
         await deleteDoc(doc(db, collectionName, itemId));
 
-        const deletePromises = itemDescriptions.map(itemDescription => {
+        const deletePromises = itemDescriptions.map((itemDescription) => {
           const imageUrl = itemDescription.imageUrl;
           const urlPath = new URL(imageUrl).pathname;
           const decodedPath = decodeURIComponent(urlPath)
@@ -123,7 +123,7 @@ const ItemInfiniteScroll = () => {
 
         await Promise.all(deletePromises);
 
-        setItems(items.filter(item => item.id !== itemId));
+        setItems(items.filter((item) => item.id !== itemId));
 
         Swal.fire(alertList.successMessage("삭제가 완료되었습니다."));
       } catch (error) {
@@ -135,11 +135,11 @@ const ItemInfiniteScroll = () => {
 
   return (
     <Container>
-      {items.map(item => (
+      {items.map((item) => (
         <ItemBox key={item.id} onClick={() => handleItemClick(item.id)}>
           {isAdmin && (
             <DeleteButton
-              onClick={e => {
+              onClick={(e) => {
                 e.stopPropagation();
                 deleteItemWithImage(item.id, item.itemDescription);
               }}

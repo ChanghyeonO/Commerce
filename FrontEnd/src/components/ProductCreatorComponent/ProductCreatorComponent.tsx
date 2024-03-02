@@ -25,6 +25,7 @@ import {
   OptionDeleteButton,
   OptionAddButton,
   PriceAddInput,
+  ProductCountInput,
   Body,
   ContentAddButton,
   IntroContentArea,
@@ -52,6 +53,7 @@ const ProductCreatorComponent = () => {
   const [productName, setProductName] = useState("");
   const [productDescription, setProductDescription] = useState("");
   const [price, setPrice] = useState("");
+  const [productCount, setProductCount] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   const location = useLocation();
@@ -74,11 +76,11 @@ const ProductCreatorComponent = () => {
   };
 
   const removeOption = (id: number) => {
-    setOptions(options.filter(option => option.id !== id));
+    setOptions(options.filter((option) => option.id !== id));
   };
 
   const handleChange = (id: number, value: string) => {
-    const newOptions = options.map(option => {
+    const newOptions = options.map((option) => {
       if (option.id === id) {
         return { ...option, value };
       }
@@ -101,21 +103,23 @@ const ProductCreatorComponent = () => {
   };
 
   const removeIntroContent = async (id: number) => {
-    const contentToRemove = introContents.find(content => content.id === id);
+    const contentToRemove = introContents.find((content) => content.id === id);
     if (contentToRemove && contentToRemove.imageUrl) {
       const imagePath = extractStoragePathFromUrl(contentToRemove.imageUrl);
       const imageRef = ref(storage, imagePath);
-      await deleteObject(imageRef).catch(error =>
+      await deleteObject(imageRef).catch((error) =>
         console.error("Failed to delete image from storage:", error),
       );
     }
 
-    const newIntroContents = introContents.filter(content => content.id !== id);
+    const newIntroContents = introContents.filter(
+      (content) => content.id !== id,
+    );
     setIntroContents(newIntroContents);
   };
 
   const handleIntroContentChange = (id: number, value: string) => {
-    const newIntroContents = introContents.map(content => {
+    const newIntroContents = introContents.map((content) => {
       if (content.id === id) {
         return { ...content, value };
       }
@@ -132,7 +136,7 @@ const ProductCreatorComponent = () => {
   const handleImageChange = (id: number, file: File) => {
     const previewUrl = URL.createObjectURL(file);
 
-    const newIntroContents = introContents.map(content => {
+    const newIntroContents = introContents.map((content) => {
       if (content.id === id) {
         return {
           ...content,
@@ -152,7 +156,7 @@ const ProductCreatorComponent = () => {
       !productName ||
       !productDescription ||
       !price ||
-      introContents.some(content => !content.value)
+      introContents.some((content) => !content.value)
     ) {
       setIsLoading(false);
       Swal.fire(alertList.infoMessage("모든 내용을 입력해주세요"));
@@ -160,8 +164,8 @@ const ProductCreatorComponent = () => {
     }
 
     const uploads = introContents
-      .filter(content => content.imageFile)
-      .map(async content => {
+      .filter((content) => content.imageFile)
+      .map(async (content) => {
         const imageRef = ref(storage, `images/${content.id}_${Date.now()}`);
         const snapshot = await uploadBytes(imageRef, content.imageFile as File);
         return getDownloadURL(snapshot.ref);
@@ -178,8 +182,9 @@ const ProductCreatorComponent = () => {
         name: productName,
         description: productDescription,
         price: Number(price),
+        productCount: Number(productCount),
         itemDescription: updatedIntroContents,
-        option: options.map(option => option.value),
+        option: options.map((option) => option.value),
         createdAt: serverTimestamp(),
       };
 
@@ -213,21 +218,21 @@ const ProductCreatorComponent = () => {
             type="text"
             placeholder="제품명을 입력해주세요."
             value={productName}
-            onChange={e => setProductName(e.target.value)}
+            onChange={(e) => setProductName(e.target.value)}
           />
           <ProductDescriptionTextArea
-            placeholder="제품에 대해 간단하게 소개해주세요"
+            placeholder="제품에 대해 간단하게 소개해주세요."
             value={productDescription}
-            onChange={e => setProductDescription(e.target.value)}
+            onChange={(e) => setProductDescription(e.target.value)}
           />
           <IntroText>추가할 옵션을 작성해주세요</IntroText>
-          {options.map(option => (
+          {options.map((option) => (
             <OptionInputArea key={option.id}>
               <OptionInput
                 type="text"
                 value={option.value}
-                placeholder="추가할 옵션에 대해 작성해주세요"
-                onChange={e => handleChange(option.id, e.target.value)}
+                placeholder="추가할 옵션에 대해 작성해주세요."
+                onChange={(e) => handleChange(option.id, e.target.value)}
               />
               {options.length > 1 && (
                 <OptionDeleteButton onClick={() => removeOption(option.id)}>
@@ -239,9 +244,15 @@ const ProductCreatorComponent = () => {
           <OptionAddButton onClick={addOption}>추가</OptionAddButton>
           <PriceAddInput
             type="number"
-            placeholder="판매 금액을 작성해주세요"
+            placeholder="판매 금액을 작성해주세요."
             value={price}
-            onChange={e => setPrice(e.target.value)}
+            onChange={(e) => setPrice(e.target.value)}
+          />
+          <ProductCountInput
+            type="number"
+            placeholder="제품 갯수를 입력해주세요."
+            value={productCount}
+            onChange={(e) => setProductCount(e.target.value)}
           />
         </Header>
         <Body>
@@ -256,16 +267,16 @@ const ProductCreatorComponent = () => {
                 <AddInput
                   id={`file-upload-${content.id}`}
                   multiple
-                  onChange={e =>
+                  onChange={(e) =>
                     e.target.files &&
                     handleImageChange(content.id, e.target.files[0])
                   }
                 />
               </ImageArea>
               <DescriptionText
-                placeholder="제품에 대해 상세하게 설명해주세요"
+                placeholder="제품에 대해 상세하게 설명해주세요."
                 value={content.value}
-                onChange={e =>
+                onChange={(e) =>
                   handleIntroContentChange(content.id, e.target.value)
                 }
               />
