@@ -94,11 +94,17 @@ const ProductDetailComponent = () => {
     if (!isNaN(newCount)) {
       if (newCount < 1) {
         newCount = 1;
-      } else if (newCount > (item?.productCount || 1)) {
-        newCount = item?.productCount || 1;
+      } else if (newCount > (item?.count || 1)) {
+        newCount = item?.count || 1;
       }
       setItemCount(newCount);
     }
+  };
+
+  const getCartKey = () => {
+    return location.pathname.includes("funding")
+      ? "fundingItemsCart"
+      : "otherItemsCart";
   };
 
   const addToCart = (navigateToCart: boolean) => {
@@ -118,8 +124,10 @@ const ProductDetailComponent = () => {
         totalPrice: item.price * itemCount,
       };
 
+      const cartKey = getCartKey();
+
       const currentCart: CartItem[] = JSON.parse(
-        sessionStorage.getItem("cart") || "[]",
+        sessionStorage.getItem(cartKey) || "[]",
       );
 
       const existingItemIndex = currentCart.findIndex(
@@ -139,7 +147,7 @@ const ProductDetailComponent = () => {
         currentCart.push(newItem);
       }
 
-      sessionStorage.setItem("cart", JSON.stringify(currentCart));
+      sessionStorage.setItem(cartKey, JSON.stringify(currentCart));
 
       if (navigateToCart) {
         navigate("/mypage/cart");
@@ -209,7 +217,7 @@ const ProductDetailComponent = () => {
           </OptionArea>
           <IntroProductCountArea>
             <IntroProductCount>재고 수량</IntroProductCount>
-            <IntroProductCount>{item?.productCount} 개</IntroProductCount>
+            <IntroProductCount>{item?.count} 개</IntroProductCount>
           </IntroProductCountArea>
           <ProductCountArea>
             <MinusButton
@@ -224,9 +232,7 @@ const ProductDetailComponent = () => {
             />
             <PlusButton
               onClick={() =>
-                setItemCount((prev) =>
-                  Math.min(prev + 1, item?.productCount || 1),
-                )
+                setItemCount((prev) => Math.min(prev + 1, item?.count || 1))
               }
             >
               +

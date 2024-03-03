@@ -150,7 +150,6 @@ const CheckoutComponent = () => {
           const { data } = await axios.get(
             `https://us-central1-commerce-204d5.cloudfunctions.net/getPaymentInfo?imp_uid=${response.imp_uid}`,
           );
-          console.log(data.response.imp_uid);
           if (data.response.status === "paid") {
             const orderItemRef = doc(collection(db, "orderItems"));
             await setDoc(orderItemRef, {
@@ -164,6 +163,11 @@ const CheckoutComponent = () => {
               buyer_addr: paymentData.buyer_addr,
               order_status: "결제완료",
               delivery_request: deliveryReq,
+              items: cartItems.map((item) => ({
+                name: item.name,
+                option: item.option,
+                count: item.count,
+              })),
             });
 
             Swal.fire(alertList.successMessage("결제가 완료되었습니다."));

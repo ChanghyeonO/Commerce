@@ -2,7 +2,7 @@ export interface Item {
   id: string;
   name: string;
   price: number;
-  productCount: number;
+  count: number;
   description: string;
   option: string[];
   itemDescription: {
@@ -14,10 +14,11 @@ export interface Item {
 export interface CartItem {
   id: string;
   name: string;
-  description: string;
+  description?: string;
   option: string;
   image: string;
   count: number;
   price: number;
   totalPrice: number;
+  source?: string;
 }

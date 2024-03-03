@@ -44,13 +44,13 @@ const ShoppingBasketComponent = () => {
 
   const handleDelete = (id: string, option: string) => {
     const updatedCartItems = cartItems.filter(
-      item => !(item.id === id && item.option === option),
+      (item) => !(item.id === id && item.option === option),
     );
     updateCartItems(updatedCartItems);
   };
 
   const handleIncrease = (id: string, option: string) => {
-    const updatedCartItems = cartItems.map(item => {
+    const updatedCartItems = cartItems.map((item) => {
       if (item.id === id && item.option === option) {
         return {
           ...item,
@@ -64,7 +64,7 @@ const ShoppingBasketComponent = () => {
   };
 
   const handleDecrease = (id: string, option: string) => {
-    const updatedCartItems = cartItems.map(item => {
+    const updatedCartItems = cartItems.map((item) => {
       if (item.id === id && item.option === option && item.count > 1) {
         return {
           ...item,

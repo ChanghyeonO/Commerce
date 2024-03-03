@@ -93,7 +93,7 @@ export const TotalPrice = styled.div`
 export const ProductCountArea = styled.div`
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: end;
   gap: 10px;
   width: 80%;
   height: 30px;
