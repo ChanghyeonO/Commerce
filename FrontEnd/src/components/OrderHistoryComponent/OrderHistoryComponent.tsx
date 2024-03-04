@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { useUser } from "../../contexts/UserContext";
 import MyPageNav from "../MyPageNav/MyPageNav";
 import Loading from "../Loading/Loading";
 import {
@@ -13,7 +14,7 @@ import {
   doc,
   orderBy,
 } from "firebase/firestore";
-import { auth, db } from "../../api/firebase";
+import { db } from "../../api/firebase";
 import { Timestamp } from "firebase/firestore";
 
 import {
@@ -43,17 +44,17 @@ const OrderHistoryComponent = () => {
   const [orderDetails, setOrderDetails] = useState<OrderDetail[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
+  const { user } = useUser();
 
   const fetchOrderList = async () => {
     setIsLoading(true);
-    const user = auth.currentUser;
     if (!user) {
       console.log("로그인된 사용자가 없습니다.");
       setIsLoading(false);
       return;
     }
 
-    const userRef = doc(db, "users", user.uid);
+    const userRef = doc(db, "users", user.userId);
     const docSnap = await getDoc(userRef);
     if (!docSnap.exists()) {
       console.log("사용자 데이터를 찾을 수 없습니다.");
@@ -65,7 +66,7 @@ const OrderHistoryComponent = () => {
     setIsAdmin(isAdmin);
 
     let queryToExecute;
-    if (isAdmin) {
+    if (user.admin) {
       queryToExecute = query(
         collection(db, "orderItems"),
         orderBy("created_at", "desc"),
@@ -73,7 +74,7 @@ const OrderHistoryComponent = () => {
     } else {
       queryToExecute = query(
         collection(db, "orderItems"),
-        where("user_id", "==", user.uid),
+        where("user_id", "==", user.userId),
         orderBy("created_at", "desc"),
       );
     }
@@ -90,7 +91,7 @@ const OrderHistoryComponent = () => {
 
   useEffect(() => {
     fetchOrderList();
-  }, []);
+  }, [user]);
 
   const updateOrderStatus = async (orderId: string, newStatus: string) => {
     setIsLoading(true);

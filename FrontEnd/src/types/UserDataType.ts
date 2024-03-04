@@ -5,6 +5,7 @@ export interface User {
   phoneNumber: string;
   address: string;
   addressDetail: string;
+  admin: boolean;
 }
 
 export interface UserContextType {
