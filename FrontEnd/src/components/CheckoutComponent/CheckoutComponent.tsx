@@ -1,13 +1,15 @@
 import React, { ChangeEvent, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { auth, db } from "../../api/firebase";
+import { db } from "../../api/firebase";
+import { useUser } from "../../contexts/UserContext";
 import {
   collection,
   doc,
   getDoc,
   setDoc,
   serverTimestamp,
+  updateDoc,
 } from "firebase/firestore";
 import Swal from "sweetalert2";
 import alertList from "../../utils/Swal";
@@ -52,44 +54,18 @@ const CheckoutComponent = () => {
   const [deliveryReq, setDeliveryReq] = useState<string>("");
   const [totalAmount, setTotalAmount] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
-  const [user, setUser] = useState({
-    email: "",
-    name: "",
-    phoneNumber: "",
-    address: "",
-    addressDetail: "",
+  const { user } = useUser();
+  const [localUser, setLocalUser] = useState({
+    name: user?.name || "",
+    phoneNumber: user?.phoneNumber || "",
+    address: user?.address || "",
+    addressDetail: user?.addressDetail || "",
   });
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetchUserData();
     fetchCartData();
-  }, []);
-
-  async function fetchUserData() {
-    if (!auth.currentUser) {
-      console.log("로그인된 사용자가 없습니다.");
-      return;
-    }
-
-    try {
-      const userDocRef = doc(db, "users", auth.currentUser.uid);
-      const userDoc = await getDoc(userDocRef);
-      if (!userDoc.exists()) {
-        console.log("해당 문서가 없습니다.");
-        return;
-      }
-
-      const userData = userDoc.data();
-      setUser((current) => ({
-        ...current,
-        ...userData,
-        email: auth.currentUser!.email || "",
-      }));
-    } catch (error) {
-      console.error("사용자 데이터를 가져오는 중 오류가 발생했습니다:", error);
-    }
-  }
+  }, [user]);
 
   function fetchCartData() {
     const fundingData = sessionStorage.getItem("fundingItemsCart");
@@ -109,19 +85,58 @@ const CheckoutComponent = () => {
 
   function handleChange(event: ChangeEvent<HTMLInputElement>) {
     const { name, value } = event.target;
-    setUser((current) => ({ ...current, [name]: value }));
+    setLocalUser((current) => ({ ...current, [name]: value }));
   }
 
   const getAddress = () => {
     new window.daum.Postcode({
       oncomplete: function (data) {
-        setUser((prevUser) => ({
+        setLocalUser((prevUser) => ({
           ...prevUser,
           address: data.address,
           addressDetail: "",
         }));
       },
     }).open();
+  };
+
+  const updateStocksAfterPayment = async () => {
+    const fundingItemsCart: CartItem[] = JSON.parse(
+      sessionStorage.getItem("fundingItemsCart") || "[]",
+    );
+    const otherItemsCart: CartItem[] = JSON.parse(
+      sessionStorage.getItem("otherItemsCart") || "[]",
+    );
+
+    await updateStockForItems(fundingItemsCart, "fundingItems");
+    await updateStockForItems(otherItemsCart, "otherItems");
+
+    sessionStorage.removeItem("fundingItemsCart");
+    sessionStorage.removeItem("otherItemsCart");
+  };
+
+  const updateStockForItems = async (
+    items: CartItem[],
+    collectionName: string,
+  ) => {
+    for (const item of items) {
+      const productRef = doc(db, collectionName, item.id);
+      const productSnap = await getDoc(productRef);
+
+      if (productSnap.exists()) {
+        const currentStock = productSnap.data().productCount;
+        const newStock = currentStock - item.count;
+
+        if (newStock >= 0) {
+          await updateDoc(productRef, { productCount: newStock });
+          console.log(`재고 업데이트 성공: ${item.name}`);
+        } else {
+          console.error(`재고 부족: ${item.name}`);
+        }
+      } else {
+        console.error(`제품 정보 없음: ${item.id}`);
+      }
+    }
   };
 
   const processPayment = async () => {
@@ -143,10 +158,12 @@ const CheckoutComponent = () => {
       merchant_uid: `mid_${new Date().getTime()}`,
       name: orderName,
       amount: totalAmount,
-      buyer_name: user.name,
-      buyer_tel: user.phoneNumber,
-      buyer_email: user.email,
-      buyer_addr: `${user.address} ${user.addressDetail}`,
+      buyer_name: user?.name || "이름 없음",
+      buyer_tel: user?.phoneNumber || "전화번호 없음",
+      buyer_email: user?.email || "이메일 없음",
+      buyer_addr: `${user?.address || "주소 없음"} ${
+        user?.addressDetail || ""
+      }`,
       buyer_postcode: "",
       m_redirect_url:
         "https://web-commerce-qrd2als3zw3jc.sel5.cloudtype.app/mypage/order-history",
@@ -162,7 +179,7 @@ const CheckoutComponent = () => {
           if (data.response.status === "paid") {
             const orderItemRef = doc(collection(db, "orderItems"));
             await setDoc(orderItemRef, {
-              user_id: auth.currentUser?.uid,
+              user_id: user?.userId || "userId 없음",
               imp_uid: response.imp_uid,
               name: paymentData.name,
               amount: paymentData.amount,
@@ -180,10 +197,11 @@ const CheckoutComponent = () => {
               created_at: serverTimestamp(),
             });
 
+            await updateStocksAfterPayment();
+
             Swal.fire(alertList.successMessage("결제가 완료되었습니다."));
             setIsLoading(false);
-            sessionStorage.removeItem("otherItemsCart");
-            sessionStorage.removeItem("fundingItemsCart");
+
             navigate("/mypage/order-history");
           } else if (data.response.status === "ready") {
             Swal.fire(alertList.infoMessage("결제가 중단되었습니다."));
@@ -254,21 +272,21 @@ const CheckoutComponent = () => {
           <NameInput
             type="text"
             placeholder="이름"
-            value={user.name}
+            value={user?.name || "이름 없음"}
             onChange={handleChange}
           />
           <PhoneNumberInput
             name="phoneNumber"
             type="text"
             placeholder="전화번호"
-            value={user.phoneNumber}
+            value={user?.phoneNumber || "전화번호 없음"}
             onChange={handleChange}
           />
           <MainAddressArea>
             <AddressInput
               type="text"
               placeholder="주소"
-              value={user.address}
+              value={user?.address || "주소 없음"}
               readOnly
             />
             <FindAddressButton onClick={getAddress}>검색</FindAddressButton>
@@ -277,7 +295,7 @@ const CheckoutComponent = () => {
             name="addressDetail"
             type="text"
             placeholder="상세 주소"
-            value={user.addressDetail}
+            value={user?.addressDetail || ""}
             onChange={handleChange}
           />
           <DeliveryRequestInput

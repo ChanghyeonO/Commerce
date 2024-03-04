@@ -49,7 +49,6 @@ const OrderHistoryComponent = () => {
   const fetchOrderList = async () => {
     setIsLoading(true);
     if (!user) {
-      console.log("로그인된 사용자가 없습니다.");
       setIsLoading(false);
       return;
     }

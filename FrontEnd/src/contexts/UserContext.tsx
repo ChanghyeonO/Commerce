@@ -32,9 +32,8 @@ const UserProvider = ({ children }: UserProviderProps) => {
             ...(docSnap.data() as Omit<User, "userId" | "email">),
           };
           setUser(userData);
-          console.log("User data:", userData);
         } else {
-          console.log("No such document!");
+          console.log("해당 문서가 존재하지 않습니다.");
         }
       } else {
         setUser(null);
@@ -55,7 +54,7 @@ const UserProvider = ({ children }: UserProviderProps) => {
 export const useUser = () => {
   const context = useContext(UserContext);
   if (!context) {
-    throw new Error("useUser must be used within a UserProvider");
+    throw new Error("useUser는 UserProvider 내부에서 사용되어야 합니다.");
   }
   return context;
 };

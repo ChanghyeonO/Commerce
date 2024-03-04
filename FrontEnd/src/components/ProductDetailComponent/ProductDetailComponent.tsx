@@ -94,8 +94,8 @@ const ProductDetailComponent = () => {
     if (!isNaN(newCount)) {
       if (newCount < 1) {
         newCount = 1;
-      } else if (newCount > (item?.count || 1)) {
-        newCount = item?.count || 1;
+      } else if (newCount > (item?.productCount || 1)) {
+        newCount = item?.productCount || 1;
       }
       setItemCount(newCount);
     }
@@ -217,7 +217,7 @@ const ProductDetailComponent = () => {
           </OptionArea>
           <IntroProductCountArea>
             <IntroProductCount>재고 수량</IntroProductCount>
-            <IntroProductCount>{item?.count} 개</IntroProductCount>
+            <IntroProductCount>{item?.productCount} 개</IntroProductCount>
           </IntroProductCountArea>
           <ProductCountArea>
             <MinusButton
@@ -232,7 +232,9 @@ const ProductDetailComponent = () => {
             />
             <PlusButton
               onClick={() =>
-                setItemCount((prev) => Math.min(prev + 1, item?.count || 1))
+                setItemCount((prev) =>
+                  Math.min(prev + 1, item?.productCount || 1),
+                )
               }
             >
               +
