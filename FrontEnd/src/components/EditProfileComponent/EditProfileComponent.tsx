@@ -1,8 +1,8 @@
 import React, { useState, useEffect, ChangeEvent } from "react";
 import { auth, db } from "../../api/firebase";
-import { doc, getDoc, updateDoc } from "firebase/firestore";
+import { doc, updateDoc } from "firebase/firestore";
 import { updatePassword } from "firebase/auth";
-
+import { useUser } from "../../contexts/UserContext";
 import Swal from "sweetalert2";
 import alertList from "../../utils/Swal";
 import MyPageNav from "../MyPageNav/MyPageNav";
@@ -32,12 +32,13 @@ import {
 } from "./EditProfileComponentStyle";
 
 const EditProfileComponent = () => {
-  const [user, setUser] = useState({
-    email: "",
-    name: "",
-    phoneNumber: "",
-    address: "",
-    addressDetail: "",
+  const { user } = useUser();
+  const [userInfo, setUserInfo] = useState({
+    email: user?.email || "",
+    name: user?.name || "",
+    phoneNumber: user?.phoneNumber || "",
+    address: user?.address || "",
+    addressDetail: user?.addressDetail || "",
     password: "",
   });
   const [passwordCheck, setPasswordCheck] = useState("");
@@ -50,61 +51,39 @@ const EditProfileComponent = () => {
   });
 
   useEffect(() => {
-    const fetchUserData = async () => {
-      if (auth.currentUser) {
-        try {
-          const userDocRef = doc(db, "users", auth.currentUser!.uid);
-          const userDoc = await getDoc(userDocRef);
-          if (userDoc.exists()) {
-            const userData = userDoc.data();
-            setUser(prevState => ({
-              ...prevState,
-              email: auth.currentUser!.email || "",
-              name: userData.name,
-              phoneNumber: userData.phoneNumber,
-              address: userData.address,
-              addressDetail: userData.addressDetail,
-            }));
-          } else {
-            console.log("해당 문서가 없습니다.");
-          }
-        } catch (error) {
-          console.error(
-            "사용자 데이터를 가져오는 중 오류가 발생했습니다:",
-            error,
-          );
-        }
-      } else {
-        console.log("로그인된 사용자가 없습니다.");
-      }
-    };
-
-    fetchUserData();
-  }, []);
+    setUserInfo({
+      email: user?.email || "",
+      name: user?.name || "",
+      phoneNumber: user?.phoneNumber || "",
+      address: user?.address || "",
+      addressDetail: user?.addressDetail || "",
+      password: "",
+    });
+  }, [user]);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setUser(prevState => ({
+    setUserInfo((prevState) => ({
       ...prevState,
       [name]: value,
     }));
 
     if (name === "password") {
-      setErrors(prev => ({
+      setErrors((prev) => ({
         ...prev,
         password: validatePassword(value)
           ? ""
           : "*패스워드는 8자 이상, 숫자와 특수문자를 포함해주세요.",
       }));
     } else if (name === "phoneNumber") {
-      setErrors(prev => ({
+      setErrors((prev) => ({
         ...prev,
         phoneNumber: validatePhoneNumber(value)
           ? ""
           : "*유효한 전화번호 형식이 아닙니다.",
       }));
     } else if (name === "name") {
-      setErrors(prev => ({
+      setErrors((prev) => ({
         ...prev,
         name: value.trim() === "" ? "*이름을 입력해 주세요." : "",
       }));
@@ -124,10 +103,10 @@ const EditProfileComponent = () => {
   const handlePasswordCheckChange = (e: ChangeEvent<HTMLInputElement>) => {
     const passwordCheckInput = e.target.value;
     setPasswordCheck(passwordCheckInput);
-    setErrors(prev => ({
+    setErrors((prev) => ({
       ...prev,
       passwordCheck:
-        user.password !== passwordCheckInput
+        userInfo.password !== passwordCheckInput
           ? "*입력한 비밀번호가 일치하지 않습니다."
           : "",
     }));
@@ -136,7 +115,7 @@ const EditProfileComponent = () => {
   const getAddress = () => {
     new window.daum.Postcode({
       oncomplete: function (data) {
-        setUser(prevUser => ({
+        setUserInfo((prevUser) => ({
           ...prevUser,
           address: data.address,
         }));
@@ -148,17 +127,17 @@ const EditProfileComponent = () => {
     let isValid = true;
     const newErrors = { ...errors };
 
-    if (!validatePassword(user.password)) {
+    if (!validatePassword(userInfo.password)) {
       newErrors.password =
         "*패스워드는 8자 이상, 숫자와 특수문자를 포함해주세요.";
       isValid = false;
-    } else if (user.password !== passwordCheck) {
+    } else if (userInfo.password !== passwordCheck) {
       newErrors.passwordCheck = "*입력한 비밀번호가 일치하지 않습니다.";
       isValid = false;
-    } else if (!validatePhoneNumber(user.phoneNumber)) {
+    } else if (!validatePhoneNumber(userInfo.phoneNumber)) {
       newErrors.phoneNumber = "*유효한 전화번호 형식이 아닙니다.";
       isValid = false;
-    } else if (user.name.trim() === "") {
+    } else if (userInfo.name.trim() === "") {
       newErrors.name = "*이름을 입력해 주세요.";
       isValid = false;
     }
@@ -186,18 +165,18 @@ const EditProfileComponent = () => {
     if (auth.currentUser) {
       try {
         await updateDoc(doc(db, "users", auth.currentUser.uid), {
-          name: user.name,
-          phoneNumber: user.phoneNumber,
-          address: user.address,
-          addressDetail: user.addressDetail,
+          name: userInfo.name,
+          phoneNumber: userInfo.phoneNumber,
+          address: userInfo.address,
+          addressDetail: userInfo.addressDetail,
         });
         Swal.fire(alertList.successMessage("회원 정보가 수정되었습니다."));
       } catch (error) {
         Swal.fire(alertList.errorMessage("회원 정보 수정에 실패했습니다."));
       }
     }
-    if (user.password) {
-      await updatePasswordFunction(user.password);
+    if (userInfo.password) {
+      await updatePasswordFunction(userInfo.password);
     }
   };
 
@@ -208,14 +187,14 @@ const EditProfileComponent = () => {
         <Title>프로필 수정</Title>
         <InnerContent>
           <EmailInputArea>
-            <EmailInput type="text" value={user.email} readOnly />
+            <EmailInput type="text" value={userInfo.email} readOnly />
           </EmailInputArea>
           <PasswordInputArea>
             <PasswordInput
               name="password"
               type="password"
               placeholder="패스워드"
-              value={user.password}
+              value={userInfo.password}
               onChange={handleChange}
             />
             {errors.password && (
@@ -236,7 +215,7 @@ const EditProfileComponent = () => {
               name="name"
               type="text"
               placeholder="이름"
-              value={user.name}
+              value={userInfo.name}
               onChange={handleChange}
             />
           </NameInputArea>
@@ -246,7 +225,7 @@ const EditProfileComponent = () => {
               name="phoneNumber"
               type="text"
               placeholder="전화번호"
-              value={user.phoneNumber}
+              value={userInfo.phoneNumber}
               onChange={handleChange}
             />
           </PhoneNumberInputArea>
@@ -258,7 +237,7 @@ const EditProfileComponent = () => {
               <AddressInput
                 type="text"
                 placeholder="주소"
-                value={user.address}
+                value={userInfo.address}
                 readOnly
               />
               <FindAddressButton onClick={getAddress}>검색</FindAddressButton>
@@ -270,7 +249,7 @@ const EditProfileComponent = () => {
               name="addressDetail"
               type="text"
               placeholder="상세 주소"
-              value={user.addressDetail}
+              value={userInfo.addressDetail}
               onChange={handleChange}
             />
           </AddressInputArea>

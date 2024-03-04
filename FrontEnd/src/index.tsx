@@ -1,6 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { UserProvider } from "./contexts/UserContext";
 import { QueryClient, QueryClientProvider } from "react-query";
 import GlobalStyles from "./styles/GlobalStyles";
 import GlobalFont from "./styles/GlobalFont";
@@ -50,9 +51,11 @@ if (rootElement) {
   ReactDOM.createRoot(rootElement).render(
     <React.StrictMode>
       <QueryClientProvider client={queryClient}>
-        <GlobalStyles />
-        <GlobalFont />
-        <RouterProvider router={router} />
+        <UserProvider>
+          <GlobalStyles />
+          <GlobalFont />
+          <RouterProvider router={router} />
+        </UserProvider>
       </QueryClientProvider>
     </React.StrictMode>,
   );

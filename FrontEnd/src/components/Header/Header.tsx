@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
+import { auth } from "../../api/firebase";
+import { onAuthStateChanged, signOut } from "firebase/auth";
+import { useUser } from "../../contexts/UserContext";
 import FUNDITLOGO from "../../assets/icons/FUNDITHEADERFOOTER.png";
 import UserImage from "../../assets/icons/UserLogo.png";
 import Swal from "sweetalert2";
@@ -20,19 +22,8 @@ import {
 } from "./HeaderStyle";
 
 const Header = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const auth = getAuth();
+  const { user } = useUser();
   const navigate = useNavigate();
-
-  useEffect(() => {
-    onAuthStateChanged(auth, user => {
-      if (user && user.emailVerified) {
-        setIsLoggedIn(true);
-      } else {
-        setIsLoggedIn(false);
-      }
-    });
-  }, [auth]);
 
   const handleLogout = async () => {
     const result = await Swal.fire(
@@ -64,7 +55,7 @@ const Header = () => {
         </Link>
       </LeftContainer>
       <RightContainer>
-        {isLoggedIn ? (
+        {user ? (
           <LoginContent>
             <LoginLogoutButton onClick={handleLogout}>
               로그아웃

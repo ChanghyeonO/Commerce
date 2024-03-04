@@ -93,20 +93,24 @@ const OrderHistoryComponent = () => {
   }, []);
 
   const updateOrderStatus = async (orderId: string, newStatus: string) => {
+    setIsLoading(true);
     const orderRef = doc(db, "orderItems", orderId);
 
     try {
       await updateDoc(orderRef, {
         order_status: newStatus,
       });
+      setIsLoading(false);
       Swal.fire(alertList.successMessage("결제 상태 변경이 완료되었습니다."));
       fetchOrderList();
     } catch (error) {
+      setIsLoading(false);
       Swal.fire(alertList.errorMessage("결제 상태 변경에 실패했습니다."));
     }
   };
 
   const handleDelete = async (orderId: string) => {
+    setIsLoading(true);
     const result = await Swal.fire(
       alertList.doubleCheckMessage("정말로 주문을 삭제하시겠습니까?"),
     );
@@ -115,11 +119,13 @@ const OrderHistoryComponent = () => {
 
       try {
         await deleteDoc(orderRef);
+        setIsLoading(false);
         Swal.fire(
           alertList.successMessage("주문이 성공적으로 삭제되었습니다."),
         );
         fetchOrderList();
       } catch (error) {
+        setIsLoading(false);
         console.error("Error deleting order: ", error);
         Swal.fire(alertList.errorMessage("주문 삭제에 실패했습니다."));
       }
@@ -127,6 +133,7 @@ const OrderHistoryComponent = () => {
   };
 
   const handleCancelOrder = async (impUid: string, orderId: string) => {
+    setIsLoading(true);
     const result = await Swal.fire(
       alertList.doubleCheckMessage("정말로 주문을 취소하시겠습니까?"),
     );
@@ -135,7 +142,6 @@ const OrderHistoryComponent = () => {
       const requestBody = {
         imp_uid: impUid,
       };
-
       try {
         const response = await axios.post(
           "https://us-central1-commerce-204d5.cloudfunctions.net/cancelPayment",
@@ -147,17 +153,21 @@ const OrderHistoryComponent = () => {
           await updateDoc(orderRef, {
             order_status: "주문취소",
           });
-
+          setIsLoading(false);
           Swal.fire(alertList.successMessage("주문 취소가 완료되었습니다."));
           fetchOrderList();
         } else {
+          setIsLoading(false);
           console.error("주문 취소 실패1:", response.data.message);
           Swal.fire(alertList.errorMessage(response.data.message));
         }
       } catch (error) {
+        setIsLoading(false);
         console.error("주문 취소 실패2:", error);
         Swal.fire(alertList.errorMessage("주문 취소에 실패했습니다."));
       }
+    } else {
+      setIsLoading(false);
     }
   };
 
@@ -249,7 +259,7 @@ const OrderHistoryComponent = () => {
                     )}
                   </ItemDescription>
                   <ItemDescription>
-                    결제금액 : {order.amount} 원
+                    결제금액 : {order.amount.toLocaleString()}원
                   </ItemDescription>
                 </CenterContent>
                 <RightContent>

@@ -1,16 +1,16 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { getFirestore, doc, getDoc } from "firebase/firestore";
-import { FirebaseError } from "firebase/app";
+
 import Swal from "sweetalert2";
 import alertList from "../../utils/Swal";
 import {
   signInWithEmailAndPassword,
-  getAuth,
   signInWithPopup,
   GoogleAuthProvider,
 } from "firebase/auth";
-
+import { doc, getDoc } from "firebase/firestore";
+import { FirebaseError } from "firebase/app";
+import { db, auth } from "../../api/firebase";
 import Loading from "../Loading/Loading";
 import FUNDITLOGO from "../../assets/icons/FUNDIT.png";
 
@@ -41,10 +41,8 @@ const LoginComponent = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const navigate = useNavigate();
-  const auth = getAuth();
 
   const fetchUserData = async (userId: string) => {
-    const db = getFirestore();
     const docRef = doc(db, "users", userId);
     try {
       const docSnap = await getDoc(docRef);
