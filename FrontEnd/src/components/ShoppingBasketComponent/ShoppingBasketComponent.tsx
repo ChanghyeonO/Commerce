@@ -106,9 +106,21 @@ const ShoppingBasketComponent = () => {
       <ItemArea key={`${item.id}-${item.option}-${index}`}>
         <ItemImage src={item.image} alt={`Product ${item.id}`} />
         <CenterContent>
-          <ItemTitle>{item.name}</ItemTitle>
-          <ItemOption>{item.option}</ItemOption>
-          <ItemDescription>{item.description}</ItemDescription>
+          <ItemTitle>
+            {item.name.length > 15
+              ? `${item.name.substring(0, 15)}...`
+              : item.name}
+          </ItemTitle>
+          <ItemOption>
+            {item.option && item.option.length > 20
+              ? `${item.option.substring(0, 20)}...`
+              : item.option}
+          </ItemOption>
+          <ItemDescription>
+            {item.description && item.description.length > 15
+              ? `${item.description.substring(0, 20)}...`
+              : item.description || ""}
+          </ItemDescription>
         </CenterContent>
         <RightContent>
           <DeleteButton

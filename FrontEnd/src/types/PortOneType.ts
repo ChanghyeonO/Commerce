@@ -1,3 +1,5 @@
+import { Timestamp } from "firebase/firestore";
+
 declare global {
   interface Window {
     IMP: any; // IMP 타입 정의
@@ -33,4 +35,5 @@ export interface OrderDetail {
   order_status: string;
   user_id: string;
   cancel_reason: string;
+  created_at: Timestamp | undefined;
 }

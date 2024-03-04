@@ -56,7 +56,7 @@ export const CenterContent = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-around;
-  width: 205px;
+  width: 220px;
   height: 150px;
 `;
 

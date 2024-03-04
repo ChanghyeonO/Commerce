@@ -11,8 +11,10 @@ import {
   updateDoc,
   deleteDoc,
   doc,
+  orderBy,
 } from "firebase/firestore";
 import { auth, db } from "../../api/firebase";
+import { Timestamp } from "firebase/firestore";
 
 import {
   RightContent,
@@ -64,13 +66,15 @@ const OrderHistoryComponent = () => {
 
     let queryToExecute;
     if (isAdmin) {
-      // 관리자인 경우 모든 주문 데이터를 가져옵니다.
-      queryToExecute = query(collection(db, "orderItems"));
+      queryToExecute = query(
+        collection(db, "orderItems"),
+        orderBy("created_at", "desc"),
+      );
     } else {
-      // 일반 사용자인 경우 해당 사용자의 주문만 가져옵니다.
       queryToExecute = query(
         collection(db, "orderItems"),
         where("user_id", "==", user.uid),
+        orderBy("created_at", "desc"),
       );
     }
 
@@ -158,11 +162,13 @@ const OrderHistoryComponent = () => {
   };
 
   const requestOrderCancellation = async (orderId: string) => {
+    setIsLoading(true);
     try {
       const orderRef = doc(db, "orderItems", orderId);
       const orderSnap = await getDoc(orderRef);
 
       if (orderSnap.exists() && orderSnap.data().cancel_reason) {
+        setIsLoading(false);
         Swal.fire(alertList.infoMessage("이미 취소 요청이 완료되었습니다."));
         return;
       }
@@ -178,6 +184,7 @@ const OrderHistoryComponent = () => {
         cancelButtonColor: "#2F2F2F",
         inputValidator: (value) => {
           if (!value) {
+            setIsLoading(false);
             return "취소 사유는 필수로 입력해야 합니다!";
           }
         },
@@ -188,13 +195,22 @@ const OrderHistoryComponent = () => {
           cancel_reason: cancelReason,
           order_status: "취소요청",
         });
-
+        setIsLoading(false);
         Swal.fire(alertList.successMessage("취소 요청이 완료되었습니다."));
       }
     } catch (error) {
+      setIsLoading(false);
       console.error("취소 요청 실패:", error);
       Swal.fire(alertList.errorMessage("취소 요청에 실패했습니다."));
     }
+  };
+
+  const formatDate = (timestamp: Timestamp | undefined) => {
+    if (!timestamp) {
+      return "";
+    }
+    const date = timestamp.toDate();
+    return date.toLocaleString();
   };
 
   return (
@@ -208,6 +224,9 @@ const OrderHistoryComponent = () => {
               <ItemArea key={index}>
                 <CenterContent>
                   <ItemDescription>주문번호 : {order.imp_uid}</ItemDescription>
+                  <ItemDescription>
+                    주문시각 : {formatDate(order.created_at)}
+                  </ItemDescription>
                   <ItemTitle>{order.name}</ItemTitle>
                   <ItemDescription>
                     결제상태 :{" "}

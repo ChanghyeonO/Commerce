@@ -2,7 +2,13 @@ import React, { ChangeEvent, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { auth, db } from "../../api/firebase";
-import { collection, doc, getDoc, setDoc } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDoc,
+  setDoc,
+  serverTimestamp,
+} from "firebase/firestore";
 import Swal from "sweetalert2";
 import alertList from "../../utils/Swal";
 import {
@@ -86,16 +92,19 @@ const CheckoutComponent = () => {
   }
 
   function fetchCartData() {
-    const cartData = sessionStorage.getItem("cart");
-    if (cartData) {
-      const items = JSON.parse(cartData);
-      setCartItems(items);
-      const total = items.reduce(
-        (sum: number, item: CartItem) => sum + item.totalPrice,
-        0,
-      );
-      setTotalAmount(total);
-    }
+    const fundingData = sessionStorage.getItem("fundingItemsCart");
+    const otherData = sessionStorage.getItem("otherItemsCart");
+    const fundingItems = fundingData ? JSON.parse(fundingData) : [];
+    const otherItems = otherData ? JSON.parse(otherData) : [];
+
+    const combinedItems = [...fundingItems, ...otherItems];
+    setCartItems(combinedItems);
+
+    const total = combinedItems.reduce(
+      (sum: number, item: CartItem) => sum + item.totalPrice,
+      0,
+    );
+    setTotalAmount(total);
   }
 
   function handleChange(event: ChangeEvent<HTMLInputElement>) {
@@ -168,11 +177,13 @@ const CheckoutComponent = () => {
                 option: item.option,
                 count: item.count,
               })),
+              created_at: serverTimestamp(),
             });
 
             Swal.fire(alertList.successMessage("결제가 완료되었습니다."));
             setIsLoading(false);
-            sessionStorage.removeItem("cart");
+            sessionStorage.removeItem("otherItemsCart");
+            sessionStorage.removeItem("fundingItemsCart");
             navigate("/mypage/order-history");
           } else if (data.response.status === "ready") {
             Swal.fire(alertList.infoMessage("결제가 중단되었습니다."));
@@ -191,6 +202,14 @@ const CheckoutComponent = () => {
       }
     });
   };
+
+  const shortenText = (text: string | undefined, maxLength: number): string => {
+    if (!text) return "";
+    return text.length > maxLength
+      ? `${text.substring(0, maxLength)}...`
+      : text;
+  };
+
   return (
     <Container>
       <InnerContent>
@@ -205,9 +224,11 @@ const CheckoutComponent = () => {
                 <ItemArea key={`${item.id}-${item.option}-${index}`}>
                   <ItemImage src={item.image} alt={`Product ${item.id}`} />
                   <CenterContent>
-                    <ItemTitle>{item.name}</ItemTitle>
-                    <ItemOption>{item.option}</ItemOption>
-                    <ItemDescription>{item.description}</ItemDescription>
+                    <ItemTitle>{shortenText(item.name, 15)}</ItemTitle>
+                    <ItemOption>{shortenText(item.option, 15)}</ItemOption>
+                    <ItemDescription>
+                      {shortenText(item.description, 10)}
+                    </ItemDescription>
                   </CenterContent>
                   <RightContent>
                     <TotalPrice>{`${item.totalPrice.toLocaleString()}원`}</TotalPrice>
