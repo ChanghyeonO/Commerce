@@ -28,29 +28,48 @@ import {
 import { CartItem } from "../../types/ItemType";
 
 const ShoppingBasketComponent = () => {
-  const [cartItems, setCartItems] = useState<CartItem[]>([]);
+  const [fundingItems, setFundingItems] = useState<CartItem[]>([]);
+  const [otherItems, setOtherItems] = useState<CartItem[]>([]);
 
   useEffect(() => {
-    const cartData = sessionStorage.getItem("cart");
-    if (cartData) {
-      setCartItems(JSON.parse(cartData));
-    }
+    const fundingData = sessionStorage.getItem("fundingItemsCart");
+    const otherData = sessionStorage.getItem("otherItemsCart");
+    if (fundingData) setFundingItems(JSON.parse(fundingData));
+    if (otherData) setOtherItems(JSON.parse(otherData));
   }, []);
 
-  const updateCartItems = (items: CartItem[]) => {
-    setCartItems(items);
-    sessionStorage.setItem("cart", JSON.stringify(items));
+  const updateCartItems = (
+    items: CartItem[],
+    category: "funding" | "other",
+  ) => {
+    if (category === "funding") {
+      setFundingItems(items);
+      sessionStorage.setItem("fundingItemsCart", JSON.stringify(items));
+    } else {
+      setOtherItems(items);
+      sessionStorage.setItem("otherItemsCart", JSON.stringify(items));
+    }
   };
 
-  const handleDelete = (id: string, option: string) => {
-    const updatedCartItems = cartItems.filter(
+  const handleDelete = (
+    id: string,
+    option: string,
+    category: "funding" | "other",
+  ) => {
+    const currentItems = category === "funding" ? fundingItems : otherItems;
+    const updatedCartItems = currentItems.filter(
       (item) => !(item.id === id && item.option === option),
     );
-    updateCartItems(updatedCartItems);
+    updateCartItems(updatedCartItems, category);
   };
 
-  const handleIncrease = (id: string, option: string) => {
-    const updatedCartItems = cartItems.map((item) => {
+  const handleIncrease = (
+    id: string,
+    option: string,
+    category: "funding" | "other",
+  ) => {
+    const currentItems = category === "funding" ? fundingItems : otherItems;
+    const updatedCartItems = currentItems.map((item) => {
       if (item.id === id && item.option === option) {
         return {
           ...item,
@@ -60,11 +79,16 @@ const ShoppingBasketComponent = () => {
       }
       return item;
     });
-    updateCartItems(updatedCartItems);
+    updateCartItems(updatedCartItems, category);
   };
 
-  const handleDecrease = (id: string, option: string) => {
-    const updatedCartItems = cartItems.map((item) => {
+  const handleDecrease = (
+    id: string,
+    option: string,
+    category: "funding" | "other",
+  ) => {
+    const currentItems = category === "funding" ? fundingItems : otherItems;
+    const updatedCartItems = currentItems.map((item) => {
       if (item.id === id && item.option === option && item.count > 1) {
         return {
           ...item,
@@ -74,7 +98,41 @@ const ShoppingBasketComponent = () => {
       }
       return item;
     });
-    updateCartItems(updatedCartItems);
+    updateCartItems(updatedCartItems, category);
+  };
+
+  const renderItems = (items: CartItem[], category: "funding" | "other") => {
+    return items.map((item, index) => (
+      <ItemArea key={`${item.id}-${item.option}-${index}`}>
+        <ItemImage src={item.image} alt={`Product ${item.id}`} />
+        <CenterContent>
+          <ItemTitle>{item.name}</ItemTitle>
+          <ItemOption>{item.option}</ItemOption>
+          <ItemDescription>{item.description}</ItemDescription>
+        </CenterContent>
+        <RightContent>
+          <DeleteButton
+            onClick={() => handleDelete(item.id, item.option, category)}
+          >
+            X
+          </DeleteButton>
+          <TotalPrice>{`${item.totalPrice}원`}</TotalPrice>
+          <ProductCountArea>
+            <MinusButton
+              onClick={() => handleDecrease(item.id, item.option, category)}
+            >
+              -
+            </MinusButton>
+            <CountInput type="number" value={item.count} readOnly />
+            <PlusButton
+              onClick={() => handleIncrease(item.id, item.option, category)}
+            >
+              +
+            </PlusButton>
+          </ProductCountArea>
+        </RightContent>
+      </ItemArea>
+    ));
   };
 
   return (
@@ -83,38 +141,11 @@ const ShoppingBasketComponent = () => {
       <RightContentArea>
         <Title>장바구니</Title>
         <BottomContent>
-          {cartItems.length > 0 ? (
-            cartItems.map((item, index) => (
-              <ItemArea key={`${item.id}-${item.option}-${index}`}>
-                <ItemImage src={item.image} alt={`Product ${item.id}`} />
-                <CenterContent>
-                  <ItemTitle>{item.name}</ItemTitle>
-                  <ItemOption>{item.option}</ItemOption>
-                  <ItemDescription>{item.description}</ItemDescription>
-                </CenterContent>
-                <RightContent>
-                  <DeleteButton
-                    onClick={() => handleDelete(item.id, item.option)}
-                  >
-                    X
-                  </DeleteButton>
-                  <TotalPrice>{`${item.totalPrice}원`}</TotalPrice>
-                  <ProductCountArea>
-                    <MinusButton
-                      onClick={() => handleDecrease(item.id, item.option)}
-                    >
-                      -
-                    </MinusButton>
-                    <CountInput type="number" value={item.count} readOnly />
-                    <PlusButton
-                      onClick={() => handleIncrease(item.id, item.option)}
-                    >
-                      +
-                    </PlusButton>
-                  </ProductCountArea>
-                </RightContent>
-              </ItemArea>
-            ))
+          {fundingItems.length + otherItems.length > 0 ? (
+            <>
+              {renderItems(fundingItems, "funding")}
+              {renderItems(otherItems, "other")}
+            </>
           ) : (
             <EmptyInfomation>장바구니가 비었습니다.</EmptyInfomation>
           )}
