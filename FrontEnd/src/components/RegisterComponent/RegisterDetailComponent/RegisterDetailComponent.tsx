@@ -217,6 +217,8 @@ const RegisterDetailComponent = () => {
         phoneNumber,
         address,
         addressDetail,
+        email,
+        admin: false,
       };
 
       await saveUserData(userData);
