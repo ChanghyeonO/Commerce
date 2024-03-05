@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { db, auth } from "../../api/firebase";
+import { db } from "../../api/firebase";
 import { doc, getDoc } from "firebase/firestore";
 import ImageSlider from "../ImageSlider/ImageSlider";
 import ItemInfiniteScroll from "../ItemInfiniteScroll/ItemInfiniteScroll";
 import ImageUpload from "../ImageUpload/ImageUpload";
 import { useSort } from "../../contexts/SortContext";
+import { useUser } from "../../contexts/UserContext";
 
 import {
   Container,
@@ -26,28 +27,15 @@ import {
 
 const ProductComponent = () => {
   const [showImageUpload, setShowImageUpload] = useState(false);
-  const [isAdmin, setIsAdmin] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const { sortOption, handleSortChange } = useSort();
 
   const location = useLocation();
+  const { user } = useUser();
 
-  useEffect(() => {
-    const checkAdminStatus = async () => {
-      const user = auth.currentUser;
-      if (user) {
-        const userRef = doc(db, "users", user.uid);
-        const docSnap = await getDoc(userRef);
-        if (docSnap.exists()) {
-          setIsAdmin(docSnap.data().admin);
-        }
-      }
-    };
+  const isAdmin = user?.admin ?? false;
 
-    checkAdminStatus();
-  }, []);
-
-  let linkPath = "/other/create";
+  let linkPath = "/funding/create";
 
   if (location.pathname.includes("/funding")) {
     linkPath = "/funding/create";

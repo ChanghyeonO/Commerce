@@ -82,6 +82,14 @@ export const AddItemButtonArea = styled.div`
   gap: 20px;
 `;
 
+export const AddImageButtonArea = styled.div`
+  width: 100%;
+  height: 50px;
+  display: flex;
+  gap: 20px;
+  justify-content: end;
+`;
+
 const ButtonDesign = styled.button`
   width: 220px;
   height: 50px;

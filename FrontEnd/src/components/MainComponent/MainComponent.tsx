@@ -18,7 +18,8 @@ import {
   Container,
   TopContent,
   BottomContent,
-  AddItemButtonArea,
+  CenterButtonArea,
+  AddImageButtonArea,
   AddImageButton,
   ItemContent,
   IntroArea,
@@ -74,11 +75,11 @@ const MainComponent = () => {
       const fundingSnapshot = await getDocs(fundingQuery);
       const otherSnapshot = await getDocs(otherQuery);
 
-      const fundingData = fundingSnapshot.docs.map(doc => ({
+      const fundingData = fundingSnapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
       })) as Item[];
-      const otherData = otherSnapshot.docs.map(doc => ({
+      const otherData = otherSnapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
       })) as Item[];
@@ -105,13 +106,16 @@ const MainComponent = () => {
         <ImageSlider />
       </TopContent>
       <BottomContent>
-        {isAdmin && (
-          <AddItemButtonArea>
-            <AddImageButton onClick={handleShowImageUpload}>
-              슬라이드 사진 수정
-            </AddImageButton>
-          </AddItemButtonArea>
-        )}
+        <CenterButtonArea>
+          {isAdmin && (
+            <AddImageButtonArea>
+              <AddImageButton onClick={handleShowImageUpload}>
+                슬라이드 사진 수정
+              </AddImageButton>
+            </AddImageButtonArea>
+          )}
+        </CenterButtonArea>
+
         <ItemContent>
           <IntroArea>
             <IntroTitle>펀딩 상품 목록</IntroTitle>
@@ -120,7 +124,7 @@ const MainComponent = () => {
             </Link>
           </IntroArea>
           <ItemArea>
-            {fundingItems.map(item => (
+            {fundingItems.map((item) => (
               <ItemBox
                 key={item.id}
                 onClick={() => handleItemClick(true, item.id)}
@@ -140,7 +144,7 @@ const MainComponent = () => {
             </Link>
           </IntroArea>
           <ItemArea>
-            {otherItems.map(item => (
+            {otherItems.map((item) => (
               <ItemBox
                 key={item.id}
                 onClick={() => handleItemClick(false, item.id)}
