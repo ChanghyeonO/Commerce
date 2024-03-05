@@ -29,7 +29,7 @@ export const fetchItems = async (
     const querySnapshot = await getDocs(itemsQuery);
     const lastVisible =
       querySnapshot.docs[querySnapshot.docs.length - 1] || null;
-    const items = querySnapshot.docs.map(doc => {
+    const items = querySnapshot.docs.map((doc) => {
       const itemData = doc.data() as Item;
 
       return {

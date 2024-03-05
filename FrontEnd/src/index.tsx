@@ -2,6 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { UserProvider } from "./contexts/UserContext";
+import { SortProvider } from "./contexts/SortContext";
 import { QueryClient, QueryClientProvider } from "react-query";
 import GlobalStyles from "./styles/GlobalStyles";
 import GlobalFont from "./styles/GlobalFont";
@@ -52,9 +53,11 @@ if (rootElement) {
     <React.StrictMode>
       <QueryClientProvider client={queryClient}>
         <UserProvider>
-          <GlobalStyles />
-          <GlobalFont />
-          <RouterProvider router={router} />
+          <SortProvider>
+            <GlobalStyles />
+            <GlobalFont />
+            <RouterProvider router={router} />
+          </SortProvider>
         </UserProvider>
       </QueryClientProvider>
     </React.StrictMode>,

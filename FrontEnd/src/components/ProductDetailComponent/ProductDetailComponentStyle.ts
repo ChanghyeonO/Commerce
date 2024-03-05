@@ -52,7 +52,7 @@ export const DropdownContainer = styled.div`
 `;
 
 export const DropdownSelected = styled.div`
-  padding: 10px;
+  padding: 15px;
   border: none;
   cursor: pointer;
   background-color: #eee;
@@ -71,9 +71,9 @@ export const DropdownOptions = styled.div`
 `;
 
 export const DropdownOption = styled.div`
-  padding: 10px;
+  padding: 15px;
   cursor: pointer;
-  border-bottom: 1px dashed #999;
+  border-bottom: 1px solid #999;
   &:last-child {
     border-bottom: none;
   }

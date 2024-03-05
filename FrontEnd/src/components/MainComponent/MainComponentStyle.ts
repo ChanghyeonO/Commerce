@@ -60,12 +60,25 @@ export const GoProductPageButton = styled.button`
   }
 `;
 
-export const AddItemButtonArea = styled.div`
+export const CenterButtonArea = styled.div`
   width: 100%;
-  height: 100px;
+  height: 50px;
   display: flex;
-  justify-content: flex-end;
-  // align-items: center;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+export const SortDropDownArea = styled.div`
+  width: 15%;
+  height: 50px;
+  justify-content: center;
+`;
+
+export const AddItemButtonArea = styled.div`
+  min-width: 20%;
+  height: 50px;
+  display: flex;
+  justify-content: center;
   gap: 20px;
 `;
 
