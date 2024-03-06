@@ -13,18 +13,26 @@ import { Item } from "../types/ItemType";
 export const fetchItems = async (
   collectionName: string,
   lastFetchedItem: DocumentData | null,
+  sortBy: string = "createdAt",
+  sortDirection: "asc" | "desc" = "desc",
   itemsPerPage = 4,
 ) => {
   const itemsRef = collection(db, collectionName);
-  const itemsQuery = lastFetchedItem
-    ? query(
-        itemsRef,
-        orderBy("createdAt", "desc"),
-        startAfter(lastFetchedItem),
-        limit(itemsPerPage),
-      )
-    : query(itemsRef, orderBy("createdAt", "desc"), limit(itemsPerPage));
-
+  let itemsQuery;
+  if (lastFetchedItem) {
+    itemsQuery = query(
+      itemsRef,
+      orderBy(sortBy, sortDirection),
+      startAfter(lastFetchedItem),
+      limit(itemsPerPage),
+    );
+  } else {
+    itemsQuery = query(
+      itemsRef,
+      orderBy(sortBy, sortDirection),
+      limit(itemsPerPage),
+    );
+  }
   try {
     const querySnapshot = await getDocs(itemsQuery);
     const lastVisible =

@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useUser } from "../../contexts/UserContext";
+import { useSort } from "../../contexts/SortContext";
 import { useInfiniteQuery } from "react-query";
 import { useInView } from "react-intersection-observer";
 import { fetchItems } from "../../api/api";
@@ -25,6 +26,7 @@ const ItemInfiniteScroll = () => {
   const { ref, inView } = useInView();
   const navigate = useNavigate();
   const location = useLocation();
+  const { sortOption } = useSort();
   const { user } = useUser();
   const isAdmin = user?.admin ?? false;
 
@@ -33,13 +35,33 @@ const ItemInfiniteScroll = () => {
     : "otherItems";
 
   const fetchItemsWithCursor = async ({ pageParam = null }) => {
-    return fetchItems(collectionName, pageParam);
+    let sortBy = "createdAt";
+    let sortDirection: "desc" | "asc" = "desc";
+
+    if (sortOption === "최신순") {
+      sortBy = "createdAt";
+      sortDirection = "desc";
+    } else if (sortOption === "과거순") {
+      sortBy = "createdAt";
+      sortDirection = "asc";
+    } else if (sortOption === "높은 가격순") {
+      sortBy = "price";
+      sortDirection = "desc";
+    } else if (sortOption === "낮은 가격순") {
+      sortBy = "price";
+      sortDirection = "asc";
+    }
+    return fetchItems(collectionName, pageParam, sortBy, sortDirection, 4);
   };
 
   const { data, hasNextPage, fetchNextPage, isFetchingNextPage } =
-    useInfiniteQuery(["items", collectionName], fetchItemsWithCursor, {
-      getNextPageParam: (lastPage) => lastPage.lastVisible || undefined,
-    });
+    useInfiniteQuery(
+      ["items", collectionName, sortOption],
+      fetchItemsWithCursor,
+      {
+        getNextPageParam: (lastPage) => lastPage.lastVisible || undefined,
+      },
+    );
 
   useEffect(() => {
     if (inView && hasNextPage) {
