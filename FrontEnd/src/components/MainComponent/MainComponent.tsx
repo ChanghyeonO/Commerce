@@ -2,15 +2,13 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ImageSlider from "../ImageSlider/ImageSlider";
 import { Link } from "react-router-dom";
-import { auth } from "../../api/firebase";
+import { useUser } from "../../contexts/UserContext";
 import {
   collection,
   query,
   orderBy,
   limit,
   getDocs,
-  doc,
-  getDoc,
   getFirestore,
 } from "firebase/firestore";
 import ImageUpload from "../ImageUpload/ImageUpload";
@@ -37,27 +35,14 @@ import { Item } from "../../types/ItemType";
 
 const MainComponent = () => {
   const [showImageUpload, setShowImageUpload] = useState(false);
-  const [isAdmin, setIsAdmin] = useState(false);
   const [fundingItems, setFundingItems] = useState<Item[]>([]);
   const [otherItems, setOtherItems] = useState<Item[]>([]);
 
   const navigate = useNavigate();
   const db = getFirestore();
+  const { user } = useUser();
 
-  useEffect(() => {
-    const checkAdminStatus = async () => {
-      const user = auth.currentUser;
-      if (user) {
-        const userRef = doc(db, "users", user.uid);
-        const docSnap = await getDoc(userRef);
-        if (docSnap.exists()) {
-          setIsAdmin(docSnap.data().admin);
-        }
-      }
-    };
-
-    checkAdminStatus();
-  }, []);
+  const isAdmin = user?.admin ?? false;
 
   useEffect(() => {
     const fetchItems = async () => {

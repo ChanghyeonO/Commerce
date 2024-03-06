@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { db } from "../../api/firebase";
-import { doc, getDoc } from "firebase/firestore";
 import ImageSlider from "../ImageSlider/ImageSlider";
 import ItemInfiniteScroll from "../ItemInfiniteScroll/ItemInfiniteScroll";
 import ImageUpload from "../ImageUpload/ImageUpload";
