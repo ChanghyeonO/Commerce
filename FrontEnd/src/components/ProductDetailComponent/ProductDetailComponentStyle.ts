@@ -49,6 +49,7 @@ export const DropdownContainer = styled.div`
   user-select: none;
   font-size: 15px;
   font-weight: bold;
+  z-index: 2;
 `;
 
 export const DropdownSelected = styled.div`

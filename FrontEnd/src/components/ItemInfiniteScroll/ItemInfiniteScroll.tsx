@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useUser } from "../../contexts/UserContext";
 import { useSort } from "../../contexts/SortContext";
 import { useInfiniteQuery } from "react-query";
+import { useQueryClient } from "react-query";
 import { useInView } from "react-intersection-observer";
 import { fetchItems } from "../../api/api";
 import { db, storage } from "../../api/firebase";
@@ -15,6 +16,7 @@ import { Item } from "../../types/ItemType";
 import {
   Container,
   ItemBox,
+  SoldOutInfoText,
   ItemImage,
   ItemName,
   ItemPrice,
@@ -26,8 +28,10 @@ const ItemInfiniteScroll = () => {
   const { ref, inView } = useInView();
   const navigate = useNavigate();
   const location = useLocation();
+  const queryClient = useQueryClient();
   const { sortOption } = useSort();
   const { user } = useUser();
+
   const isAdmin = user?.admin ?? false;
 
   const collectionName = location.pathname.includes("/funding")
@@ -69,7 +73,12 @@ const ItemInfiniteScroll = () => {
     }
   }, [inView, hasNextPage, fetchNextPage]);
 
-  const handleItemClick = (id: string) => {
+  const handleItemClick = (id: string, productCount: number) => {
+    if (productCount < 1) {
+      Swal.fire(alertList.infoMessage("품절된 상품입니다."));
+      return;
+    }
+
     const basePath = location.pathname.includes("/funding")
       ? "/funding"
       : "/other";
@@ -93,12 +102,13 @@ const ItemInfiniteScroll = () => {
           const decodedPath = decodeURIComponent(urlPath)
             .split("/o/")[1]
             ?.split("?")[0];
-          const storagePath = `images/${decodedPath}`;
+          const storagePath = `/${decodedPath}`;
           const imageRef = storageRef(storage, storagePath);
           return deleteObject(imageRef);
         });
 
         await Promise.all(deletePromises);
+        queryClient.invalidateQueries(["items", collectionName]);
         Swal.fire(alertList.successMessage("삭제가 완료되었습니다."));
       } catch (error) {
         console.error("Error deleting item:", error);
@@ -111,7 +121,11 @@ const ItemInfiniteScroll = () => {
       {data?.pages.map((page, i) => (
         <React.Fragment key={i}>
           {page.items.map((item: Item) => (
-            <ItemBox key={item.id} onClick={() => handleItemClick(item.id)}>
+            <ItemBox
+              key={item.id}
+              onClick={() => handleItemClick(item.id, item.productCount)}
+            >
+              {item.productCount < 1 && <SoldOutInfoText>품절</SoldOutInfoText>}
               {isAdmin && (
                 <DeleteButton
                   onClick={(e) => {

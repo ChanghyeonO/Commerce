@@ -23,6 +23,24 @@ export const ItemBox = styled.div`
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 `;
 
+export const SoldOutInfoText = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-weight: bold;
+  font-size: 35px;
+  z-index: 1;
+  border-radius: 12px;
+  cursor: pointer;
+`;
+
 export const ItemImage = styled.img`
   width: 100%;
   height: 300px;

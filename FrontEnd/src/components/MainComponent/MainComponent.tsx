@@ -11,6 +11,8 @@ import {
   getDocs,
   getFirestore,
 } from "firebase/firestore";
+import Swal from "sweetalert2";
+import alertList from "../../utils/Swal";
 import ImageUpload from "../ImageUpload/ImageUpload";
 import {
   Container,
@@ -30,6 +32,7 @@ import {
   ItemImage,
   ItemName,
   ItemPrice,
+  SoldOutInfoText,
 } from "../ItemInfiniteScroll/ItemInfiniteScrollStyle";
 import { Item } from "../../types/ItemType";
 
@@ -80,7 +83,15 @@ const MainComponent = () => {
     setShowImageUpload(!showImageUpload);
   };
 
-  const handleItemClick = (isFunding: boolean, id: string) => {
+  const handleItemClick = (
+    isFunding: boolean,
+    id: string,
+    productCount: number,
+  ) => {
+    if (productCount < 1) {
+      Swal.fire(alertList.infoMessage("품절된 상품입니다."));
+      return;
+    }
     const path = isFunding ? `/funding/detail/${id}` : `/other/detail/${id}`;
     navigate(path);
   };
@@ -112,8 +123,13 @@ const MainComponent = () => {
             {fundingItems.map((item) => (
               <ItemBox
                 key={item.id}
-                onClick={() => handleItemClick(true, item.id)}
+                onClick={() =>
+                  handleItemClick(true, item.id, item.productCount)
+                }
               >
+                {item.productCount < 1 && (
+                  <SoldOutInfoText>품절</SoldOutInfoText>
+                )}
                 <ItemImage src={item.itemDescription[0].imageUrl} />
                 <ItemName>{item.name}</ItemName>
                 <ItemPrice>{item.price.toLocaleString()} 원</ItemPrice>
@@ -132,8 +148,13 @@ const MainComponent = () => {
             {otherItems.map((item) => (
               <ItemBox
                 key={item.id}
-                onClick={() => handleItemClick(false, item.id)}
+                onClick={() =>
+                  handleItemClick(false, item.id, item.productCount)
+                }
               >
+                {item.productCount < 1 && (
+                  <SoldOutInfoText>품절</SoldOutInfoText>
+                )}
                 <ItemImage src={item.itemDescription[0].imageUrl} />
                 <ItemName>{item.name}</ItemName>
                 <ItemPrice>{item.price.toLocaleString()} 원</ItemPrice>
