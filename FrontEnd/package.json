@@ -26,7 +26,8 @@
     "react-query": "^3.39.3",
     "react-router-dom": "6.4",
     "styled-components": "^6.1.8",
-    "sweetalert2": "^11.10.4"
+    "sweetalert2": "^11.10.4",
+    "esbuild": "latest"
   },
   "devDependencies": {
     "@types/firebase": "^3.2.1",
