@@ -4,19 +4,29 @@ import DeleteButtonIcon from "../../assets/icons/delete-button.png";
 
 export const Container = styled.div`
   position: fixed;
-  width: 1000px;
-  height: 700px;
-  top: 15%;
-  left: 50%;
-  transform: translateX(-50%);
-  background-color: #fff;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(170, 170, 170, 0.5);
+  z-index: 3;
+`;
+
+export const ContentArea = styled.div`
+  max-width: 900px;
+  height: auto;
+  padding: 20px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  border-radius: 12px;
-  border: 2px solid #999;
   gap: 10px;
+  background-color: #fff;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
+  border-radius: 12px;
 `;
 
 export const CloseButtonArea = styled.div`

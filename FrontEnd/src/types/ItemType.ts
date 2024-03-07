@@ -1,3 +1,5 @@
+import { Timestamp, FieldValue } from "firebase/firestore";
+
 export interface Item {
   id: string;
   name: string;
@@ -5,6 +7,7 @@ export interface Item {
   productCount: number;
   description: string;
   option: string[];
+  deadLine: Timestamp;
   itemDescription: {
     imageUrl: string;
     description: string;
@@ -21,4 +24,19 @@ export interface CartItem {
   price: number;
   totalPrice: number;
   source?: string;
+}
+
+export interface PostData {
+  name: string;
+  description: string;
+  price: number;
+  productCount: number;
+  itemDescription: {
+    description: string;
+    imageUrl: string;
+  }[];
+  option: string[];
+  createdAt: FieldValue;
+  targetSales?: number;
+  deadLine?: Timestamp | null;
 }

@@ -20,6 +20,8 @@ import {
   DropdownSelected,
   DropdownOptions,
   DropdownOption,
+  IntroDeadLineArea,
+  IntroDeadLine,
   IntroProductCountArea,
   IntroProductCount,
   ProductCountArea,
@@ -56,6 +58,8 @@ const ProductDetailComponent = () => {
       return "otherItems";
     }
   };
+
+  const isFundingPage = location.pathname.includes("/funding");
 
   useEffect(() => {
     const fetchItemDetails = async () => {
@@ -215,9 +219,20 @@ const ProductDetailComponent = () => {
               )}
             </DropdownContainer>
           </OptionArea>
+          {isFundingPage && (
+            <>
+              <IntroDeadLineArea>
+                <IntroDeadLine>
+                  펀딩 마감일 :
+                  {item?.deadLine?.toDate().toLocaleDateString("ko-KR")}
+                </IntroDeadLine>
+              </IntroDeadLineArea>
+            </>
+          )}
           <IntroProductCountArea>
-            <IntroProductCount>재고 수량</IntroProductCount>
-            <IntroProductCount>{item?.productCount} 개</IntroProductCount>
+            <IntroProductCount>
+              재고 수량 :{item?.productCount} 개
+            </IntroProductCount>
           </IntroProductCountArea>
           <ProductCountArea>
             <MinusButton

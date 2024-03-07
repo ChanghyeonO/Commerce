@@ -46,6 +46,7 @@ import {
   UploadButtonArea,
   UploadButton,
 } from "./ProductCreatorComponentStyle";
+import { PostData } from "../../types/ItemType";
 
 interface IntroContent {
   id: number;
@@ -66,6 +67,7 @@ const ProductCreatorComponent = () => {
   const [productDescription, setProductDescription] = useState("");
   const [price, setPrice] = useState("");
   const [productCount, setProductCount] = useState("");
+  const [targetSalesCount, setTargetSalesCount] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const today = new Date();
   const [date, setDate] = useState<Value>(today);
@@ -186,6 +188,7 @@ const ProductCreatorComponent = () => {
       Swal.fire(alertList.infoMessage("제품 갯수는 1개 이상이어야 합니다."));
       return;
     }
+
     const uploads = introContents
       .filter((content) => content.imageFile)
       .map(async (content) => {
@@ -193,10 +196,12 @@ const ProductCreatorComponent = () => {
         const snapshot = await uploadBytes(imageRef, content.imageFile as File);
         return getDownloadURL(snapshot.ref);
       });
-    const selectedDate = Array.isArray(date) ? date[0] : date; //
-    const firestoreTimestamp = selectedDate
-      ? Timestamp.fromDate(selectedDate)
-      : null;
+
+    const selectedDate = Array.isArray(date) ? date[0] : date;
+    let firestoreTimestamp = null;
+    if (selectedDate) {
+      firestoreTimestamp = Timestamp.fromDate(selectedDate);
+    }
 
     try {
       const imageUrls = await Promise.all(uploads);
@@ -205,7 +210,7 @@ const ProductCreatorComponent = () => {
         imageUrl: content.imageFile ? imageUrls[index] : content.imageUrl,
       }));
 
-      const postData = {
+      let postData: PostData = {
         name: productName,
         description: productDescription,
         price: Number(price),
@@ -213,8 +218,15 @@ const ProductCreatorComponent = () => {
         itemDescription: updatedIntroContents,
         option: options.map((option) => option.value),
         createdAt: serverTimestamp(),
-        deadline: firestoreTimestamp,
       };
+
+      if (isFundingCreatePage) {
+        postData = {
+          ...postData,
+          targetSales: Number(targetSalesCount),
+          deadLine: firestoreTimestamp,
+        };
+      }
 
       const collectionName = getCollectionName();
       const postRef = doc(collection(db, collectionName));
@@ -276,17 +288,21 @@ const ProductCreatorComponent = () => {
             value={price}
             onChange={(e) => setPrice(e.target.value)}
           />
+          <ProductCountInput
+            type="number"
+            placeholder="제품 재고 수량을 입력해주세요."
+            value={productCount}
+            onChange={(e) => setProductCount(e.target.value)}
+          />
 
           {isFundingCreatePage ? (
             <>
-              <IntroText>
-                판매할 제품의 개수 및 마감일을 설정해주세요.
-              </IntroText>
+              <IntroText>목표 판매량 및 마감일을 설정해주세요.</IntroText>
               <ProductCountInput
                 type="number"
-                placeholder="제품 갯수를 입력해주세요."
-                value={productCount}
-                onChange={(e) => setProductCount(e.target.value)}
+                placeholder="목표 판매 수량을 입력해주세요."
+                value={targetSalesCount}
+                onChange={(e) => setTargetSalesCount(e.target.value)}
               />
               <StyledCalendarArea>
                 <StyledCalendar

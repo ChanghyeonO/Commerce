@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom"; // 현재 경로 정보를 얻기 위해 useLocation 훅을 import
+import { useLocation } from "react-router-dom";
 import { db } from "../../api/firebase";
 import { doc, onSnapshot } from "firebase/firestore";
 import {
@@ -19,7 +19,7 @@ const ImageSlider = ({ images: propImages }: { images?: string[] }) => {
   useEffect(() => {
     if (!isDetailPage) {
       const docRef = doc(db, "slideImages", "main");
-      const unsubscribe = onSnapshot(docRef, doc => {
+      const unsubscribe = onSnapshot(docRef, (doc) => {
         if (doc.exists()) {
           setImages(doc.data().images || []);
         } else {
@@ -35,10 +35,12 @@ const ImageSlider = ({ images: propImages }: { images?: string[] }) => {
   }, [isDetailPage, propImages]);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentSlide(prev => (prev + 1) % images.length || 1);
-    }, 5000);
-    return () => clearInterval(interval);
+    if (images.length > 1) {
+      const interval = setInterval(() => {
+        setCurrentSlide((prev) => (prev + 1) % images.length);
+      }, 5000);
+      return () => clearInterval(interval);
+    }
   }, [images]);
 
   const goToSlide = (index: number) => {

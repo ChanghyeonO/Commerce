@@ -20,6 +20,7 @@ import Loading from "../Loading/Loading";
 
 import {
   Container,
+  ContentArea,
   CloseButtonArea,
   CloseButton,
   ImageUploadArea,
@@ -46,7 +47,7 @@ const ImageUpload = ({ onClose }: Props) => {
     if (files) {
       const newFiles = Array.from(files);
       setImage(newFiles[0]);
-      setPreviewImages(prev => [...prev, ...newFiles]);
+      setPreviewImages((prev) => [...prev, ...newFiles]);
     }
   };
 
@@ -58,7 +59,7 @@ const ImageUpload = ({ onClose }: Props) => {
       return;
     }
 
-    const uploadPromises = previewImages.map(async file => {
+    const uploadPromises = previewImages.map(async (file) => {
       const imageRef = ref(storage, `images/${file.name}_${Date.now()}`);
       try {
         const snapshot = await uploadBytes(imageRef, file);
@@ -75,8 +76,8 @@ const ImageUpload = ({ onClose }: Props) => {
     });
 
     Promise.all(uploadPromises)
-      .then(urls => {
-        setUploadedImages(prev => [...prev, ...urls]);
+      .then((urls) => {
+        setUploadedImages((prev) => [...prev, ...urls]);
         setPreviewImages([]);
         setIsLoading(false);
         Swal.fire(
@@ -96,7 +97,7 @@ const ImageUpload = ({ onClose }: Props) => {
     const mainDocRef = doc(db, "slideImages", "main");
     try {
       await updateDoc(mainDocRef, { images: arrayRemove(urlToDelete) });
-      setUploadedImages(uploadedImages.filter(url => url !== urlToDelete));
+      setUploadedImages(uploadedImages.filter((url) => url !== urlToDelete));
       const imageRef = ref(storage, urlToDelete);
       await deleteObject(imageRef);
       setIsLoading(false);
@@ -118,7 +119,7 @@ const ImageUpload = ({ onClose }: Props) => {
       const imagesRef = collection(db, "slideImages");
       const snapshot = await getDocs(imagesRef);
       const imagesList: string[] = [];
-      snapshot.forEach(doc => {
+      snapshot.forEach((doc) => {
         const data = doc.data();
         if (data.images) {
           imagesList.push(...data.images);
@@ -131,31 +132,38 @@ const ImageUpload = ({ onClose }: Props) => {
   }, []);
   return (
     <Container>
-      <ImageUploadArea>
-        {uploadedImages.map((url, index) => (
-          <ImageContainer key={index}>
-            <UploadedImage src={url} alt={`Uploaded ${index}`} />
-            <DeleteButton onClick={() => handleDelete(url)} />
-          </ImageContainer>
-        ))}
+      <ContentArea>
+        <ImageUploadArea>
+          {uploadedImages.map((url, index) => (
+            <ImageContainer key={index}>
+              <UploadedImage src={url} alt={`Uploaded ${index}`} />
+              <DeleteButton onClick={() => handleDelete(url)} />
+            </ImageContainer>
+          ))}
 
-        {previewImages.map((file, index) => (
-          <ImageContainer key={index}>
-            <UploadedImage
-              src={URL.createObjectURL(file)}
-              alt={`Preview ${index}`}
-            />
-            <DeleteButton onClick={() => handleDeletePreview(index)} />
-          </ImageContainer>
-        ))}
-      </ImageUploadArea>
+          {previewImages.map((file, index) => (
+            <ImageContainer key={index}>
+              <UploadedImage
+                src={URL.createObjectURL(file)}
+                alt={`Preview ${index}`}
+              />
+              <DeleteButton onClick={() => handleDeletePreview(index)} />
+            </ImageContainer>
+          ))}
+        </ImageUploadArea>
 
-      <AddLabel htmlFor="file-upload" />
-      <AddInput id="file-upload" type="file" multiple onChange={handleChange} />
-      <CloseButtonArea>
-        <ImageUploadButton onClick={handleUpload}>업로드</ImageUploadButton>
-        <CloseButton onClick={onClose}>닫기</CloseButton>
-      </CloseButtonArea>
+        <AddLabel htmlFor="file-upload" />
+        <AddInput
+          id="file-upload"
+          type="file"
+          multiple
+          onChange={handleChange}
+        />
+        <CloseButtonArea>
+          <ImageUploadButton onClick={handleUpload}>업로드</ImageUploadButton>
+          <CloseButton onClick={onClose}>닫기</CloseButton>
+        </CloseButtonArea>
+      </ContentArea>
       {isLoading && <Loading />}
     </Container>
   );
