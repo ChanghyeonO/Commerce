@@ -47,6 +47,13 @@ const MainComponent = () => {
 
   const isAdmin = user?.admin ?? false;
 
+  const checkIfFundingEnded = (item: Item) => {
+    if (!item.deadLine) return false;
+    const now = new Date();
+    const deadlineDate = item.deadLine.toDate();
+    return now > deadlineDate;
+  };
+
   useEffect(() => {
     const fetchItems = async () => {
       const fundingQuery = query(
@@ -127,7 +134,10 @@ const MainComponent = () => {
                   handleItemClick(true, item.id, item.productCount)
                 }
               >
-                {item.productCount < 1 && (
+                {checkIfFundingEnded(item) && (
+                  <SoldOutInfoText>펀딩 마감</SoldOutInfoText>
+                )}
+                {item.productCount < 1 && !checkIfFundingEnded(item) && (
                   <SoldOutInfoText>품절</SoldOutInfoText>
                 )}
                 <ItemImage src={item.itemDescription[0].imageUrl} />

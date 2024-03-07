@@ -22,6 +22,9 @@ import {
   DropdownOption,
   IntroDeadLineArea,
   IntroDeadLine,
+  FundingGaugeContainer,
+  FundingGaugeFiller,
+  FundingGaugePercentage,
   IntroProductCountArea,
   IntroProductCount,
   ProductCountArea,
@@ -41,6 +44,7 @@ import {
 
 const ProductDetailComponent = () => {
   const [item, setItem] = useState<Item>();
+  const [isDeadlinePassed, setIsDeadlinePassed] = useState(false);
   const [totalPrice, setTotalPrice] = useState(0);
   const [itemCount, setItemCount] = useState(1);
   const [isOpen, setIsOpen] = useState(false);
@@ -60,6 +64,14 @@ const ProductDetailComponent = () => {
   };
 
   const isFundingPage = location.pathname.includes("/funding");
+
+  useEffect(() => {
+    if (item && item.deadLine) {
+      const now = new Date();
+      const deadlineDate = item.deadLine.toDate();
+      setIsDeadlinePassed(now > deadlineDate);
+    }
+  }, [item]);
 
   useEffect(() => {
     const fetchItemDetails = async () => {
@@ -171,13 +183,20 @@ const ProductDetailComponent = () => {
   };
 
   const addToCartHandler = () => {
-    addToCart(false);
+    if (isDeadlinePassed) {
+      Swal.fire(alertList.infoMessage("펀딩 마감일이 지났습니다."));
+    } else {
+      addToCart(false);
+    }
   };
 
   const purchaseHandler = () => {
-    addToCart(true);
+    if (isDeadlinePassed) {
+      Swal.fire(alertList.infoMessage("펀딩 마감일이 지났습니다."));
+    } else {
+      addToCart(true);
+    }
   };
-
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
   };
@@ -186,6 +205,11 @@ const ProductDetailComponent = () => {
     setSelectedOption(option);
     setIsOpen(false);
   };
+
+  const fundingProgress =
+    item && item.targetSales > 0
+      ? (item.salesCount / item.targetSales) * 100
+      : 0;
 
   return (
     <Container>
@@ -226,7 +250,16 @@ const ProductDetailComponent = () => {
                   펀딩 마감일 :
                   {item?.deadLine?.toDate().toLocaleDateString("ko-KR")}
                 </IntroDeadLine>
+                <IntroDeadLine>
+                  목표 판매량 :{item?.targetSales} 개
+                </IntroDeadLine>
               </IntroDeadLineArea>
+              <FundingGaugeContainer>
+                <FundingGaugeFiller style={{ width: `${fundingProgress}%` }} />
+                <FundingGaugePercentage>
+                  {fundingProgress.toFixed(2)}%
+                </FundingGaugePercentage>
+              </FundingGaugeContainer>
             </>
           )}
           <IntroProductCountArea>

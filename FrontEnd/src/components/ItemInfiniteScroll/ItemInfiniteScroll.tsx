@@ -34,6 +34,15 @@ const ItemInfiniteScroll = () => {
 
   const isAdmin = user?.admin ?? false;
 
+  const isFundingPage = location.pathname.includes("/funding");
+
+  const checkIfFundingEnded = (item: Item) => {
+    if (!item.deadLine) return false;
+    const now = new Date();
+    const deadlineDate = item.deadLine.toDate();
+    return now > deadlineDate;
+  };
+
   const collectionName = location.pathname.includes("/funding")
     ? "fundingItems"
     : "otherItems";
@@ -120,31 +129,40 @@ const ItemInfiniteScroll = () => {
     <Container>
       {data?.pages.map((page, i) => (
         <React.Fragment key={i}>
-          {page.items.map((item: Item) => (
-            <ItemBox
-              key={item.id}
-              onClick={() => handleItemClick(item.id, item.productCount)}
-            >
-              {item.productCount < 1 && <SoldOutInfoText>품절</SoldOutInfoText>}
-              {isAdmin && (
-                <DeleteButton
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    deleteItemWithImage(item.id, item.itemDescription);
-                  }}
+          {page.items.map((item: Item) => {
+            const isFundingEnded = checkIfFundingEnded(item);
+
+            return (
+              <ItemBox
+                key={item.id}
+                onClick={() => handleItemClick(item.id, item.productCount)}
+              >
+                {item.productCount < 1 && (
+                  <SoldOutInfoText>품절</SoldOutInfoText>
+                )}
+                {isFundingPage && isFundingEnded && (
+                  <SoldOutInfoText>펀딩 마감</SoldOutInfoText>
+                )}
+                {isAdmin && (
+                  <DeleteButton
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      deleteItemWithImage(item.id, item.itemDescription);
+                    }}
+                  />
+                )}
+                <ItemImage
+                  src={
+                    item.itemDescription[0]?.imageUrl ||
+                    "https://bunny-pit-image.s3.ap-northeast-2.amazonaws.com/image.png"
+                  }
+                  alt={`Product ${item.id}`}
                 />
-              )}
-              <ItemImage
-                src={
-                  item.itemDescription[0]?.imageUrl ||
-                  "https://bunny-pit-image.s3.ap-northeast-2.amazonaws.com/image.png"
-                }
-                alt={`Product ${item.id}`}
-              />
-              <ItemName>{item.name}</ItemName>
-              <ItemPrice>{item.price.toLocaleString()} 원</ItemPrice>
-            </ItemBox>
-          ))}
+                <ItemName>{item.name}</ItemName>
+                <ItemPrice>{item.price.toLocaleString()} 원</ItemPrice>
+              </ItemBox>
+            );
+          })}
         </React.Fragment>
       ))}
       <EndMessage ref={ref}>

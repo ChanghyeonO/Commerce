@@ -83,16 +83,38 @@ export const DropdownOption = styled.div`
 
 export const IntroDeadLineArea = styled.div`
   width: 80%;
-  height: 60px;
+  height: 30px;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
   gap: 20px;
 `;
 
 export const IntroDeadLine = styled.div`
-  font-size: 20px;
+  font-size: 15px;
   font-weight: bold;
+`;
+
+export const FundingGaugeContainer = styled.div`
+  position: relative;
+  width: 80%;
+  background-color: #eee;
+  border-radius: 8px;
+`;
+
+export const FundingGaugeFiller = styled.div`
+  height: 30px;
+  background-color: #5271ff;
+  border-radius: inherit;
+  transition: width 0.5s ease-in-out;
+`;
+
+export const FundingGaugePercentage = styled.span`
+  position: absolute;
+  right: 5px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 14px;
 `;
 
 export const IntroProductCountArea = styled.div`

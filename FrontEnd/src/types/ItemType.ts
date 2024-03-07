@@ -7,7 +7,9 @@ export interface Item {
   productCount: number;
   description: string;
   option: string[];
-  deadLine: Timestamp;
+  deadLine?: Timestamp;
+  targetSales: number;
+  salesCount: number;
   itemDescription: {
     imageUrl: string;
     description: string;
@@ -38,5 +40,6 @@ export interface PostData {
   option: string[];
   createdAt: FieldValue;
   targetSales?: number;
+  salesCount: number;
   deadLine?: Timestamp | null;
 }

@@ -218,6 +218,7 @@ const ProductCreatorComponent = () => {
         itemDescription: updatedIntroContents,
         option: options.map((option) => option.value),
         createdAt: serverTimestamp(),
+        salesCount: 0,
       };
 
       if (isFundingCreatePage) {
@@ -295,7 +296,7 @@ const ProductCreatorComponent = () => {
             onChange={(e) => setProductCount(e.target.value)}
           />
 
-          {isFundingCreatePage ? (
+          {isFundingCreatePage && (
             <>
               <IntroText>목표 판매량 및 마감일을 설정해주세요.</IntroText>
               <ProductCountInput
@@ -322,13 +323,6 @@ const ProductCreatorComponent = () => {
                 />
               </StyledCalendarArea>
             </>
-          ) : (
-            <ProductCountInput
-              type="number"
-              placeholder="제품 갯수를 입력해주세요."
-              value={productCount}
-              onChange={(e) => setProductCount(e.target.value)}
-            />
           )}
         </Header>
         <Body>

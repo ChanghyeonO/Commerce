@@ -124,15 +124,22 @@ const CheckoutComponent = () => {
       const productSnap = await getDoc(productRef);
 
       if (productSnap.exists()) {
-        const currentStock = productSnap.data().productCount;
+        const productData = productSnap.data() as {
+          productCount: number;
+          salesCount: number;
+        };
+        const currentStock = productData.productCount;
+        const currentSales = productData.salesCount || 0;
         const newStock = currentStock - item.count;
+        const newSales = currentSales + item.count;
 
-        if (newStock >= 0) {
-          await updateDoc(productRef, { productCount: newStock });
-          console.log(`재고 업데이트 성공: ${item.name}`);
-        } else {
-          console.error(`재고 부족: ${item.name}`);
-        }
+        const updates = {
+          ...(newStock >= 0 && { productCount: newStock }),
+          salesCount: newSales,
+        };
+
+        await updateDoc(productRef, updates);
+        console.log(`재고 및 판매량 업데이트 성공: ${item.name}`);
       } else {
         console.error(`제품 정보 없음: ${item.id}`);
       }
