@@ -38,6 +38,7 @@ export const Title = styled.h1`
 
 export const Description = styled.p`
   font-size: 15px;
+  white-space: pre-wrap;
 `;
 
 export const OptionArea = styled.div`
@@ -218,4 +219,5 @@ export const ProductDescription = styled.div`
   align-items: center;
   justify-content: center;
   font-size: 25px;
+  white-space: pre-wrap;
 `;

@@ -7,7 +7,14 @@ import {
   uploadBytes,
   deleteObject,
 } from "firebase/storage";
-import { collection, doc, serverTimestamp, setDoc } from "firebase/firestore";
+import {
+  Timestamp,
+  collection,
+  doc,
+  serverTimestamp,
+  setDoc,
+} from "firebase/firestore";
+import moment from "moment";
 import Swal from "sweetalert2";
 import alertList from "../../utils/Swal";
 import Loading from "../Loading/Loading";
@@ -26,6 +33,8 @@ import {
   OptionAddButton,
   PriceAddInput,
   ProductCountInput,
+  StyledCalendarArea,
+  StyledCalendar,
   Body,
   ContentAddButton,
   IntroContentArea,
@@ -45,6 +54,9 @@ interface IntroContent {
   imageFile?: File;
 }
 
+type ValuePiece = Date | null;
+type Value = ValuePiece | [ValuePiece, ValuePiece];
+
 const ProductCreatorComponent = () => {
   const [options, setOptions] = useState([{ id: 1, value: "" }]);
   const [introContents, setIntroContents] = useState<IntroContent[]>([
@@ -55,9 +67,15 @@ const ProductCreatorComponent = () => {
   const [price, setPrice] = useState("");
   const [productCount, setProductCount] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const today = new Date();
+  const [date, setDate] = useState<Value>(today);
 
   const location = useLocation();
   const navigate = useNavigate();
+
+  const handleDateChange = (newDate: Value) => {
+    setDate(newDate);
+  };
 
   const getCollectionName = () => {
     if (location.pathname.includes("/funding/create")) {
@@ -67,6 +85,8 @@ const ProductCreatorComponent = () => {
     }
     return "defaultCollection";
   };
+
+  const isFundingCreatePage = location.pathname.includes("/funding/create");
 
   const addOption = () => {
     if (options.length < 6) {
@@ -173,6 +193,10 @@ const ProductCreatorComponent = () => {
         const snapshot = await uploadBytes(imageRef, content.imageFile as File);
         return getDownloadURL(snapshot.ref);
       });
+    const selectedDate = Array.isArray(date) ? date[0] : date; //
+    const firestoreTimestamp = selectedDate
+      ? Timestamp.fromDate(selectedDate)
+      : null;
 
     try {
       const imageUrls = await Promise.all(uploads);
@@ -189,6 +213,7 @@ const ProductCreatorComponent = () => {
         itemDescription: updatedIntroContents,
         option: options.map((option) => option.value),
         createdAt: serverTimestamp(),
+        deadline: firestoreTimestamp,
       };
 
       const collectionName = getCollectionName();
@@ -228,7 +253,7 @@ const ProductCreatorComponent = () => {
             value={productDescription}
             onChange={(e) => setProductDescription(e.target.value)}
           />
-          <IntroText>추가할 옵션을 작성해주세요</IntroText>
+          <IntroText>추가할 옵션을 작성해주세요.</IntroText>
           {options.map((option) => (
             <OptionInputArea key={option.id}>
               <OptionInput
@@ -247,19 +272,51 @@ const ProductCreatorComponent = () => {
           <OptionAddButton onClick={addOption}>추가</OptionAddButton>
           <PriceAddInput
             type="number"
-            placeholder="판매 금액을 작성해주세요."
+            placeholder="판매 금액을 작성해주세요. 단위(원)"
             value={price}
             onChange={(e) => setPrice(e.target.value)}
           />
-          <ProductCountInput
-            type="number"
-            placeholder="제품 갯수를 입력해주세요."
-            value={productCount}
-            onChange={(e) => setProductCount(e.target.value)}
-          />
+
+          {isFundingCreatePage ? (
+            <>
+              <IntroText>
+                판매할 제품의 개수 및 마감일을 설정해주세요.
+              </IntroText>
+              <ProductCountInput
+                type="number"
+                placeholder="제품 갯수를 입력해주세요."
+                value={productCount}
+                onChange={(e) => setProductCount(e.target.value)}
+              />
+              <StyledCalendarArea>
+                <StyledCalendar
+                  value={date}
+                  onChange={handleDateChange}
+                  formatDay={(locale, date) => moment(date).format("D")}
+                  formatYear={(locale, date) => moment(date).format("YYYY")}
+                  formatMonthYear={(locale, date) =>
+                    moment(date).format("YYYY. MM")
+                  }
+                  calendarType="gregory"
+                  showNeighboringMonth={false}
+                  next2Label={null}
+                  prev2Label={null}
+                  minDetail="year"
+                  minDate={new Date()}
+                />
+              </StyledCalendarArea>
+            </>
+          ) : (
+            <ProductCountInput
+              type="number"
+              placeholder="제품 갯수를 입력해주세요."
+              value={productCount}
+              onChange={(e) => setProductCount(e.target.value)}
+            />
+          )}
         </Header>
         <Body>
-          <IntroText>제품에 대한 추가 정보를 작성해주세요</IntroText>
+          <IntroText>제품에 대한 추가 정보를 작성해주세요.</IntroText>
           {introContents.map((content, index) => (
             <IntroContentArea key={index}>
               <ImageArea>

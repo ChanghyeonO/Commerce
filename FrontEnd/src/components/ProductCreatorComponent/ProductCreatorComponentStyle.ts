@@ -1,4 +1,6 @@
 import styled from "styled-components";
+import Calendar from "react-calendar";
+import "react-calendar/dist/Calendar.css";
 import AddButtonIcon from "../../assets/icons/add-button.png";
 
 export const Container = styled.div`
@@ -113,6 +115,15 @@ export const ProductCountInput = styled(InputDesign)`
     -moz-appearance: textfield;
   }
 `;
+
+export const StyledCalendarArea = styled.div`
+  width: 100%;
+  padding: 10px 0;
+  display: flex;
+  justify-content: start;
+`;
+
+export const StyledCalendar = styled(Calendar)``;
 
 export const Body = styled.div`
   margin-bottom: 10px;
