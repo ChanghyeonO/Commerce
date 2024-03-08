@@ -73,7 +73,8 @@ export const RegisterButton = styled(LoginRegisterButtonDesign)`
 `;
 
 export const UserContent = styled.div`
-  display: flex;
+  position: relative;
+  display: inline-block;
   align-items: center;
   justify-content: center;
   width: 35%;
@@ -87,4 +88,19 @@ export const UserLogo = styled.img`
   background-size: 100% 100%;
   border: 2px solid #eee;
   cursor: pointer;
+`;
+
+export const CartItemCount = styled.div`
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  width: 20px;
+  height: 20px;
+  background-color: #e01040;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
 `;

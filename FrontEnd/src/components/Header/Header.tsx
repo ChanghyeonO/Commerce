@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { auth } from "../../api/firebase";
-import { onAuthStateChanged, signOut } from "firebase/auth";
+import { signOut } from "firebase/auth";
 import { useUser } from "../../contexts/UserContext";
 import FUNDITLOGO from "../../assets/icons/FUNDITHEADERFOOTER.png";
 import UserImage from "../../assets/icons/UserLogo.png";
@@ -19,11 +19,33 @@ import {
   RegisterButton,
   UserContent,
   UserLogo,
+  CartItemCount,
 } from "./HeaderStyle";
 
 const Header = () => {
+  const [cartItemsCount, setCartItemsCount] = useState(0);
   const { user } = useUser();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const getCartItemCount = () => {
+      const fundingItemsCart = JSON.parse(
+        sessionStorage.getItem("fundingItemsCart") || "[]",
+      );
+      const otherItemsCart = JSON.parse(
+        sessionStorage.getItem("otherItemsCart") || "[]",
+      );
+      const totalItemCount = fundingItemsCart.length + otherItemsCart.length;
+      setCartItemsCount(totalItemCount);
+    };
+    getCartItemCount();
+
+    window.addEventListener("storage", getCartItemCount);
+
+    return () => {
+      window.removeEventListener("storage", getCartItemCount);
+    };
+  });
 
   const handleLogout = async () => {
     const result = await Swal.fire(
@@ -63,6 +85,7 @@ const Header = () => {
             <UserContent>
               <Link to={"/mypage/check-password"}>
                 <UserLogo src={UserImage} alt="유저 이미지" />
+                <CartItemCount>{cartItemsCount}</CartItemCount>
               </Link>
             </UserContent>
           </LoginContent>
