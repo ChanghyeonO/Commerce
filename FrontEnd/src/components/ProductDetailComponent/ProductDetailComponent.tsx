@@ -165,6 +165,8 @@ const ProductDetailComponent = () => {
 
       sessionStorage.setItem(cartKey, JSON.stringify(currentCart));
 
+      window.dispatchEvent(new Event("sessionStorageChanged"));
+
       if (navigateToCart) {
         navigate("/mypage/cart");
       } else {

@@ -38,14 +38,17 @@ const Header = () => {
       const totalItemCount = fundingItemsCart.length + otherItemsCart.length;
       setCartItemsCount(totalItemCount);
     };
-    getCartItemCount();
 
     window.addEventListener("storage", getCartItemCount);
+    window.addEventListener("sessionStorageChanged", getCartItemCount);
+
+    getCartItemCount();
 
     return () => {
       window.removeEventListener("storage", getCartItemCount);
+      window.removeEventListener("sessionStorageChanged", getCartItemCount);
     };
-  });
+  }, []);
 
   const handleLogout = async () => {
     const result = await Swal.fire(
@@ -85,7 +88,9 @@ const Header = () => {
             <UserContent>
               <Link to={"/mypage/check-password"}>
                 <UserLogo src={UserImage} alt="유저 이미지" />
-                <CartItemCount>{cartItemsCount}</CartItemCount>
+                {cartItemsCount > 0 && (
+                  <CartItemCount>{cartItemsCount}</CartItemCount>
+                )}
               </Link>
             </UserContent>
           </LoginContent>

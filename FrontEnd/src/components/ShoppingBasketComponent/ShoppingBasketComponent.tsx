@@ -61,6 +61,7 @@ const ShoppingBasketComponent = () => {
       (item) => !(item.id === id && item.option === option),
     );
     updateCartItems(updatedCartItems, category);
+    window.dispatchEvent(new Event("sessionStorageChanged"));
   };
 
   const handleIncrease = (
