@@ -137,6 +137,32 @@ export const cancelPayment = functions.https.onRequest((request, response) => {
   });
 });
 
+export const checkFundingDeadLines = functions.pubsub
+  .schedule("every 24 hours")
+  .onRun(async (context) => {
+    const firestoreTimeNow = admin.firestore.Timestamp.now();
+    const querySnapshot = await db
+      .collection("fundingItems")
+      .where("deadLine", "<", firestoreTimeNow)
+      .get();
+
+    if (querySnapshot.empty) {
+      console.log("마감기한이 지난 문서가 존재하지 않습니다.");
+      return;
+    }
+
+    const copyAndDeletePromises = querySnapshot.docs.map(async (doc) => {
+      const docData = doc.data();
+      const newDocRef = db.collection("alreadyCheckDeadLineItems").doc(doc.id);
+
+      await newDocRef.set(docData);
+      await doc.ref.delete();
+    });
+
+    await Promise.all(copyAndDeletePromises);
+    console.log("마감기한 지난 문서들이 복사되고 원본이 삭제되었습니다.");
+  });
+
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
@@ -145,43 +171,69 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-export const checkFundingDeadlines = functions.pubsub
-  .schedule("every 5 minutes")
+export const emailSendAlreadyCheckedDeadLine = functions.pubsub
+  .schedule("every 12 hours")
   .onRun(async (context) => {
-    const now = admin.firestore.Timestamp.now();
-    const querySnapshot = await db
-      .collection("fundingItems")
-      .where("deadLine", "<", now)
+    const deadlineItemsSnapshot = await db
+      .collection("alreadyCheckDeadLineItems")
+      .where("deadLineCheck", "!=", true)
       .get();
 
-    if (querySnapshot.empty) {
-      console.log("No matching documents.");
+    if (deadlineItemsSnapshot.empty) {
+      console.log("이미 모든 문서가 처리되었습니다.");
       return;
     }
 
-    const mailPromises = querySnapshot.docs.map((doc) => {
-      const { name, deadLine } = doc.data();
-      console.log(`Preparing email for expired funding item: ${name}`);
+    const mailPromises: Promise<void>[] = [];
 
-      const mailOptions = {
-        from: "fundit@gmail.com",
-        to: "ckdgus5189@gmail.com",
-        subject: `${name} 펀딩 마감일이 지났습니다`,
-        text: `${name}의 펀딩 마감일이 ${deadLine
-          .toDate()
-          .toLocaleString()}에 지났습니다.`,
-      };
+    deadlineItemsSnapshot.docs
+      .filter((doc) => doc.data().deadLineCheck !== true)
+      .forEach(async (deadlineDoc) => {
+        const { name, deadLine, salesCount, targetSales } = deadlineDoc.data();
 
-      return transporter
-        .sendMail(mailOptions)
-        .then((info) => {
-          console.log(`Email sent: ${info.response}`);
-        })
-        .catch((error) => {
-          console.error(`Failed to send email for ${name}: ${error}`);
+        let fundingResult = "실패";
+        let resultInfoMessage = "환불 처리 될 예정입니다.";
+        if (salesCount >= targetSales) {
+          fundingResult = "성공";
+          resultInfoMessage = "배송이 시작 될 예정입니다.";
+        }
+
+        const orderItemsSnapshot = await db
+          .collection("orderItems")
+          .where("items", "array-contains", deadlineDoc.id)
+          .get();
+
+        orderItemsSnapshot.docs.forEach((orderDoc) => {
+          const { buyer_email, buyer_name } = orderDoc.data();
+
+          const mailOptions = {
+            from: "fundit@gmail.com",
+            to: buyer_email,
+            subject: `안녕하세요 ${buyer_name}님, ${name} 제품 펀딩이 마감되었습니다.`,
+            html: `<img src="https://firebasestorage.googleapis.com/v0/b/commerce-204d5.appspot.com/o/funditLogo%2FFUNDIT%20LOGO.png?alt=media&token=3031a550-f0d8-4e72-8955-5fe935be4283" alt="FUNDIT LOGO"/><br>
+            안녕하세요 ${buyer_name}님, FUNDIT입니다.<br>
+                   <strong>${name}</strong> 제품의 펀딩이 ${deadLine
+  .toDate()
+  .toLocaleString()}에 마감되었습니다.<br>
+                   해당 제품의 펀딩이 ${fundingResult}하여 ${resultInfoMessage}<br>
+                   FUNDIT을 이용해주셔서 감사합니다.`,
+          };
+
+          mailPromises.push(
+            transporter
+              .sendMail(mailOptions)
+              .then((info) => {
+                console.log(`이메일 발송 완료: ${info.response}`);
+                return deadlineDoc.ref.update({ deadLineCheck: true });
+              })
+              .then(() => undefined)
+              .catch((error) => {
+                console.error(`이메일 발송 실패: ${name}: ${error}`);
+              }),
+          );
         });
-    });
+      });
 
     await Promise.all(mailPromises);
-    console.log("All emails processed.");
+    console.log("모든 이메일 발송을 완료했습니다.");
   });

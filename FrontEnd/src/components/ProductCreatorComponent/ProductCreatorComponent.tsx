@@ -226,6 +226,7 @@ const ProductCreatorComponent = () => {
           ...postData,
           targetSales: Number(targetSalesCount),
           deadLine: firestoreTimestamp,
+          deadLineCheck: false,
         };
       }
 

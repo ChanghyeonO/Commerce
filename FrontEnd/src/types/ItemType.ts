@@ -42,4 +42,5 @@ export interface PostData {
   targetSales?: number;
   salesCount: number;
   deadLine?: Timestamp | null;
+  deadLineCheck?: boolean;
 }

@@ -196,11 +196,7 @@ const CheckoutComponent = () => {
               buyer_addr: paymentData.buyer_addr,
               order_status: "결제완료",
               delivery_request: deliveryReq,
-              items: cartItems.map((item) => ({
-                name: item.name,
-                option: item.option,
-                count: item.count,
-              })),
+              items: cartItems.map((item) => item.id),
               created_at: serverTimestamp(),
             });
 
