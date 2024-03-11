@@ -8,6 +8,7 @@ import {
   deleteObject,
 } from "firebase/storage";
 import {
+  DocumentReference,
   Timestamp,
   collection,
   doc,
@@ -171,6 +172,24 @@ const ProductCreatorComponent = () => {
     setIntroContents(newIntroContents);
   };
 
+  const addToExpiredFundingItems = async (
+    postData: PostData,
+    expiredPostRef: DocumentReference,
+  ) => {
+    try {
+      await setDoc(expiredPostRef, {
+        name: postData.name,
+        salesCount: postData.salesCount,
+        targetSales: postData.targetSales,
+        deadLine: postData.deadLine,
+        emailSendCheck: postData.emailSendCheck,
+      });
+      console.log("expiredFundingItems에 항목 추가 성공");
+    } catch (error) {
+      console.error("expiredFundingItems에 항목 추가 실패:", error);
+    }
+  };
+
   const uploadPostWithImages = async () => {
     setIsLoading(true);
 
@@ -226,13 +245,16 @@ const ProductCreatorComponent = () => {
           ...postData,
           targetSales: Number(targetSalesCount),
           deadLine: firestoreTimestamp,
-          deadLineCheck: false,
         };
       }
 
       const collectionName = getCollectionName();
       const postRef = doc(collection(db, collectionName));
-      await setDoc(postRef, postData);
+      const docId = postRef.id;
+      await setDoc(postRef, postData).then(() => {
+        const expiredPostRef = doc(db, "expiredFundingItems", docId);
+        addToExpiredFundingItems(postData, expiredPostRef);
+      });
       setIsLoading(false);
       Swal.fire(
         alertList.successMessage("제품이 성공적으로 업로드 되었습니다."),

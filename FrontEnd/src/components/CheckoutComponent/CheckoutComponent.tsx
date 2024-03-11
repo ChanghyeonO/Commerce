@@ -10,6 +10,7 @@ import {
   setDoc,
   serverTimestamp,
   updateDoc,
+  DocumentReference,
 } from "firebase/firestore";
 import Swal from "sweetalert2";
 import alertList from "../../utils/Swal";
@@ -46,7 +47,7 @@ import {
 } from "../ShoppingBasketComponent/ShoppingBasketComponentStyle";
 
 import Loading from "../Loading/Loading";
-import { CartItem } from "../../types/ItemType";
+import { CartItem, PostData } from "../../types/ItemType";
 import { PaymentDetails } from "../../types/PortOneType";
 
 const CheckoutComponent = () => {
@@ -121,28 +122,32 @@ const CheckoutComponent = () => {
   ) => {
     for (const item of items) {
       const productRef = doc(db, collectionName, item.id);
-      const productSnap = await getDoc(productRef);
+      await updateSalesCount(productRef, item.count);
 
-      if (productSnap.exists()) {
-        const productData = productSnap.data() as {
-          productCount: number;
-          salesCount: number;
-        };
-        const currentStock = productData.productCount;
-        const currentSales = productData.salesCount || 0;
-        const newStock = currentStock - item.count;
-        const newSales = currentSales + item.count;
-
-        const updates = {
-          ...(newStock >= 0 && { productCount: newStock }),
-          salesCount: newSales,
-        };
-
-        await updateDoc(productRef, updates);
-        console.log(`재고 및 판매량 업데이트 성공: ${item.name}`);
-      } else {
-        console.error(`제품 정보 없음: ${item.id}`);
+      if (collectionName === "fundingItems") {
+        const expiredProductRef = doc(db, "expiredFundingItems", item.id);
+        await updateSalesCount(expiredProductRef, item.count);
       }
+    }
+  };
+
+  const updateSalesCount = async (
+    documentRef: DocumentReference,
+    itemCount: number,
+  ) => {
+    const docSnap = await getDoc(documentRef);
+
+    if (docSnap.exists()) {
+      const data = docSnap.data() as PostData;
+      const currentSales = data.salesCount || 0;
+      const newSales = currentSales + itemCount;
+
+      await updateDoc(documentRef, {
+        salesCount: newSales,
+      });
+      console.log(`재고 및 판매량 업데이트 성공: ${data.name}`);
+    } else {
+      console.error(`제품 정보 없음: ${documentRef.id}`);
     }
   };
 

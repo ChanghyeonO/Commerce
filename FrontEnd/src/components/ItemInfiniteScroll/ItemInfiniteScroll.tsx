@@ -94,19 +94,23 @@ const ItemInfiniteScroll = () => {
     navigate(`${basePath}/detail/${id}`);
   };
 
-  const deleteItemWithImage = async (
-    itemId: string,
-    itemDescriptions: { description: string; imageUrl: string }[],
-  ) => {
+  const deleteItemWithImage = async (item: Item) => {
+    const isFundingEnded = checkIfFundingEnded(item);
+
+    if (!isFundingEnded && isFundingPage) {
+      Swal.fire(alertList.infoMessage("펀딩 마감 전에는 삭제할 수 없습니다."));
+      return;
+    }
+
     const result = await Swal.fire(
       alertList.doubleCheckMessage("정말로 삭제하시겠습니까?"),
     );
 
     if (result.isConfirmed) {
       try {
-        await deleteDoc(doc(db, collectionName, itemId));
+        await deleteDoc(doc(db, collectionName, item.id));
 
-        const deletePromises = itemDescriptions.map(({ imageUrl }) => {
+        const deletePromises = item.itemDescription.map(({ imageUrl }) => {
           const urlPath = new URL(imageUrl).pathname;
           const decodedPath = decodeURIComponent(urlPath)
             .split("/o/")[1]
@@ -125,6 +129,7 @@ const ItemInfiniteScroll = () => {
       }
     }
   };
+
   return (
     <Container>
       {data?.pages.map((page, i) => (
@@ -147,7 +152,7 @@ const ItemInfiniteScroll = () => {
                   <DeleteButton
                     onClick={(e) => {
                       e.stopPropagation();
-                      deleteItemWithImage(item.id, item.itemDescription);
+                      deleteItemWithImage(item);
                     }}
                   />
                 )}

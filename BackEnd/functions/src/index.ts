@@ -172,7 +172,7 @@ const transporter = nodemailer.createTransport({
 });
 
 export const emailSendAlreadyCheckedDeadLine = functions.pubsub
-  .schedule("every 12 hours")
+  .schedule("every 6 hours")
   .onRun(async (context) => {
     const deadlineItemsSnapshot = await db
       .collection("alreadyCheckDeadLineItems")
@@ -191,11 +191,14 @@ export const emailSendAlreadyCheckedDeadLine = functions.pubsub
       .forEach(async (deadlineDoc) => {
         const { name, deadLine, salesCount, targetSales } = deadlineDoc.data();
 
-        let fundingResult = "실패";
-        let resultInfoMessage = "환불 처리 될 예정입니다.";
+        let fundingResult = "";
+        let resultInfoMessage = "";
         if (salesCount >= targetSales) {
           fundingResult = "성공";
           resultInfoMessage = "배송이 시작 될 예정입니다.";
+        } else {
+          fundingResult = "실패";
+          resultInfoMessage = "환불 처리 될 예정입니다.";
         }
 
         const orderItemsSnapshot = await db
@@ -204,7 +207,7 @@ export const emailSendAlreadyCheckedDeadLine = functions.pubsub
           .get();
 
         orderItemsSnapshot.docs.forEach((orderDoc) => {
-          const { buyer_email, buyer_name } = orderDoc.data();
+          const { buyer_email, buyer_name, imp_uid } = orderDoc.data();
 
           const mailOptions = {
             from: "fundit@gmail.com",
@@ -226,7 +229,25 @@ export const emailSendAlreadyCheckedDeadLine = functions.pubsub
                 console.log(`이메일 발송 완료: ${info.response}`);
                 return deadlineDoc.ref.update({ deadLineCheck: true });
               })
-              .then(() => undefined)
+              .then(() => {
+                if (fundingResult === "실패") {
+                  const cancelPaymentUrl =
+                    functions.config().cancel.payment.url;
+                  axios
+                    .post(cancelPaymentUrl, { imp_uid })
+                    .then((response) => {
+                      console.log(`결제 취소 성공: ${response.data}`);
+                      orderDoc.ref.update({ order_status: "주문취소" });
+                    })
+                    .catch((error) => {
+                      console.error(
+                        `결제 취소 실패: ${
+                          error.response ? error.response.data : error
+                        }`,
+                      );
+                    });
+                }
+              })
               .catch((error) => {
                 console.error(`이메일 발송 실패: ${name}: ${error}`);
               }),
@@ -237,3 +258,69 @@ export const emailSendAlreadyCheckedDeadLine = functions.pubsub
     await Promise.all(mailPromises);
     console.log("모든 이메일 발송을 완료했습니다.");
   });
+
+export const getCombinedItems = functions.https.onRequest(
+  async (request, response) => {
+    response.set("Access-Control-Allow-Origin", "*");
+    response.set("Access-Control-Allow-Methods", "GET, POST");
+
+    try {
+      const pageParam = request.query.page;
+      const pageSizeParam = request.query.pageSize;
+      const sortOption = request.query.sortOption;
+
+      const page = typeof pageParam === "string" ? parseInt(pageParam) : 1;
+      const pageSize =
+        typeof pageSizeParam === "string" ? parseInt(pageSizeParam) : 4;
+
+      let sortBy = "createdAt";
+      let sortDirection = "desc";
+
+      if (sortOption === "최신순") {
+        sortBy = "createdAt";
+        sortDirection = "desc";
+      } else if (sortOption === "과거순") {
+        sortBy = "createdAt";
+        sortDirection = "asc";
+      } else if (sortOption === "높은 가격순") {
+        sortBy = "price";
+        sortDirection = "desc";
+      } else if (sortOption === "낮은 가격순") {
+        sortBy = "price";
+        sortDirection = "asc";
+      }
+
+      const deadlineItemsSnapshot = await db
+        .collection("alreadyCheckDeadLineItems")
+        .get();
+      const fundingItemsSnapshot = await db.collection("fundingItems").get();
+
+      const combinedItems: any[] = [];
+
+      deadlineItemsSnapshot.forEach((doc) => {
+        combinedItems.push({ id: doc.id, ...doc.data() });
+      });
+
+      fundingItemsSnapshot.forEach((doc) => {
+        combinedItems.push({ id: doc.id, ...doc.data() });
+      });
+
+      combinedItems.sort((a, b) => {
+        if (sortDirection === "asc") {
+          return a[sortBy] > b[sortBy] ? 1 : -1;
+        } else {
+          return a[sortBy] < b[sortBy] ? 1 : -1;
+        }
+      });
+
+      const startIndex = (page - 1) * pageSize;
+      const endIndex = startIndex + pageSize;
+      const paginatedItems = combinedItems.slice(startIndex, endIndex);
+
+      response.json(paginatedItems);
+    } catch (error) {
+      console.error("Error fetching documents:", error);
+      response.status(500).send("Internal Server Error");
+    }
+  },
+);
