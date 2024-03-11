@@ -138,11 +138,11 @@ export const cancelPayment = functions.https.onRequest((request, response) => {
 });
 
 export const checkFundingDeadLines = functions.pubsub
-  .schedule("every 24 hours")
+  .schedule("every 8 hours")
   .onRun(async (context) => {
     const firestoreTimeNow = admin.firestore.Timestamp.now();
     const querySnapshot = await db
-      .collection("fundingItems")
+      .collection("expiredFundingItems")
       .where("deadLine", "<", firestoreTimeNow)
       .get();
 
@@ -153,7 +153,7 @@ export const checkFundingDeadLines = functions.pubsub
 
     const copyAndDeletePromises = querySnapshot.docs.map(async (doc) => {
       const docData = doc.data();
-      const newDocRef = db.collection("alreadyCheckDeadLineItems").doc(doc.id);
+      const newDocRef = db.collection("sendEmailFundingItems").doc(doc.id);
 
       await newDocRef.set(docData);
       await doc.ref.delete();
@@ -172,11 +172,11 @@ const transporter = nodemailer.createTransport({
 });
 
 export const emailSendAlreadyCheckedDeadLine = functions.pubsub
-  .schedule("every 6 hours")
+  .schedule("every 4 hours")
   .onRun(async (context) => {
     const deadlineItemsSnapshot = await db
-      .collection("alreadyCheckDeadLineItems")
-      .where("deadLineCheck", "!=", true)
+      .collection("sendEmailFundingItems")
+      .where("emailSendCheck", "!=", true)
       .get();
 
     if (deadlineItemsSnapshot.empty) {
@@ -186,141 +186,72 @@ export const emailSendAlreadyCheckedDeadLine = functions.pubsub
 
     const mailPromises: Promise<void>[] = [];
 
-    deadlineItemsSnapshot.docs
-      .filter((doc) => doc.data().deadLineCheck !== true)
-      .forEach(async (deadlineDoc) => {
-        const { name, deadLine, salesCount, targetSales } = deadlineDoc.data();
+    deadlineItemsSnapshot.docs.forEach(async (deadlineDoc) => {
+      const { name, deadLine, salesCount, targetSales } = deadlineDoc.data();
 
-        let fundingResult = "";
-        let resultInfoMessage = "";
-        if (salesCount >= targetSales) {
-          fundingResult = "성공";
-          resultInfoMessage = "배송이 시작 될 예정입니다.";
-        } else {
-          fundingResult = "실패";
-          resultInfoMessage = "환불 처리 될 예정입니다.";
-        }
+      let fundingResult = "";
+      let resultInfoMessage = "";
+      if (salesCount >= targetSales) {
+        fundingResult = "성공";
+        resultInfoMessage = "배송이 시작 될 예정입니다.";
+      } else {
+        fundingResult = "실패";
+        resultInfoMessage = "환불 처리 될 예정입니다.";
+      }
 
-        const orderItemsSnapshot = await db
-          .collection("orderItems")
-          .where("items", "array-contains", deadlineDoc.id)
-          .get();
+      const orderItemsSnapshot = await db
+        .collection("orderItems")
+        .where("items", "array-contains", deadlineDoc.id)
+        .get();
 
-        orderItemsSnapshot.docs.forEach((orderDoc) => {
-          const { buyer_email, buyer_name, imp_uid } = orderDoc.data();
+      orderItemsSnapshot.docs.forEach((orderDoc) => {
+        const { buyer_email, buyer_name, imp_uid } = orderDoc.data();
 
-          const mailOptions = {
-            from: "fundit@gmail.com",
-            to: buyer_email,
-            subject: `안녕하세요 ${buyer_name}님, ${name} 제품 펀딩이 마감되었습니다.`,
-            html: `<img src="https://firebasestorage.googleapis.com/v0/b/commerce-204d5.appspot.com/o/funditLogo%2FFUNDIT%20LOGO.png?alt=media&token=3031a550-f0d8-4e72-8955-5fe935be4283" alt="FUNDIT LOGO"/><br>
+        const mailOptions = {
+          from: "fundit@gmail.com",
+          to: buyer_email,
+          subject: `안녕하세요 ${buyer_name}님, ${name} 제품 펀딩이 마감되었습니다.`,
+          html: `<img src="https://firebasestorage.googleapis.com/v0/b/commerce-204d5.appspot.com/o/funditLogo%2FFUNDIT%20LOGO.png?alt=media&token=3031a550-f0d8-4e72-8955-5fe935be4283" alt="FUNDIT LOGO"/><br>
             안녕하세요 ${buyer_name}님, FUNDIT입니다.<br>
                    <strong>${name}</strong> 제품의 펀딩이 ${deadLine
   .toDate()
   .toLocaleString()}에 마감되었습니다.<br>
                    해당 제품의 펀딩이 ${fundingResult}하여 ${resultInfoMessage}<br>
                    FUNDIT을 이용해주셔서 감사합니다.`,
-          };
+        };
 
-          mailPromises.push(
-            transporter
-              .sendMail(mailOptions)
-              .then((info) => {
-                console.log(`이메일 발송 완료: ${info.response}`);
-                return deadlineDoc.ref.update({ deadLineCheck: true });
-              })
-              .then(() => {
-                if (fundingResult === "실패") {
-                  const cancelPaymentUrl =
-                    functions.config().cancel.payment.url;
-                  axios
-                    .post(cancelPaymentUrl, { imp_uid })
-                    .then((response) => {
-                      console.log(`결제 취소 성공: ${response.data}`);
-                      orderDoc.ref.update({ order_status: "주문취소" });
-                    })
-                    .catch((error) => {
-                      console.error(
-                        `결제 취소 실패: ${
-                          error.response ? error.response.data : error
-                        }`,
-                      );
-                    });
-                }
-              })
-              .catch((error) => {
-                console.error(`이메일 발송 실패: ${name}: ${error}`);
-              }),
-          );
-        });
+        mailPromises.push(
+          transporter
+            .sendMail(mailOptions)
+            .then((info) => {
+              console.log(`이메일 발송 완료: ${info.response}`);
+              return deadlineDoc.ref.update({ emailSendCheck: true });
+            })
+            .then(() => {
+              if (fundingResult === "실패") {
+                const cancelPaymentUrl = functions.config().cancel.payment.url;
+                axios
+                  .post(cancelPaymentUrl, { imp_uid })
+                  .then((response) => {
+                    console.log(`결제 취소 성공: ${response.data}`);
+                    orderDoc.ref.update({ order_status: "주문취소" });
+                  })
+                  .catch((error) => {
+                    console.error(
+                      `결제 취소 실패: ${
+                        error.response ? error.response.data : error
+                      }`,
+                    );
+                  });
+              }
+            })
+            .catch((error) => {
+              console.error(`이메일 발송 실패: ${name}: ${error}`);
+            }),
+        );
       });
+    });
 
     await Promise.all(mailPromises);
     console.log("모든 이메일 발송을 완료했습니다.");
   });
-
-export const getCombinedItems = functions.https.onRequest(
-  async (request, response) => {
-    response.set("Access-Control-Allow-Origin", "*");
-    response.set("Access-Control-Allow-Methods", "GET, POST");
-
-    try {
-      const pageParam = request.query.page;
-      const pageSizeParam = request.query.pageSize;
-      const sortOption = request.query.sortOption;
-
-      const page = typeof pageParam === "string" ? parseInt(pageParam) : 1;
-      const pageSize =
-        typeof pageSizeParam === "string" ? parseInt(pageSizeParam) : 4;
-
-      let sortBy = "createdAt";
-      let sortDirection = "desc";
-
-      if (sortOption === "최신순") {
-        sortBy = "createdAt";
-        sortDirection = "desc";
-      } else if (sortOption === "과거순") {
-        sortBy = "createdAt";
-        sortDirection = "asc";
-      } else if (sortOption === "높은 가격순") {
-        sortBy = "price";
-        sortDirection = "desc";
-      } else if (sortOption === "낮은 가격순") {
-        sortBy = "price";
-        sortDirection = "asc";
-      }
-
-      const deadlineItemsSnapshot = await db
-        .collection("alreadyCheckDeadLineItems")
-        .get();
-      const fundingItemsSnapshot = await db.collection("fundingItems").get();
-
-      const combinedItems: any[] = [];
-
-      deadlineItemsSnapshot.forEach((doc) => {
-        combinedItems.push({ id: doc.id, ...doc.data() });
-      });
-
-      fundingItemsSnapshot.forEach((doc) => {
-        combinedItems.push({ id: doc.id, ...doc.data() });
-      });
-
-      combinedItems.sort((a, b) => {
-        if (sortDirection === "asc") {
-          return a[sortBy] > b[sortBy] ? 1 : -1;
-        } else {
-          return a[sortBy] < b[sortBy] ? 1 : -1;
-        }
-      });
-
-      const startIndex = (page - 1) * pageSize;
-      const endIndex = startIndex + pageSize;
-      const paginatedItems = combinedItems.slice(startIndex, endIndex);
-
-      response.json(paginatedItems);
-    } catch (error) {
-      console.error("Error fetching documents:", error);
-      response.status(500).send("Internal Server Error");
-    }
-  },
-);
