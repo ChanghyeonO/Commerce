@@ -374,35 +374,4 @@ npm run start
 ```
 
 <br>
-
-## 📌 프론트엔드 팀 구성원
-
-<table width="600">
-    <thead>
-    </thead>
-    <tbody>
-    <tr>
-        <th>이름</th>
-        <td width="100" align="center">오창현</td>
-        <td width="100" align="center">김민준</td>
-        <td width="100" align="center">김용현</td>
-    </tr>
-    <tr>
-        <th>역할</th>
-        <td width="150" align="center">
-            로그인, 회원가입&탈퇴, <br>분양신청내역
-        </td>
-        <td width="150" align="center">
-            강아지, 브리더 모아보기<br>
-            프로필관리, 회원정보 수정
-        </td>
-        <td width="150" align="center">
-            강아지, 브리더 모아보기<br> 상세
-        </td>
-    </tr>
-    <tr>
-    </tbody>
-</table>
-
-<br>
 <br>
