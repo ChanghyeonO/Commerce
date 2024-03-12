@@ -42,9 +42,9 @@
 
 <br />
 
-<!-- ## 📌 시연 영상
+## 📌 시연 영상
 
-### [▶️ 시연 영상 바로가기](https://www.youtube.com/watch?v=1TeH3DO5bOA) -->
+### [▶️ 시연 영상 바로가기](https://www.youtube.com/watch?v=1TeH3DO5bOA)
 
 ## 📌 기술 스택
 
@@ -70,7 +70,7 @@ CloudType(AWS S3로 변경 예정)
 
 ## 📌 서비스 기능 명세
 
-### 유저기능
+### 구매자 기능
 
 #### 회원가입
 
@@ -124,215 +124,210 @@ CloudType(AWS S3로 변경 예정)
 4. 판매 금액 확인
 5. 제품 장바구니 저장, 바로 구매
 
-<!-- ## 📌 디렉토리 파일구조 -->
+#### 마이페이지
 
-<!-- <details><summary>Backend</summary>
+##### - 프로필 수정
 
-```bash
-📦backend
+1. 회원정보 수정 전 재인증 절차
+2. 이메일을 제외한 회원정보 수정
 
- ┣ 📂src
- ┃ ┣ 📂config
- ┃ ┃ ┣📜imgAPI 2.js
- ┃ ┃ ┣📜imgAPI.js
- ┃ ┃ ┣📜s3 2.js
- ┃ ┃ ┗📜s3.js
- ┃ ┣ 📂controller
- ┃ ┃ ┣📜chat_controller.js
- ┃ ┃ ┣📜comment_controller.js
- ┃ ┃ ┣📜friendChat_controller.js
- ┃ ┃ ┣📜friendMessage_controller.js
- ┃ ┃ ┣📜like_controller.js
- ┃ ┃ ┣📜mainhomeFriends_controller.js
- ┃ ┃ ┣📜mainhomeSecret_controller.js
- ┃ ┃ ┣📜message_controller.js
- ┃ ┃ ┣📜post_controller.js
- ┃ ┃ ┗📜user_controller.js
- ┃ ┣ 📂database/models
- ┃ ┃ ┣📜chat_model.js
- ┃ ┃ ┣📜comment_model.js
- ┃ ┃ ┣📜friendChat_model.js
- ┃ ┃ ┣📜friendMessage_model.js
- ┃ ┃ ┣📜index.js
- ┃ ┃ ┣📜like_model.js
- ┃ ┃ ┣📜mainhomeFriends_model.js
- ┃ ┃ ┣📜mainhomeSecret_model.js
- ┃ ┃ ┣📜message_model.js
- ┃ ┃ ┣📜post_model.js
- ┃ ┃ ┗📜user_model.js
- ┃ ┣ 📂lib
- ┃ ┃ ┣📜constant.js
- ┃ ┃ ┣📜socket.js
- ┃ ┃ ┗📜utils.js
- ┃ ┣ 📂middlewares
- ┃ ┃ ┣📜adminCheck.js
- ┃ ┃ ┣📜asyncHandler.js
- ┃ ┃ ┣📜index.js
- ┃ ┃ ┣📜login_required.js
- ┃ ┃ ┗📜registerMail.js
- ┃ ┣ 📂routers
- ┃ ┃ ┣📜chat_router.js
- ┃ ┃ ┣📜comment_router.js
- ┃ ┃ ┣📜like_router.js
- ┃ ┃ ┣📜mainhome_router.js
- ┃ ┃ ┣📜message_router.js
- ┃ ┃ ┣📜post_router.js
- ┃ ┃ ┗📜user_router.js
- ┃ ┣ 📂services
- ┃ ┃ ┣📜chat_service.js
- ┃ ┃ ┣📜comment_service.js
- ┃ ┃ ┣📜friendChat_service.js
- ┃ ┃ ┣📜friendMessage_service.js
- ┃ ┃ ┣📜like_service.js
- ┃ ┃ ┣📜mainhomeFriends_service.js
- ┃ ┃ ┣📜mainhomeSecret_service.js
- ┃ ┃ ┣📜message_service.js
- ┃ ┃ ┣📜post_service.js
- ┃ ┃ ┗📜user_service.js
- ┣ 📜.env
- ┣ 📜gitignore
- ┣ 📜package-lock.json
- ┣ 📜package-lock.json
- ┣ 📜package.json
-``` -->
+##### - 장바구니
 
-<!-- </details>
+1. 장바구니 추가 및 삭제
+2. 장바구니 주문 할 제품 갯수 수정하기
+
+##### - 주문내역
+
+1. 제품 주문 내역 확인하기
+2. 제품 주문 취소 요청하기 (주문 취소 사유 입력)
+
+##### - 회원탈퇴
+
+1. 회원탈퇴시 약관 확인 후 동의 시 회원탈퇴
+
+#### 제품 주문 페이지
+
+1. 주문할 제품 확인
+2. 최종 금액 확인
+3. 받는 사람 정보 확인 및 수정
+4. 결제하기(포트원으로 결제 서비스 구현)
+
+#### 제품 주문 확인
+
+1. 이메일을 통한 결제 성공 확인
+2. 펀딩 날짜 경과 시 이메일로 펀딩 성공 여부 확인
+
+### 판매자 기능
+
+#### 판매자 권한 부여
+
+1. 판매자 권한은 Firestore에서 admin 값 true로 변경 시 부여
+
+#### 베너 슬라이더 이미지 수정
+
+1. 배너 슬라이더 이미지 수정
+2. 이미지 수정 시 이미지 미리보기 가능
+3. 이미지 추가 삭제 가능
+
+#### 펀딩 상품 등록 및 삭제
+
+1. 제품명 및 간단 설명 입력
+2. 옵션 추가하기 최대 5개 입력
+3. 판매 금액 지정 및 제품 재고 수량 입력
+4. 목표 판매수량 및 마감일은 달력에서 설정
+5. 제품 상세 정보 및 이미지 작성란 최대 5개 입력
+6. 제품 등록 시 펀딩 기간 이후 제품 삭제 가능
+
+#### 기타 상품 등록 및 삭제
+
+1. 제품명 및 간단 설명 입력
+2. 옵션 추가하기 최대 5개 입력
+3. 판매 금액 지정 및 제품 재고 수량 입력
+4. 제품 상세 정보 및 이미지 작성란 최대 5개 입력
+5. 제품 등록 시 제품 삭제 가능
+
+## 📌 디렉토리 파일구조
+
+</details>
 <details><summary>Frontend</summary>
 
 ```bash
-📦frontend
+📦FrontEnd
  ┣ 📂public
- ┃ ┗ 📜index.html
+ ┃ ┗ 📜vite.svg
  ┣ 📂src
  ┃ ┣ 📂api
+ ┃ ┃ ┣ 📜api.ts
+ ┃ ┃ ┗ 📜firebase.ts
  ┃ ┣ 📂assets
  ┃ ┃ ┣ 📂icons
  ┃ ┃ ┗ 📂images
  ┃ ┣ 📂components
- ┃ ┃ ┣ 📂AdminDetail
- ┃ ┃ ┃ ┣ 📂MemberDetail
- ┃ ┃ ┃ ┃ ┣ 📜MemberDetail.tsx
- ┃ ┃ ┃ ┃ ┗ 📜MemberDetailStyle.ts
- ┃ ┃ ┃ ┗ 📂ReportDetail
- ┃ ┃ ┃ ┃ ┣ 📜ReportDetail.tsx
- ┃ ┃ ┃ ┃ ┗ 📜ReportDetailStyle.ts
- ┃ ┃ ┣ 📂AdminHeader
- ┃ ┃ ┃ ┣ 📜AdminHeader.tsx
- ┃ ┃ ┃ ┗ 📜AdminHeaderStyle.ts
- ┃ ┃ ┣ 📂Buttons
+ ┃ ┃ ┣ 📂CheckoutComponent
+ ┃ ┃ ┃ ┣ 📜CheckoutComponent.tsx
+ ┃ ┃ ┃ ┗ 📜CheckoutComponentStyle.ts
+ ┃ ┃ ┣ 📂CheckPasswordBeforeEdit
+ ┃ ┃ ┃ ┣ 📜CheckPasswordBeforeEdit.tsx
+ ┃ ┃ ┃ ┗ 📜CheckPasswordBeforeEditStyle.ts
+ ┃ ┃ ┣ 📂DefaultButton
  ┃ ┃ ┃ ┣ 📜DefaultButton.tsx
  ┃ ┃ ┃ ┗ 📜DefaultButtonStyle.ts
- ┃ ┃ ┣ 📂Chat
- ┃ ┃ ┃ ┣ 📜Chat.tsx
- ┃ ┃ ┃ ┣ 📜FriendChat.tsx
- ┃ ┃ ┃ ┗ 📜ChatStyle.ts
- ┃ ┃ ┣ 📂ChatBox
- ┃ ┃ ┃ ┣ 📜ChatBox.tsx
- ┃ ┃ ┃ ┣ 📜FriendChatBox.tsx
- ┃ ┃ ┃ ┗ 📜ChatBoxStyle.ts
- ┃ ┃ ┣ 📂DMList
- ┃ ┃ ┃ ┣ 📜DMList.tsx
- ┃ ┃ ┃ ┣ 📜FriendDMList.tsx
- ┃ ┃ ┃ ┗ 📜DMListStyle.ts
+ ┃ ┃ ┣ 📂DeleteAccountComponent
+ ┃ ┃ ┃ ┣ 📜DeleteAccountComponent.tsx
+ ┃ ┃ ┃ ┗ 📜DeleteAccountComponentStyle.ts
+ ┃ ┃ ┣ 📂EditProfileComponent
+ ┃ ┃ ┃ ┣ 📜EditProfileComponent.tsx
+ ┃ ┃ ┃ ┗ 📜EditProfileComponentStyle.ts
  ┃ ┃ ┣ 📂Footer
  ┃ ┃ ┃ ┣ 📜Footer.tsx
  ┃ ┃ ┃ ┗ 📜FooterStyle.ts
  ┃ ┃ ┣ 📂Header
- ┃ ┃ ┃ ┣ 📂DetailHeader
- ┃ ┃ ┃ ┃ ┣ 📜DetailHeader.tsx
- ┃ ┃ ┃ ┃ ┗ 📜DeatailHeaderStyle.ts
  ┃ ┃ ┃ ┣ 📜Header.tsx
  ┃ ┃ ┃ ┗ 📜HeaderStyle.ts
- ┃ ┃ ┣ 📂MainHomeContent
- ┃ ┃ ┃ ┣ 📂MainHomeContentDetail
- ┃ ┃ ┃ ┃ ┣ 📜MainHomeContentImage.tsx
- ┃ ┃ ┃ ┃ ┗ 📜MainHomeContentInnerContent.ts
- ┃ ┃ ┃ ┣ 📜MainHomeContent.tsx
- ┃ ┃ ┃ ┗ 📜MainHomeContentStyle.ts
- ┃ ┃ ┣ 📂MainHomeSendBox
- ┃ ┃ ┃ ┣ 📜MainHomeSendBox.tsx
- ┃ ┃ ┃ ┗ 📜MainHomeSendBoxStyle.ts
- ┃ ┃ ┣ 📂MessageBubble
- ┃ ┃ ┃ ┗ 📜MessageBubble.tsx
- ┃ ┃ ┣ 📂ProfileUpdateModal
- ┃ ┃ ┃ ┣ 📜arrow_back_icon.svg
- ┃ ┃ ┃ ┣ 📜media_icon.svg
- ┃ ┃ ┃ ┣ 📜ProfileUpdateModal.tsx
- ┃ ┃ ┃ ┗ 📜ProfileUpdateModalStyle.ts
- ┃ ┃ ┣ 📂SearchBar
- ┃ ┃ ┃ ┣ 📜SearchBar.tsx
- ┃ ┃ ┃ ┗ 📜SearchBarStyle.ts
- ┃ ┃ ┣ 📂SearchModal
- ┃ ┃ ┃ ┣ 📜SearchModal.tsx
- ┃ ┃ ┃ ┗ 📜SearchModalStyle.ts
- ┃ ┣ 📂hooks
- ┃ ┃ ┣ 📜useAutoScroll.ts
- ┃ ┃ ┣ 📜useMainHomePost.ts
- ┃ ┃ ┗ 📜useSocket.ts
+ ┃ ┃ ┣ 📂EditProfileComponent
+ ┃ ┃ ┃ ┣ 📜EditProfileComponent.tsx
+ ┃ ┃ ┃ ┗ 📜EditProfileComponentStyle.ts
+ ┃ ┃ ┣ 📂ImageSlider
+ ┃ ┃ ┃ ┣ 📜ImageSlider.tsx
+ ┃ ┃ ┃ ┗ 📜ImageSliderStyle.ts
+ ┃ ┃ ┣ 📂ImageUpload
+ ┃ ┃ ┃ ┣ 📜ImageUpload.tsx
+ ┃ ┃ ┃ ┗ 📜ImageUploadStyle.ts
+ ┃ ┃ ┣ 📂ItemInfiniteScroll
+ ┃ ┃ ┃ ┣ 📜ItemInfiniteScroll.tsx
+ ┃ ┃ ┃ ┗ 📜ItemInfiniteScrollStlye.ts
+ ┃ ┃ ┣ 📂Loading
+ ┃ ┃ ┃ ┣ 📜Loading.tsx
+ ┃ ┃ ┃ ┗ 📜LoadingStyle.ts
+ ┃ ┃ ┣ 📂LoginComponent
+ ┃ ┃ ┃ ┣ 📜LoginComponent.tsx
+ ┃ ┃ ┃ ┗ 📜LoginComponentStyle.ts
+ ┃ ┃ ┣ 📂MainComponent
+ ┃ ┃ ┃ ┣ 📜MainComponent.tsx
+ ┃ ┃ ┃ ┗ 📜MainComponentStyle.ts
+ ┃ ┃ ┣ 📂MyPageNav
+ ┃ ┃ ┃ ┣ 📜MyPageNav.tsx
+ ┃ ┃ ┃ ┗ 📜MyPageNavStyle.ts
+ ┃ ┃ ┣ 📂OrderHistoryComponent
+ ┃ ┃ ┃ ┣ 📜OrderHistoryComponent.tsx
+ ┃ ┃ ┃ ┗ 📜OrderHistoryComponentStyle.ts
+ ┃ ┃ ┣ 📂ProductComponent
+ ┃ ┃ ┃ ┗ 📜ProductComponent.tsx
+ ┃ ┃ ┣ 📂ProductCreactorComponent
+ ┃ ┃ ┃ ┣ 📜ProductCreatorComponent.tsx
+ ┃ ┃ ┃ ┗ 📜ProductCreatorComponentStyle.ts
+ ┃ ┃ ┣ 📂ProductDetailComponent
+ ┃ ┃ ┃ ┣ 📜ProductDetailComponent.tsx
+ ┃ ┃ ┃ ┗ 📜ProductDetailComponentStyle.ts
+ ┃ ┃ ┣ 📂RegisterComponent
+ ┃ ┃ ┃ ┣ 📂RegisterDetailComponent
+ ┃ ┃ ┃ ┃ ┣ 📜RegisterDetailComponent.tsx
+ ┃ ┃ ┃ ┃ ┗ 📜RegisterDetailComponentStyle.ts
+ ┃ ┃ ┃ ┣ 📂RegisterSuccessComponent
+ ┃ ┃ ┃ ┃ ┣ 📜RegisterSuccessComponent.tsx
+ ┃ ┃ ┃ ┃ ┗ 📜RegisterSuccessComponentStyle.ts
+ ┃ ┃ ┃ ┗ 📂RegisterTermsComponent
+ ┃ ┃ ┃   ┣ 📜RegisterTermsComponent.tsx
+ ┃ ┃ ┃   ┗ 📜RegisterTermsComponentStyle.ts
+ ┃ ┃ ┗ 📂ShoppingBasketComponent
+ ┃ ┃    ┣ 📜ShoppingBasketComponent.tsx
+ ┃ ┃    ┗ 📜ShoppingBasketComponentStyle.ts
+ ┃ ┣ 📂contexts
+ ┃ ┃ ┣ 📜SortContext.tsx
+ ┃ ┃ ┗ 📜UserContext.tsx
  ┃ ┣ 📂pages
- ┃ ┃ ┣ 📂Admin
- ┃ ┃ ┃ ┣ 📂Main
- ┃ ┃ ┃ ┃ ┣ 📜AdminMain.tsx
- ┃ ┃ ┃ ┃ ┗ 📜AdminMainStyle.ts
- ┃ ┃ ┃ ┣ 📂ReportManagement
- ┃ ┃ ┃ ┃ ┣ 📜ReportManagement.tsx
- ┃ ┃ ┃ ┃ ┗ 📜ReportManagementStyle.ts
- ┃ ┃ ┃ ┗ 📂MemberManagement
- ┃ ┃ ┃ ┃ ┣ 📜MemberManagement.tsx
- ┃ ┃ ┃ ┃ ┗ 📜MemberManagementStyle.ts
- ┃ ┃ ┣ 📂Chatting
- ┃ ┃ ┃ ┣ 📜Chatting.tsx
- ┃ ┃ ┃ ┣ 📜FriendChatting.tsx
- ┃ ┃ ┃ ┗ 📜ChattingStyle.ts
+ ┃ ┃ ┣ 📂CheckOut
+ ┃ ┃ ┃ ┗ 📜CheckOut.tsx
+ ┃ ┃ ┣ 📂Login
+ ┃ ┃ ┃ ┗ 📜Login.tsx
  ┃ ┃ ┣ 📂Main
- ┃ ┃ ┃ ┣ 📜Main.tsx
- ┃ ┃ ┃ ┗ 📜MainStyle.ts
- ┃ ┃ ┣ 📂MainHome
- ┃ ┃ ┃ ┣ 📜MainHomeFriends.tsx
- ┃ ┃ ┃ ┣ 📜MainHomeSecret.tsx
- ┃ ┃ ┃ ┗ 📜MainHomeStyle.ts
- ┃ ┃ ┣ 📂UserAccount
- ┃ ┃ ┃ ┣ 📂Login
- ┃ ┃ ┃ ┃ ┣ 📜Login.tsx
- ┃ ┃ ┃ ┃ ┣ 📜Register.tsx
- ┃ ┃ ┃ ┃ ┗ 📜LoginStyle.ts
- ┃ ┃ ┃ ┣ 📂UserEdit
- ┃ ┃ ┃ ┃ ┣ 📜UserEdit.tsx
- ┃ ┃ ┃ ┃ ┗ 📜UserEditStyle.ts
- ┃ ┃ ┃ ┗ 📂UserWithdrawal
- ┃ ┃ ┃ ┃ ┗ 📜UserWithdrawal.tsx
- ┃ ┃ ┗ 📂UserMain
- ┃ ┃ ┃ ┣ 📂Detail
- ┃ ┃ ┃ ┃ ┣ 📜Detail.tsx
- ┃ ┃ ┃ ┃ ┗ 📜DetailStyle.ts
- ┃ ┃ ┃ ┗ 📂UploadPost
- ┃ ┃ ┃ ┃ ┣ 📜UploadPost.tsx
- ┃ ┃ ┃ ┃ ┗ 📜UploadPostStyle.ts
- ┃ ┃ ┃ ┣ 📜UserMain.tsx
- ┃ ┃ ┃ ┗ 📜UserMainStyle.ts
+ ┃ ┃ ┃ ┗ 📜Main.tsx
+ ┃ ┃ ┣ 📂MyPage
+ ┃ ┃ ┃ ┣ 📜CheckPassword.tsx
+ ┃ ┃ ┃ ┣ 📜DeleteAccount.tsx
+ ┃ ┃ ┃ ┣ 📜EditProfile.tsx
+ ┃ ┃ ┃ ┣ 📜OrderHistory.tsx
+ ┃ ┃ ┃ ┗ 📜ShoppingBasket.tsx
+ ┃ ┃ ┣ 📂Product
+ ┃ ┃ ┃ ┣ 📜FundingProduct.tsx
+ ┃ ┃ ┃ ┗ 📜OtherProduct.tsx
+ ┃ ┃ ┣ 📂ProductCreator
+ ┃ ┃ ┃ ┣ 📜FundingProductCreator.tsx
+ ┃ ┃ ┃ ┗ 📜OtherProductCreator.tsx
+ ┃ ┃ ┣ 📂ProductDetail
+ ┃ ┃ ┃ ┣ 📜FundingProductDetail.tsx
+ ┃ ┃ ┃ ┗ 📜OtherProductDetail.tsx
+ ┃ ┃ ┗ 📂Register
+ ┃ ┃    ┣ 📜RegisterDetail.tsx
+ ┃ ┃    ┣ 📜RegisterSuccess.tsx
+ ┃ ┃    ┗ 📜RegisterTerms.tsx
+ ┃ ┣ 📂router
+ ┃ ┃ ┗ 📜routerConfig.tsx
  ┃ ┣ 📂styles
  ┃ ┃ ┣ 📜GlobalFont.ts
- ┃ ┃ ┣ 📜GlolbalStyles.ts
- ┃ ┃ ┣ 📜Styled.d.ts
- ┃ ┃ ┗ 📜Theme.ts
+ ┃ ┃ ┣ 📜GlobalStyles.ts
+ ┃ ┃ ┗ 📜Styled.d.ts
  ┃ ┣ 📂types
- ┃ ┃ ┣ 📜chatType.ts
- ┃ ┃ ┣ 📜dataType.ts
- ┃ ┃ ┗ 📜postType.ts
- ┃ ┣ 📂utils
- ┃ ┣ 📜App.tsx
+ ┃ ┃ ┣ 📜ItemType.ts
+ ┃ ┃ ┣ 📜PortOneType.ts
+ ┃ ┃ ┗ 📜UserDataType.ts
+ ┃ ┣ 📂Utils
+ ┃ ┃ ┗ 📜Swal.ts
  ┃ ┣ 📜index.tsx
+ ┃ ┣ 📜vite-env.d.ts
  ┣ 📜.env
- ┣ 📜.gitignore
- ┣ 📜.prettierrc
+ ┣ 📜.eslintrc.cjs
+ ┣ 📜index.html
  ┣ 📜package-lock.json
  ┣ 📜package.json
- ┗ 📜tsconfig.json
+ ┣ 📜tsconfig.json
+ ┣ 📜tsconfig.node.json
+ ┗ 📜vite.config.ts
 ```
 
 </details>
 
-<br> -->
+<br>
 
 ## 📌 실행 방법
 
@@ -342,32 +337,25 @@ CloudType(AWS S3로 변경 예정)
 git clone <레포지토리 주소>
 ```
 
-2. 클론한 디렉토리에서 frontend, backend디렉토리로 들어가 아래 명령어를 통해 각각각 필요한 module 설치
+2. 클론한 디렉토리에서 FrontEnd 디렉토리로 들어가 아래 명령어를 통해 각각각 필요한 module 설치
 
 ```bash
 npm install
 ```
 
-<!-- 3. backend에서 필요한 `.env` 설정
+3. FrontEnd에서 필요한 `.env` 설정
 
 ```bash
-PORT=<포트번호>
-MONGODB_URI=<몽고db url>
-ACCESS_SECRET_KEY=<key>
-REFRESH_SECRET_KEY=<key>
-S3_ACCESS_KEY=<key>
-S3_SECRET_ACCESS_KEY=<key>
-S3_REGION=<key>
-S3_BUCKET_NAME=<key>
-``` -->
-
-4. frontend에서 필요한 `.env` 설정
-
-```bash
-REACT_APP_API_URL=<백엔드url>
+VITE_FIREBASE_API_KEY=<>
+VITE_FIREBASE_AUTH_DOMAIN=<>
+VITE_FIREBASE_PROJECT_ID=<>
+VITE_FIREBASE_STORAGE_BUCKET=<>
+VITE_FIREBASE_MESSAGING_SENDER_ID=<>
+VITE_FIREBASE_APP_ID=<>
+VITE_SHOPPINGMALL_ID=<>
 ```
 
-4. express 앱과 react앱을 실행
+4. react앱을 실행
 
 ```bash
 npm run start
