@@ -72,6 +72,8 @@ const ProductCreatorComponent = () => {
   const [isLoading, setIsLoading] = useState(false);
   const today = new Date();
   const [date, setDate] = useState<Value>(today);
+  const tomorrow = new Date(today);
+  tomorrow.setDate(tomorrow.getDate() + 1);
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -342,7 +344,7 @@ const ProductCreatorComponent = () => {
                   next2Label={null}
                   prev2Label={null}
                   minDetail="year"
-                  minDate={new Date()}
+                  minDate={tomorrow}
                 />
               </StyledCalendarArea>
             </>

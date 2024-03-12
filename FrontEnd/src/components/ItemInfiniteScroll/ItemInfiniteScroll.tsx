@@ -110,6 +110,10 @@ const ItemInfiniteScroll = () => {
       try {
         await deleteDoc(doc(db, collectionName, item.id));
 
+        if (isFundingPage) {
+          await deleteDoc(doc(db, "sendEmailFundingItems", item.id));
+        }
+
         const deletePromises = item.itemDescription.map(({ imageUrl }) => {
           const urlPath = new URL(imageUrl).pathname;
           const decodedPath = decodeURIComponent(urlPath)

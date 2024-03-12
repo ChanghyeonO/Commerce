@@ -214,8 +214,8 @@ export const emailSendAlreadyCheckedDeadLine = functions.pubsub
           html: `<img src="https://firebasestorage.googleapis.com/v0/b/commerce-204d5.appspot.com/o/funditLogo%2FFUNDIT%20LOGO.png?alt=media&token=3031a550-f0d8-4e72-8955-5fe935be4283" alt="FUNDIT LOGO"/><br>
             안녕하세요 ${buyer_name}님, FUNDIT입니다.<br>
                    <strong>${name}</strong> 제품의 펀딩이 ${deadLine
-  .toDate()
-  .toLocaleString()}에 마감되었습니다.<br>
+            .toDate()
+            .toLocaleString()}에 마감되었습니다.<br>
                    해당 제품의 펀딩이 ${fundingResult}하여 ${resultInfoMessage}<br>
                    FUNDIT을 이용해주셔서 감사합니다.`,
         };
