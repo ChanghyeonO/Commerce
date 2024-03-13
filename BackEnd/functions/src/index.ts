@@ -8,6 +8,54 @@ admin.initializeApp();
 const db = admin.firestore();
 const corsHandler = cors({ origin: true });
 
+export const getUserEmail = functions.https.onRequest((request, response) => {
+  corsHandler(request, response, async () => {
+    const { name, phoneNumber } = request.body;
+
+    if (!name) {
+      response.status(400).send("가입자 이름 정보가 필요합니다.");
+      return;
+    } else if (!phoneNumber) {
+      response.status(400).send("가입자 전화번호 정보가 필요합니다.");
+      return;
+    }
+
+    try {
+      const usersRef = admin.firestore().collection("users");
+      const snapshot = await usersRef
+        .where("name", "==", name)
+        .where("phoneNumber", "==", phoneNumber)
+        .get();
+
+      if (snapshot.empty) {
+        response.status(404).send("일치하는 사용자 정보를 찾을 수 없습니다.");
+        return;
+      }
+
+      const userDocId = snapshot.docs[0].id;
+      admin
+        .auth()
+        .getUser(userDocId)
+        .then((userRecord) => {
+          response.send({ email: userRecord.email });
+        })
+        .catch((error) => {
+          console.error(
+            "Firebase Auth에서 사용자 정보를 조회하는 중 오류 발생: ",
+            error,
+          );
+          response.status(500).send("사용자 정보 조회 중 오류가 발생했습니다.");
+        });
+    } catch (error) {
+      console.error(
+        "Firestore에서 사용자 정보를 조회하는 중 오류 발생: ",
+        error,
+      );
+      response.status(500).send("서버 오류가 발생했습니다.");
+    }
+  });
+});
+
 export const getPaymentInfo = functions.https.onRequest((request, response) => {
   corsHandler(request, response, async () => {
     const impUid = request.query.imp_uid as string;
@@ -214,8 +262,8 @@ export const emailSendAlreadyCheckedDeadLine = functions.pubsub
           html: `<img src="https://firebasestorage.googleapis.com/v0/b/commerce-204d5.appspot.com/o/funditLogo%2FFUNDIT%20LOGO.png?alt=media&token=3031a550-f0d8-4e72-8955-5fe935be4283" alt="FUNDIT LOGO"/><br>
             안녕하세요 ${buyer_name}님, FUNDIT입니다.<br>
                    <strong>${name}</strong> 제품의 펀딩이 ${deadLine
-            .toDate()
-            .toLocaleString()}에 마감되었습니다.<br>
+  .toDate()
+  .toLocaleString()}에 마감되었습니다.<br>
                    해당 제품의 펀딩이 ${fundingResult}하여 ${resultInfoMessage}<br>
                    FUNDIT을 이용해주셔서 감사합니다.`,
         };

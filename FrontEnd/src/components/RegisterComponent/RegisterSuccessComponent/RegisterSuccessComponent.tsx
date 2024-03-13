@@ -10,7 +10,7 @@ import {
   IntroText,
   InnerContent,
   LoginButton,
-} from "./RegisterSucesssComponentStyle";
+} from "./RegisterSuccessComponentStyle";
 
 const RegisterSuccessComponent = () => {
   return (

@@ -1,5 +1,3 @@
-import React from "react";
-import ReactDOM from "react-dom/client";
 import { createBrowserRouter } from "react-router-dom";
 import Main from "../pages/Main/Main";
 import FundingProduct from "../pages/Product/FundingProduct";
@@ -15,6 +13,9 @@ import ShoppingBasket from "../pages/MyPage/ShoppingBasket";
 import DeleteAccount from "../pages/MyPage/DeleteAccount";
 import Checkout from "../pages/Checkout/Checkout";
 import Login from "../pages/Login/Login";
+import FindEmail from "../pages/FindAccount/FindEmail";
+import FindEmailSuccess from "../pages/FindAccount/FindEmailSuccess";
+import FindPassword from "../pages/FindAccount/FindPassword";
 import RegisterTerms from "../pages/Register/RegisterTerms";
 import RegisterDetail from "../pages/Register/RegisterDetail";
 import RegisterSuccess from "../pages/Register/RegisterSuccess";
@@ -34,6 +35,10 @@ const router = createBrowserRouter([
   { path: "mypage/delete-account", element: <DeleteAccount /> },
   { path: "checkout", element: <Checkout /> },
   { path: "/login", element: <Login /> },
+  { path: "/find-email", element: <FindEmail /> },
+  { path: "/find-password", element: <FindPassword /> },
+  { path: "/find-email/success", element: <FindEmailSuccess /> },
+  { path: "/find-password/success", element: <FindEmail /> },
   { path: "/register-terms", element: <RegisterTerms /> },
   { path: "/register-detail", element: <RegisterDetail /> },
   { path: "/register-success", element: <RegisterSuccess /> },

@@ -1,11 +1,15 @@
 import React from "react";
-
 import { ButtonArea, Button } from "./DefaultButtonStyle";
 
-const DefaultButton = (name: string) => {
+interface DefaultButtonProps {
+  name: string;
+  onClick?: () => void;
+}
+
+const DefaultButton = ({ name, onClick }: DefaultButtonProps) => {
   return (
     <ButtonArea>
-      <Button>{name}</Button>
+      <Button onClick={onClick}>{name}</Button>
     </ButtonArea>
   );
 };

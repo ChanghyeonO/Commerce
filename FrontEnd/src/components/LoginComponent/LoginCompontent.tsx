@@ -165,7 +165,13 @@ const LoginComponent = () => {
             />
           </InputContainer>
           <FindAccountArea>
-            <FindEmail>이메일</FindEmail>|<FindPassword>비밀번호</FindPassword>
+            <Link to="/find-email">
+              <FindEmail>이메일</FindEmail>
+            </Link>
+            |
+            <Link to="/find-password">
+              <FindPassword>비밀번호</FindPassword>
+            </Link>
             찾기
           </FindAccountArea>
           <LoginButtonArea>
