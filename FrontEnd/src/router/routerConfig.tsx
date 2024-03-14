@@ -15,6 +15,7 @@ import Checkout from "../pages/Checkout/Checkout";
 import Login from "../pages/Login/Login";
 import FindEmail from "../pages/FindAccount/FindEmail";
 import FindEmailSuccess from "../pages/FindAccount/FindEmailSuccess";
+import FindPasswordSuccess from "../pages/FindAccount/FindPasswordSuccess";
 import FindPassword from "../pages/FindAccount/FindPassword";
 import RegisterTerms from "../pages/Register/RegisterTerms";
 import RegisterDetail from "../pages/Register/RegisterDetail";
@@ -38,7 +39,7 @@ const router = createBrowserRouter([
   { path: "/find-email", element: <FindEmail /> },
   { path: "/find-password", element: <FindPassword /> },
   { path: "/find-email/success", element: <FindEmailSuccess /> },
-  { path: "/find-password/success", element: <FindEmail /> },
+  { path: "/find-password/success", element: <FindPasswordSuccess /> },
   { path: "/register-terms", element: <RegisterTerms /> },
   { path: "/register-detail", element: <RegisterDetail /> },
   { path: "/register-success", element: <RegisterSuccess /> },

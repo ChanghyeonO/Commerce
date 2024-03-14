@@ -1,11 +1,11 @@
 import React, { ChangeEvent, useState } from "react";
 import axios from "axios";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import alertList from "../../utils/Swal";
 import {
   Container,
-  EmailInput,
+  NameInput,
   InnerContainer,
   InnerContent,
   InputContainer,
@@ -101,7 +101,7 @@ const FindEmailComponent = () => {
         </IntroTextArea>
         <InnerContent>
           <InputContainer>
-            <EmailInput
+            <NameInput
               type="text"
               placeholder="이름"
               value={name}

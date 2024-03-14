@@ -67,6 +67,8 @@ const InputDesign = styled.input`
   font-weight: bold;
 `;
 
+export const NameInput = styled(InputDesign)``;
+
 export const EmailInput = styled(InputDesign)``;
 
 export const PasswordInput = styled(InputDesign)``;
