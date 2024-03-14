@@ -6,8 +6,16 @@ import {
   signInWithEmailAndPassword,
   signInWithPopup,
   GoogleAuthProvider,
+  signOut,
 } from "firebase/auth";
-import { doc, getDoc } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  query,
+  where,
+} from "firebase/firestore";
 import { FirebaseError } from "firebase/app";
 import { db, auth } from "../../api/firebase";
 import Loading from "../Loading/Loading";
@@ -92,7 +100,6 @@ const LoginComponent = () => {
             errorMessage = "로그인 중 문제가 발생했습니다.";
             setIsLoading(false);
         }
-        Swal.fire(alertList.errorMessage(errorMessage));
       } else {
         Swal.fire(alertList.errorMessage(errorMessage));
       }
@@ -104,10 +111,20 @@ const LoginComponent = () => {
     const provider = new GoogleAuthProvider();
     try {
       const result = await signInWithPopup(auth, provider);
-      fetchUserData(result.user.uid);
-      Swal.fire(alertList.successMessage("로그인에 성공했습니다."));
-      setIsLoading(false);
-      navigate("/");
+      const userEmail = result.user.email;
+
+      const usersRef = collection(db, "users");
+      const q = query(usersRef, where("email", "==", userEmail));
+      const querySnapshot = await getDocs(q);
+
+      if (!querySnapshot.empty) {
+        fetchUserData(result.user.uid);
+        Swal.fire(alertList.successMessage("로그인에 성공했습니다."));
+        navigate("/");
+      } else {
+        Swal.fire(alertList.errorMessage("기존에 등록된 이메일이 없습니다."));
+        await signOut(auth);
+      }
     } catch (error) {
       let errorMessage = "Google 로그인에 실패했습니다.";
       if (error instanceof FirebaseError) {

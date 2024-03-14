@@ -152,13 +152,17 @@ const ImageUpload = ({ onClose }: Props) => {
           ))}
         </ImageUploadArea>
 
-        <AddLabel htmlFor="file-upload" />
-        <AddInput
-          id="file-upload"
-          type="file"
-          multiple
-          onChange={handleChange}
-        />
+        {uploadedImages.length + previewImages.length < 5 && (
+          <>
+            <AddLabel htmlFor="file-upload" />
+            <AddInput
+              id="file-upload"
+              type="file"
+              multiple
+              onChange={handleChange}
+            />
+          </>
+        )}
         <CloseButtonArea>
           <ImageUploadButton onClick={handleUpload}>업로드</ImageUploadButton>
           <CloseButton onClick={onClose}>닫기</CloseButton>

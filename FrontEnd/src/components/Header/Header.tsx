@@ -58,6 +58,8 @@ const Header = () => {
       try {
         await signOut(auth);
         Swal.fire(alertList.successMessage("로그아웃 되었습니다."));
+        sessionStorage.removeItem("fundingItemsCart");
+        sessionStorage.removeItem("otherItemsCart");
         navigate("/");
       } catch (error) {
         console.error("로그아웃 실패:", error);

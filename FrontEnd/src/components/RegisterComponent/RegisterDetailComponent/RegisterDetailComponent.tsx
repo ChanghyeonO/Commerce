@@ -129,6 +129,7 @@ const RegisterDetailComponent = () => {
   const saveUserData = async (userData: User) => {
     try {
       await setDoc(doc(db, "users", userData.userId), {
+        email: userData.email,
         name: userData.name,
         phoneNumber: userData.phoneNumber,
         address: userData.address,
