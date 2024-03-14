@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import MyPageNav from "../MyPageNav/MyPageNav";
+import DefaultButton from "../DefaultButton/DefaultButton";
 
 import {
   Container,
@@ -164,8 +165,8 @@ const ShoppingBasketComponent = () => {
           )}
         </BottomContent>
         <OrderButtonArea>
-          <Link to={"/checkout"}>
-            <OrderButton>주문하기</OrderButton>
+          <Link to={"/checkout"} style={{ textDecoration: "none" }}>
+            <DefaultButton name="주문하기" />
           </Link>
         </OrderButtonArea>
       </RightContentArea>

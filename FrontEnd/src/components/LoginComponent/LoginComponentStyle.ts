@@ -92,11 +92,6 @@ export const LoginButtonArea = styled.div`
   margin-bottom: 20px;
 `;
 
-export const DefaultLoginButton = styled(LoginButtonDesign)`
-  background-color: #5271ff;
-  color: #fff;
-`;
-
 export const GoogleLoginButton = styled(LoginButtonDesign)`
   background-image: url(${GoogleLoginImage});
   background-size: 100% 100%;

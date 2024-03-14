@@ -8,6 +8,7 @@ import {
   sendEmailVerification,
 } from "firebase/auth";
 import Loading from "../../Loading/Loading";
+import DefaultButton from "../../DefaultButton/DefaultButton";
 import Swal from "sweetalert2";
 import alertList from "../../../utils/Swal";
 import { User } from "../../../types/UserDataType";
@@ -321,9 +322,15 @@ const RegisterDetailComponent = () => {
               value={addressDetail}
               onChange={(e) => setAddressDetail(e.target.value)}
             />
-            <SuccessButtonArea>
-              <SuccessButton onClick={handleRegister}>회원가입</SuccessButton>
-            </SuccessButtonArea>
+
+            <DefaultButton
+              name={"회원가입"}
+              onClick={handleRegister}
+              style={{
+                height: "70px",
+                justifyContent: "start",
+              }}
+            />
           </InputContainer>
         </InnerContent>
       </InnerContainer>

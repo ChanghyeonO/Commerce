@@ -3,6 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import ImageSlider from "../ImageSlider/ImageSlider";
 import ItemInfiniteScroll from "../ItemInfiniteScroll/ItemInfiniteScroll";
 import ImageUpload from "../ImageUpload/ImageUpload";
+import DefaultButton from "../DefaultButton/DefaultButton";
 import { useSort } from "../../contexts/SortContext";
 import { useUser } from "../../contexts/UserContext";
 
@@ -13,8 +14,6 @@ import {
   AddItemButtonArea,
   CenterButtonArea,
   SortDropDownArea,
-  AddImageButton,
-  AddItemButton,
 } from "../MainComponent/MainComponentStyle";
 import {
   DropdownContainer,
@@ -90,11 +89,17 @@ const ProductComponent = () => {
           </SortDropDownArea>
           {isAdmin && (
             <AddItemButtonArea>
-              <AddImageButton onClick={handleShowImageUpload}>
-                슬라이드 사진 수정
-              </AddImageButton>
-              <Link to={linkPath}>
-                <AddItemButton>상품 등록</AddItemButton>
+              <DefaultButton
+                name={"슬라이드 사진 수정"}
+                onClick={handleShowImageUpload}
+                buttonStyle={{ height: "50px", background: "#38b6ff" }}
+              />
+
+              <Link to={linkPath} style={{ textDecoration: "none" }}>
+                <DefaultButton
+                  name={"상품 등록"}
+                  buttonStyle={{ height: "50px" }}
+                />
               </Link>
             </AddItemButtonArea>
           )}

@@ -11,6 +11,7 @@ import { doc, getDoc } from "firebase/firestore";
 import { FirebaseError } from "firebase/app";
 import { db, auth } from "../../api/firebase";
 import Loading from "../Loading/Loading";
+import DefaultButton from "../DefaultButton/DefaultButton";
 import FUNDITLOGO from "../../assets/icons/FUNDIT.png";
 
 import {
@@ -25,7 +26,6 @@ import {
   EmailInput,
   PasswordInput,
   LoginButtonArea,
-  DefaultLoginButton,
   GoogleLoginButton,
   RegisterArea,
   RegisterButton,
@@ -175,9 +175,7 @@ const LoginComponent = () => {
             찾기
           </FindAccountArea>
           <LoginButtonArea>
-            <DefaultLoginButton onClick={handleLogin}>
-              로그인
-            </DefaultLoginButton>
+            <DefaultButton name={"로그인"} onClick={handleLogin} />
             <GoogleLoginButton onClick={handleGoogleLogin} />
           </LoginButtonArea>
           <RegisterArea>

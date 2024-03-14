@@ -99,17 +99,3 @@ export const FindAddressButton = styled.button`
 `;
 
 export const AddressDetailInput = styled(InputDesign)``;
-
-export const EditButtonArea = styled.div``;
-
-export const EditButton = styled.button`
-  width: 220px;
-  height: 40px;
-  border-radius: 12px;
-  border: none;
-  background-color: #5271ff;
-  color: #fff;
-  font-size: 20px;
-  font-weight: bold;
-  cursor: pointer;
-`;

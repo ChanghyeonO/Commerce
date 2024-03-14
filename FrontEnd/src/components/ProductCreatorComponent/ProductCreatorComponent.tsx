@@ -19,6 +19,7 @@ import moment from "moment";
 import Swal from "sweetalert2";
 import alertList from "../../utils/Swal";
 import Loading from "../Loading/Loading";
+import DefaultButton from "../DefaultButton/DefaultButton";
 
 import {
   Container,
@@ -44,8 +45,6 @@ import {
   ImageArea,
   DescriptionImage,
   DescriptionText,
-  UploadButtonArea,
-  UploadButton,
 } from "./ProductCreatorComponentStyle";
 import { PostData } from "../../types/ItemType";
 
@@ -386,11 +385,12 @@ const ProductCreatorComponent = () => {
           ))}
           <ContentAddButton onClick={addIntroContent}>추가</ContentAddButton>
         </Body>
-        <UploadButtonArea>
-          <UploadButton onClick={uploadPostWithImages}>
-            제품 추가하기
-          </UploadButton>
-        </UploadButtonArea>
+        <DefaultButton
+          name={"제품 추가하기"}
+          onClick={uploadPostWithImages}
+          style={{ height: "100px" }}
+          buttonStyle={{ height: "50px" }}
+        />
       </InnerContent>
       {isLoading && <Loading />}
     </Container>

@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import alertList from "../../../utils/Swal";
 import FUNDITLOGO from "../../../assets/icons/FUNDIT.png";
+import DefaultButton from "../../DefaultButton/DefaultButton";
 
 import {
   Container,
@@ -17,8 +18,6 @@ import {
   AgreeInputArea,
   AgreeInput,
   AgreeText,
-  NextButtonArea,
-  NextButton,
 } from "./RegisterTermsComponentsStyle";
 
 const Terms = `서비스 이용약관 (상품, 서비스 등 이용 일반 회원용)
@@ -326,9 +325,7 @@ const RegisterTermsComponent = () => {
             />
             <AgreeText>위 사항에 대해 모두 이해 했으며 동의합니다.</AgreeText>
           </AgreeInputArea>
-          <NextButtonArea>
-            <NextButton onClick={GoNextPage}>다음</NextButton>
-          </NextButtonArea>
+          <DefaultButton name={"다음"} onClick={GoNextPage} />
         </InnerContent>
       </InnerContainer>
     </Container>

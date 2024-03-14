@@ -14,13 +14,12 @@ import {
 import Swal from "sweetalert2";
 import alertList from "../../utils/Swal";
 import ImageUpload from "../ImageUpload/ImageUpload";
+import DefaultButton from "../DefaultButton/DefaultButton";
 import {
   Container,
   TopContent,
   BottomContent,
   CenterButtonArea,
-  AddImageButtonArea,
-  AddImageButton,
   ItemContent,
   IntroArea,
   IntroTitle,
@@ -111,11 +110,14 @@ const MainComponent = () => {
       <BottomContent>
         <CenterButtonArea>
           {isAdmin && (
-            <AddImageButtonArea>
-              <AddImageButton onClick={handleShowImageUpload}>
-                슬라이드 사진 수정
-              </AddImageButton>
-            </AddImageButtonArea>
+            <DefaultButton
+              name={"슬라이드 사진 수정"}
+              style={{
+                justifyContent: "end",
+              }}
+              buttonStyle={{ height: "50px", background: "#38b6ff" }}
+              onClick={handleShowImageUpload}
+            />
           )}
         </CenterButtonArea>
 

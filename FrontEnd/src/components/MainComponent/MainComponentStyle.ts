@@ -81,30 +81,3 @@ export const AddItemButtonArea = styled.div`
   justify-content: center;
   gap: 20px;
 `;
-
-export const AddImageButtonArea = styled.div`
-  width: 100%;
-  height: 50px;
-  display: flex;
-  gap: 20px;
-  justify-content: end;
-`;
-
-const ButtonDesign = styled.button`
-  width: 220px;
-  height: 50px;
-  border-radius: 12px;
-  border: none;
-  color: #fff;
-  font-size: 20px;
-  font-weight: bold;
-  cursor: pointer;
-`;
-
-export const AddImageButton = styled(ButtonDesign)`
-  background-color: #38b6ff;
-`;
-
-export const AddItemButton = styled(ButtonDesign)`
-  background-color: #5271ff;
-`;

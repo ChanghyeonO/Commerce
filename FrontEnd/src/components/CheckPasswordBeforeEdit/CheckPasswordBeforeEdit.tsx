@@ -6,7 +6,7 @@ import Swal from "sweetalert2";
 import alertList from "../../utils/Swal";
 import MyPageNav from "../MyPageNav/MyPageNav";
 import Loading from "../Loading/Loading";
-
+import DefaultButton from "../DefaultButton/DefaultButton";
 import {
   Container,
   RightContent,
@@ -68,9 +68,7 @@ const CheckPasswordBeforeEdit = () => {
               onChange={handlePasswordChange}
             />
           </PasswordInputArea>
-          <LoginButtonArea>
-            <LoginButton onClick={handleReauthenticate}>확인</LoginButton>
-          </LoginButtonArea>
+          <DefaultButton name={"확인"} onClick={handleReauthenticate} />
         </InnerContent>
       </RightContent>
       {isLoading && <Loading />}

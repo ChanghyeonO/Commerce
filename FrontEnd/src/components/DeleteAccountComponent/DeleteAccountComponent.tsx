@@ -4,6 +4,7 @@ import { deleteUser } from "firebase/auth";
 import { auth, db } from "../../api/firebase";
 import { doc, deleteDoc } from "firebase/firestore";
 import Loading from "../Loading/Loading";
+import DefaultButton from "../DefaultButton/DefaultButton";
 import {
   Container,
   RightContent,
@@ -14,8 +15,6 @@ import {
   AgreeInput,
   AgreeInputArea,
   AgreeText,
-  NextButton,
-  NextButtonArea,
   TermsTextArea,
   TermsTextAreaContainer,
 } from "../RegisterComponent/RegisterTermsComponent/RegisterTermsComponentsStyle";
@@ -135,9 +134,7 @@ const DeleteAccountComponent = () => {
             <AgreeText>위 사항에 대해 모두 이해 했으며 동의합니다.</AgreeText>
           </AgreeInputArea>
         </InnerContent>
-        <NextButtonArea>
-          <NextButton onClick={handleDeleteAccount}>회원탈퇴</NextButton>
-        </NextButtonArea>
+        <DefaultButton name={"회원탈퇴"} onClick={handleDeleteAccount} />
       </RightContent>
       {isLoading && <Loading />}
     </Container>

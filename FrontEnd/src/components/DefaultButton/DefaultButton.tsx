@@ -4,12 +4,20 @@ import { ButtonArea, Button } from "./DefaultButtonStyle";
 interface DefaultButtonProps {
   name: string;
   onClick?: () => void;
+  style?: React.CSSProperties;
+  buttonStyle?: React.CSSProperties;
 }
-
-const DefaultButton = ({ name, onClick }: DefaultButtonProps) => {
+const DefaultButton = ({
+  name,
+  onClick,
+  style,
+  buttonStyle,
+}: DefaultButtonProps) => {
   return (
-    <ButtonArea>
-      <Button onClick={onClick}>{name}</Button>
+    <ButtonArea style={style}>
+      <Button onClick={onClick} style={buttonStyle}>
+        {name}
+      </Button>
     </ButtonArea>
   );
 };

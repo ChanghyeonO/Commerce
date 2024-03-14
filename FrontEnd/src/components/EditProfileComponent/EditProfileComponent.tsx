@@ -6,6 +6,7 @@ import { useUser } from "../../contexts/UserContext";
 import Swal from "sweetalert2";
 import alertList from "../../utils/Swal";
 import MyPageNav from "../MyPageNav/MyPageNav";
+import DefaultButton from "../DefaultButton/DefaultButton";
 
 import {
   Container,
@@ -27,8 +28,6 @@ import {
   AddressInput,
   FindAddressButton,
   AddressDetailInput,
-  EditButtonArea,
-  EditButton,
 } from "./EditProfileComponentStyle";
 
 const EditProfileComponent = () => {
@@ -253,9 +252,14 @@ const EditProfileComponent = () => {
               onChange={handleChange}
             />
           </AddressInputArea>
-          <EditButtonArea>
-            <EditButton onClick={handleUpdate}>수정하기</EditButton>
-          </EditButtonArea>
+          <DefaultButton
+            name={"수정하기"}
+            onClick={handleUpdate}
+            style={{
+              height: "70px",
+              justifyContent: "start",
+            }}
+          />
         </InnerContent>
       </RightContent>
     </Container>

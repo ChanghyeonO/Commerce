@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 export const ButtonArea = styled.div`
   width: 100%;
-  height: 40px;
+  height: 50px;
   display: flex;
   justify-content: center;
   align-items: center;
