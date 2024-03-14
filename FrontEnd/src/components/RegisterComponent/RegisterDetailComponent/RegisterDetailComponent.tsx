@@ -34,8 +34,6 @@ import {
   FindAdressInput,
   FindAdressButton,
   FindAdressDetailInput,
-  SuccessButtonArea,
-  SuccessButton,
 } from "./RegisterDetailComponentStyle";
 
 const RegisterDetailComponent = () => {

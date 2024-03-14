@@ -116,21 +116,3 @@ export const FindAdressInput = styled(InputDesign)``;
 export const FindAdressButton = styled(CheckButtonDesign)``;
 
 export const FindAdressDetailInput = styled(InputDesign)``;
-
-export const SuccessButtonArea = styled.div`
-  height: 70px;
-  display: flex;
-  align-items: center;
-`;
-
-export const SuccessButton = styled.button`
-  width: 220px;
-  height: 40px;
-  border-radius: 12px;
-  border: none;
-  background-color: #5271ff;
-  color: #fff;
-  font-size: 20px;
-  font-weight: bold;
-  cursor: pointer;
-`;

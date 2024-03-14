@@ -15,6 +15,7 @@ import {
 } from "firebase/firestore";
 import { storage, db } from "../../api/firebase";
 import Swal from "sweetalert2";
+import Resizer from "react-image-file-resizer";
 import alertList from "../../utils/Swal";
 import Loading from "../Loading/Loading";
 
@@ -42,6 +43,22 @@ const ImageUpload = ({ onClose }: Props) => {
   const [previewImages, setPreviewImages] = useState<File[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
+  const resizeImage = (file: File) =>
+    new Promise((resolve) => {
+      Resizer.imageFileResizer(
+        file,
+        2560, // 최대 너비를 더 크게 설정
+        1440, // 최대 높이를 더 크게 설정
+        "WEBP", // 파일 포맷
+        80, // 품질
+        0, // 회전
+        (uri) => {
+          resolve(uri);
+        },
+        "file", // 출력 타입
+      );
+    });
+
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (files) {
@@ -53,6 +70,7 @@ const ImageUpload = ({ onClose }: Props) => {
 
   const handleUpload = async () => {
     setIsLoading(true);
+
     if (previewImages.length === 0) {
       setIsLoading(false);
       Swal.fire(alertList.infoMessage("업로드할 이미지를 추가해주세요."));
@@ -60,9 +78,14 @@ const ImageUpload = ({ onClose }: Props) => {
     }
 
     const uploadPromises = previewImages.map(async (file) => {
-      const imageRef = ref(storage, `images/${file.name}_${Date.now()}`);
       try {
-        const snapshot = await uploadBytes(imageRef, file);
+        const resizedImage = await resizeImage(file);
+        if (!(resizedImage instanceof Blob)) {
+          throw new Error("Resizing failed");
+        }
+
+        const imageRef = ref(storage, `images/${file.name}_${Date.now()}`);
+        const snapshot = await uploadBytes(imageRef, resizedImage);
         const downloadURL = await getDownloadURL(snapshot.ref);
 
         const mainDocRef = doc(db, "slideImages", "main");
@@ -79,7 +102,6 @@ const ImageUpload = ({ onClose }: Props) => {
       .then((urls) => {
         setUploadedImages((prev) => [...prev, ...urls]);
         setPreviewImages([]);
-        setIsLoading(false);
         Swal.fire(
           alertList.successMessage(
             "모든 이미지가 성공적으로 업로드되었습니다.",
@@ -87,8 +109,10 @@ const ImageUpload = ({ onClose }: Props) => {
         );
       })
       .catch(() => {
-        setIsLoading(false);
         Swal.fire(alertList.errorMessage("일부 이미지 업로드에 실패했습니다."));
+      })
+      .finally(() => {
+        setIsLoading(false);
       });
   };
 

@@ -17,6 +17,7 @@ import {
 } from "firebase/firestore";
 import moment from "moment";
 import Swal from "sweetalert2";
+import Resizer from "react-image-file-resizer";
 import alertList from "../../utils/Swal";
 import Loading from "../Loading/Loading";
 import DefaultButton from "../DefaultButton/DefaultButton";
@@ -191,6 +192,22 @@ const ProductCreatorComponent = () => {
     }
   };
 
+  const resizeImage = (file: File) =>
+    new Promise((resolve) => {
+      Resizer.imageFileResizer(
+        file,
+        1980, // 최대 너비를 더 크게 설정
+        1080, // 최대 높이를 더 크게 설정
+        "WEBP", // 파일 포맷
+        80, // 품질
+        0, // 회전
+        (uri) => {
+          resolve(uri);
+        },
+        "file", // 출력 타입
+      );
+    });
+
   const uploadPostWithImages = async () => {
     setIsLoading(true);
 
@@ -212,8 +229,12 @@ const ProductCreatorComponent = () => {
     const uploads = introContents
       .filter((content) => content.imageFile)
       .map(async (content) => {
+        const resizedImageBlob = await resizeImage(content.imageFile as File);
+        if (!(resizedImageBlob instanceof Blob)) {
+          throw new Error("Resizing failed");
+        }
         const imageRef = ref(storage, `images/${content.id}_${Date.now()}`);
-        const snapshot = await uploadBytes(imageRef, content.imageFile as File);
+        const snapshot = await uploadBytes(imageRef, resizedImageBlob);
         return getDownloadURL(snapshot.ref);
       });
 
