@@ -1,4 +1,5 @@
 import { createBrowserRouter } from "react-router-dom";
+import ProtectedRoute from "../components/ProtectedRoute/ProtectedRoute";
 import Main from "../pages/Main/Main";
 import FundingProduct from "../pages/Product/FundingProduct";
 import OtherProduct from "../pages/Product/OtherProduct";
@@ -27,14 +28,70 @@ const router = createBrowserRouter([
   { path: "/other", element: <OtherProduct /> },
   { path: "/funding/detail/:id", element: <FundingProductDetail /> },
   { path: "other/detail/:id", element: <OtherProductDetail /> },
-  { path: "/funding/create", element: <FundingProductCreator /> },
-  { path: "other/create", element: <OtherProductCreator /> },
-  { path: "mypage/check-password", element: <CheckPassword /> },
-  { path: "mypage/edit-profile", element: <EditProfile /> },
-  { path: "mypage/order-history", element: <OrderHistory /> },
-  { path: "mypage/cart", element: <ShoppingBasket /> },
-  { path: "mypage/delete-account", element: <DeleteAccount /> },
-  { path: "checkout", element: <Checkout /> },
+  {
+    path: "/funding/create",
+    element: (
+      <ProtectedRoute>
+        <FundingProductCreator />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "other/create",
+    element: (
+      <ProtectedRoute>
+        <OtherProductCreator />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "mypage/check-password",
+    element: (
+      <ProtectedRoute>
+        <CheckPassword />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "mypage/edit-profile",
+    element: (
+      <ProtectedRoute>
+        <EditProfile />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "mypage/order-history",
+    element: (
+      <ProtectedRoute>
+        <OrderHistory />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "mypage/cart",
+    element: (
+      <ProtectedRoute>
+        <ShoppingBasket />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "mypage/delete-account",
+    element: (
+      <ProtectedRoute>
+        <DeleteAccount />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "checkout",
+    element: (
+      <ProtectedRoute>
+        <Checkout />
+      </ProtectedRoute>
+    ),
+  },
   { path: "/login", element: <Login /> },
   { path: "/find-email", element: <FindEmail /> },
   { path: "/find-password", element: <FindPassword /> },
