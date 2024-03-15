@@ -5,6 +5,8 @@ on:
   push:
     branches:
       - main
+    paths:
+      - "FrontEnd/**"
 
 # 작업 정의
 jobs:
@@ -36,11 +38,11 @@ jobs:
 
       # 4단계: 프로젝트 의존성을 설치
       - name: Install dependencies
-        run: npm install
+        run: cd FrontEnd && npm install
 
       # 5단계: 프로젝트를 빌드
       - name: Build
-        run: npm run build
+        run: cd FrontEnd && npm run build
 
       # 6단계: AWS CLI 버전 표시(선택)
       - name: SHOW AWS CLI VERSION
