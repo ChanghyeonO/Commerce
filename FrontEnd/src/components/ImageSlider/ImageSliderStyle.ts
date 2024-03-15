@@ -9,14 +9,12 @@ export const Container = styled.div`
   width: 100%;
   height: 100%;
   overflow: hidden;
-  background-color: #eee;
 `;
 
 export const SlideImage = styled.img`
   width: 100%;
   height: 100%;
   object-fit: cover;
-  background-color: #eee;
 `;
 
 export const Pagination = styled.div`
@@ -32,6 +30,6 @@ export const NavButton = styled.span<ButtonProps>`
   padding: 5px 35px;
   cursor: pointer;
   border-radius: 12px;
-  background: ${props => (props.$isActive ? "#5271ff" : "#fff")};
+  background: ${(props) => (props.$isActive ? "#5271ff" : "#fff")};
   border: 1px solid #eee;
 `;

@@ -280,21 +280,22 @@ const CheckoutComponent = () => {
           <NameInput
             type="text"
             placeholder="이름"
-            value={user?.name || "이름 없음"}
+            value={localUser.name}
+            name="name"
             onChange={handleChange}
           />
           <PhoneNumberInput
             name="phoneNumber"
             type="text"
             placeholder="전화번호"
-            value={user?.phoneNumber || "전화번호 없음"}
+            value={localUser.phoneNumber}
             onChange={handleChange}
           />
           <MainAddressArea>
             <AddressInput
               type="text"
               placeholder="주소"
-              value={user?.address || "주소 없음"}
+              value={localUser.address}
               readOnly
             />
             <FindAddressButton onClick={getAddress}>검색</FindAddressButton>
@@ -303,7 +304,7 @@ const CheckoutComponent = () => {
             name="addressDetail"
             type="text"
             placeholder="상세 주소"
-            value={user?.addressDetail || ""}
+            value={localUser.addressDetail}
             onChange={handleChange}
           />
           <DeliveryRequestInput

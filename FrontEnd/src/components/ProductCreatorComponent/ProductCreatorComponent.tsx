@@ -327,7 +327,10 @@ const ProductCreatorComponent = () => {
               )}
             </OptionInputArea>
           ))}
-          <OptionAddButton onClick={addOption}>추가</OptionAddButton>
+          {options.length < 5 && (
+            <OptionAddButton onClick={addOption}>추가</OptionAddButton>
+          )}
+
           <PriceAddInput
             type="number"
             placeholder="판매 금액을 작성해주세요. 단위(원)"
@@ -404,7 +407,9 @@ const ProductCreatorComponent = () => {
               )}
             </IntroContentArea>
           ))}
-          <ContentAddButton onClick={addIntroContent}>추가</ContentAddButton>
+          {introContents.length < 5 && (
+            <ContentAddButton onClick={addIntroContent}>추가</ContentAddButton>
+          )}
         </Body>
         <DefaultButton
           name={"제품 추가하기"}

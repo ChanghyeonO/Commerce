@@ -7,8 +7,8 @@ export const Container = styled.div`
 
 export const TopContent = styled.div`
   max-width: 100%;
-  height: 500px;
-  background-color: #eee;
+  height: 600px;
+  background-color: #fff;
 `;
 
 export const BottomContent = styled.div`

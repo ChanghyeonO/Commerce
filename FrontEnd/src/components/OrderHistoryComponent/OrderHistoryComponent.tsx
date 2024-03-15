@@ -49,43 +49,56 @@ const OrderHistoryComponent = () => {
   const fetchOrderList = async () => {
     setIsLoading(true);
     if (!user) {
+      console.log("사용자가 로그인하지 않았습니다.");
       setIsLoading(false);
       return;
     }
 
-    const userRef = doc(db, "users", user.userId);
-    const docSnap = await getDoc(userRef);
-    if (!docSnap.exists()) {
-      console.log("사용자 데이터를 찾을 수 없습니다.");
+    try {
+      const userRef = doc(db, "users", user.userId);
+      const docSnap = await getDoc(userRef);
+      if (!docSnap.exists()) {
+        console.log("사용자 데이터를 찾을 수 없습니다.");
+        setIsLoading(false);
+        return;
+      }
+
+      const isAdmin = docSnap.data().admin === true;
+      setIsAdmin(isAdmin);
+
+      let queryToExecute;
+      if (isAdmin) {
+        queryToExecute = query(
+          collection(db, "orderItems"),
+          orderBy("created_at", "desc"),
+        );
+      } else {
+        queryToExecute = query(
+          collection(db, "orderItems"),
+          where("user_id", "==", user.userId),
+          orderBy("created_at", "desc"),
+        );
+      }
+
+      const querySnapshot = await getDocs(queryToExecute);
+      if (querySnapshot.empty) {
+        console.log("주문 내역이 없습니다.");
+        setOrderDetails([]);
+        setIsLoading(false);
+        return;
+      }
+
+      const orders = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...(doc.data() as Omit<OrderDetail, "id">),
+      }));
+
+      setOrderDetails(orders);
+    } catch (error) {
+      console.error("주문 내역을 불러오는 중 오류 발생:", error);
+    } finally {
       setIsLoading(false);
-      return;
     }
-
-    const isAdmin = docSnap.data().admin === true;
-    setIsAdmin(isAdmin);
-
-    let queryToExecute;
-    if (user.admin) {
-      queryToExecute = query(
-        collection(db, "orderItems"),
-        orderBy("created_at", "desc"),
-      );
-    } else {
-      queryToExecute = query(
-        collection(db, "orderItems"),
-        where("user_id", "==", user.userId),
-        orderBy("created_at", "desc"),
-      );
-    }
-
-    const querySnapshot = await getDocs(queryToExecute);
-    const orders = querySnapshot.docs.map((doc) => ({
-      id: doc.id,
-      ...(doc.data() as Omit<OrderDetail, "id">),
-    }));
-
-    setOrderDetails(orders);
-    setIsLoading(false);
   };
 
   useEffect(() => {
@@ -205,8 +218,9 @@ const OrderHistoryComponent = () => {
           cancel_reason: cancelReason,
           order_status: "취소요청",
         });
-        setIsLoading(false);
         Swal.fire(alertList.successMessage("취소 요청이 완료되었습니다."));
+      } else {
+        setIsLoading(false);
       }
     } catch (error) {
       setIsLoading(false);
