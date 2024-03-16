@@ -26,15 +26,16 @@ jobs:
       # 3단계: 환경 변수 파일 생성
       - name: Create env file
         run: |
-          touch .env
-          echo VITE_FIREBASE_API_KEY=${{ secrets.VITE_FIREBASE_API_KEY }} >> .env
-          echo VITE_FIREBASE_AUTH_DOMAIN=${{ secrets.VITE_FIREBASE_AUTH_DOMAIN }} >> .env
-          echo VITE_FIREBASE_PROJECT_ID=${{ secrets.VITE_FIREBASE_PROJECT_ID }} >> .env
-          echo VITE_FIREBASE_STORAGE_BUCKET=${{ secrets.VITE_FIREBASE_STORAGE_BUCKET }} >> .env
-          echo VITE_FIREBASE_MESSAGING_SENDER_ID=${{ secrets.VITE_FIREBASE_MESSAGING_SENDER_ID }} >> .env
-          echo VITE_FIREBASE_APP_ID=${{ secrets.VITE_FIREBASE_APP_ID }} >> .env
-          echo VITE_SHOPPINGMALL_ID=${{ secrets.VITE_SHOPPINGMALL_ID }} >> .env
-          cat .env
+          touch FrontEnd/.env
+          echo VITE_FIREBASE_API_KEY=${{ secrets.VITE_FIREBASE_API_KEY }} >> FrontEnd/.env
+          echo VITE_FIREBASE_AUTH_DOMAIN=${{ secrets.VITE_FIREBASE_AUTH_DOMAIN }} >> FrontEnd/.env
+          echo VITE_FIREBASE_PROJECT_ID=${{ secrets.VITE_FIREBASE_PROJECT_ID }} >> FrontEnd/.env
+          echo VITE_FIREBASE_STORAGE_BUCKET=${{ secrets.VITE_FIREBASE_STORAGE_BUCKET }} >> FrontEnd/.env
+          echo VITE_FIREBASE_MESSAGING_SENDER_ID=${{ secrets.VITE_FIREBASE_MESSAGING_SENDER_ID }} >> FrontEnd/.env
+          echo VITE_FIREBASE_APP_ID=${{ secrets.VITE_FIREBASE_APP_ID }} >> FrontEnd/.env
+          echo VITE_SHOPPINGMALL_ID=${{ secrets.VITE_SHOPPINGMALL_ID }} >> FrontEnd/.env
+          cat FrontEnd/.env
+        working-directory: .
 
       # 4단계: 프로젝트 의존성을 설치
       - name: Install dependencies
