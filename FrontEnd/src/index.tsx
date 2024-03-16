@@ -11,7 +11,7 @@ import GlobalFont from "./styles/GlobalFont";
 const queryClient = new QueryClient();
 
 const rootElement = document.getElementById("root");
-
+//배포 테스트 위한 주석
 if (rootElement) {
   ReactDOM.createRoot(rootElement).render(
     <React.StrictMode>
