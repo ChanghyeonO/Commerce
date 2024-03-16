@@ -38,11 +38,13 @@ jobs:
 
       # 4단계: 프로젝트 의존성을 설치
       - name: Install dependencies
-        run: cd FrontEnd && npm install
+        run: npm install
+        working-directory: FrontEnd
 
       # 5단계: 프로젝트를 빌드
       - name: Build
-        run: cd FrontEnd && npm run build
+        run: npm run build
+        working-directory: FrontEnd
 
       # 6단계: AWS CLI 버전 표시(선택)
       - name: SHOW AWS CLI VERSION
@@ -56,9 +58,8 @@ jobs:
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        run: |
-          cd FrontEnd
-           aws s3 sync \
-           --region ap-northeast-2\
-           ./dist s3://funditdeploy\
-           --delete
+        run: aws s3 sync \
+          --region ap-northeast-2\
+          ./dist s3://funditdeploy\
+          --delete
+        working-directory: FrontEnd
