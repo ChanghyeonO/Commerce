@@ -31,6 +31,7 @@ export interface OrderDetail {
   buyer_tel: string;
   delivery_request: string;
   imp_uid: string;
+  items: string[];
   name: string;
   order_status: string;
   user_id: string;

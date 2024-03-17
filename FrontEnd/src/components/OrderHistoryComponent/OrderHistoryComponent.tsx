@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useUser } from "../../contexts/UserContext";
 import MyPageNav from "../MyPageNav/MyPageNav";
+import OrderHistoryDetail from "../OrderHistoryDetail/OrderHistoryDetail";
 import Loading from "../Loading/Loading";
 import {
   collection,
@@ -42,6 +43,7 @@ import alertList from "../../utils/Swal";
 
 const OrderHistoryComponent = () => {
   const [orderDetails, setOrderDetails] = useState<OrderDetail[]>([]);
+  const [openOrderDetail, setOpenOrderDetail] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const { user } = useUser();
@@ -237,6 +239,13 @@ const OrderHistoryComponent = () => {
     return date.toLocaleString();
   };
 
+  const toggleVisibility = (orderId: string) => {
+    if (openOrderDetail === orderId) {
+      setOpenOrderDetail(null);
+    } else {
+      setOpenOrderDetail(orderId);
+    }
+  };
   return (
     <Container>
       <MyPageNav />
@@ -251,7 +260,10 @@ const OrderHistoryComponent = () => {
                   <ItemDescription>
                     주문시각 : {formatDate(order.created_at)}
                   </ItemDescription>
-                  <ItemTitle>{order.name}</ItemTitle>
+                  <ItemTitle onClick={() => toggleVisibility(order.id)}>
+                    {order.name}
+                  </ItemTitle>
+
                   <ItemDescription>
                     결제상태 :{" "}
                     {isAdmin ? (
@@ -327,6 +339,15 @@ const OrderHistoryComponent = () => {
           )}
         </BottomContent>
       </RightContentArea>
+      {openOrderDetail && (
+        <OrderHistoryDetail
+          items={
+            orderDetails.find((order) => order.id === openOrderDetail)?.items ||
+            []
+          }
+          onClose={() => setOpenOrderDetail(null)}
+        />
+      )}
       {isLoading && <Loading />}
     </Container>
   );

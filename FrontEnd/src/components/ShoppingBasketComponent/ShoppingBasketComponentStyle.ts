@@ -63,6 +63,7 @@ export const CenterContent = styled.div`
 export const ItemTitle = styled.div`
   font-size: 18px;
   font-weight: bold;
+  cursor: pointer;
 `;
 
 export const ItemOption = styled.div`
