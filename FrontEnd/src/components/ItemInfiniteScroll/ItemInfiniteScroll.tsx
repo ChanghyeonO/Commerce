@@ -73,6 +73,7 @@ const ItemInfiniteScroll = () => {
       fetchItemsWithCursor,
       {
         getNextPageParam: (lastPage) => lastPage.lastVisible || undefined,
+        staleTime: 5 * 60 * 1000,
       },
     );
 

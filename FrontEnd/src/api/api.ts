@@ -17,6 +17,7 @@ export const fetchItems = async (
   sortDirection: "asc" | "desc" = "desc",
   itemsPerPage = 4,
 ) => {
+  console.log(`Fetching items from ${collectionName}`);
   const itemsRef = collection(db, collectionName);
   let itemsQuery;
   if (lastFetchedItem) {

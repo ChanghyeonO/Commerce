@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { useQueryClient } from "react-query";
 import { db, storage } from "../../api/firebase";
 import {
   getDownloadURL,
@@ -60,6 +61,7 @@ type ValuePiece = Date | null;
 type Value = ValuePiece | [ValuePiece, ValuePiece];
 
 const ProductCreatorComponent = () => {
+  const queryClient = useQueryClient();
   const [options, setOptions] = useState([{ id: 1, value: "" }]);
   const [introContents, setIntroContents] = useState<IntroContent[]>([
     { id: 1, value: "", imageUrl: "" },
@@ -182,10 +184,11 @@ const ProductCreatorComponent = () => {
       await setDoc(expiredPostRef, {
         name: postData.name,
         salesCount: postData.salesCount,
-        targetSales: postData.targetSales,
-        deadLine: postData.deadLine,
-        emailSendCheck: postData.emailSendCheck,
+        targetSales: postData.targetSales || null,
+        deadLine: postData.deadLine || null,
+        emailSendCheck: postData.emailSendCheck || null,
       });
+
       console.log("expiredFundingItems에 항목 추가 성공");
     } catch (error) {
       console.error("expiredFundingItems에 항목 추가 실패:", error);
@@ -281,6 +284,9 @@ const ProductCreatorComponent = () => {
       Swal.fire(
         alertList.successMessage("제품이 성공적으로 업로드 되었습니다."),
       );
+
+      queryClient.invalidateQueries(["items", collectionName]);
+      queryClient.invalidateQueries("items");
       if (collectionName === "fundingItems") {
         navigate("/funding");
       } else if (collectionName === "otherItems") {

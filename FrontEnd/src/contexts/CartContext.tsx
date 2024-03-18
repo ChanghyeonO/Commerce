@@ -1,10 +1,4 @@
-import React, {
-  createContext,
-  useContext,
-  useState,
-  ReactNode,
-  useEffect,
-} from "react";
+import React, { createContext, useContext, useState, ReactNode } from "react";
 
 interface CartContextType {
   selectedCategory: "funding" | "other" | null;
@@ -24,10 +18,6 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
   const [selectedCategory, setSelectedCategory] = useState<
     "funding" | "other" | null
   >(null);
-
-  useEffect(() => {
-    console.log("Selected Category:", selectedCategory);
-  }, [selectedCategory]);
 
   const value = { selectedCategory, setSelectedCategory };
 
