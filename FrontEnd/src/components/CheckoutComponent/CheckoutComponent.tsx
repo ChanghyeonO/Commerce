@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { db } from "../../api/firebase";
 import { useUser } from "../../contexts/UserContext";
+import { useCart } from "../../contexts/CartContext";
 import {
   collection,
   doc,
@@ -14,6 +15,7 @@ import {
 } from "firebase/firestore";
 import Swal from "sweetalert2";
 import alertList from "../../utils/Swal";
+import DefaultButton from "../DefaultButton/DefaultButton";
 import {
   Container,
   InnerContent,
@@ -43,7 +45,6 @@ import {
   RightContent,
   TotalPrice,
   OrderButtonArea,
-  OrderButton,
 } from "../ShoppingBasketComponent/ShoppingBasketComponentStyle";
 
 import Loading from "../Loading/Loading";
@@ -56,6 +57,7 @@ const CheckoutComponent = () => {
   const [totalAmount, setTotalAmount] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const { user } = useUser();
+  const { selectedCategory } = useCart();
   const [localUser, setLocalUser] = useState({
     name: user?.name || "",
     phoneNumber: user?.phoneNumber || "",
@@ -66,18 +68,26 @@ const CheckoutComponent = () => {
 
   useEffect(() => {
     fetchCartData();
-  }, [user]);
+  }, [user, selectedCategory]);
 
   function fetchCartData() {
-    const fundingData = sessionStorage.getItem("fundingItemsCart");
-    const otherData = sessionStorage.getItem("otherItemsCart");
-    const fundingItems = fundingData ? JSON.parse(fundingData) : [];
-    const otherItems = otherData ? JSON.parse(otherData) : [];
+    if (!selectedCategory) {
+      Swal.fire(
+        alertList.infoMessage(
+          "선택된 제품 카테고리가 없습니다. 장바구니로 돌아가서 카테고리를 선택해주세요.",
+        ),
+      );
+      navigate("/mypage/cart");
+      return;
+    }
 
-    const combinedItems = [...fundingItems, ...otherItems];
-    setCartItems(combinedItems);
+    const sessionKey =
+      selectedCategory === "funding" ? "fundingItemsCart" : "otherItemsCart";
+    const storedData = sessionStorage.getItem(sessionKey);
+    const items = storedData ? JSON.parse(storedData) : [];
+    setCartItems(items);
 
-    const total = combinedItems.reduce(
+    const total = items.reduce(
       (sum: number, item: CartItem) => sum + item.totalPrice,
       0,
     );
@@ -315,7 +325,7 @@ const CheckoutComponent = () => {
           />
         </ShippingAreaContainer>
         <OrderButtonArea>
-          <OrderButton onClick={processPayment}>결제하기</OrderButton>
+          <DefaultButton name={"결제하기"} onClick={processPayment} />
         </OrderButtonArea>
         {isLoading && <Loading />}
       </InnerContent>

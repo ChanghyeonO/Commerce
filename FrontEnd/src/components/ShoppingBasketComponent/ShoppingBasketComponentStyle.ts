@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { checkbox } from "../RegisterComponent/RegisterTermsComponent/RegisterTermsComponentsStyle";
 
 export const Container = styled.div`
   width: 100%;
@@ -28,13 +29,44 @@ export const Title = styled.h1`
 `;
 
 export const BottomContent = styled.div`
-  width: 99%;
+  width: 95%;
   height: 70%;
-  overflow-y: scroll;
   border: 2px solid #eee;
   border-radius: 12px;
+  box-sizing: border-box;
+  overflow-y: scroll;
 `;
 
+export const ItemSelectInfoArea = styled.div`
+  width: 100%;
+  height: 63.5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  border-bottom: 2px solid #eee;
+`;
+
+export const SelectInputBox = styled(checkbox)`
+  width: 20px;
+  height: 20px;
+`;
+
+export const InfoText = styled.div`
+  font-size: 25px;
+  font-weight: bold;
+  color: #777;
+`;
+
+export const FundingItemSection = styled.div`
+  height: 27%;
+`;
+
+export const OtherItemSection = styled.div`
+  width: 100%;
+  height: 49%;
+  overflow-y: scroll;
+`;
 export const ItemArea = styled.div`
   max-width: 100%;
   height: 150px;
@@ -161,16 +193,4 @@ export const OrderButtonArea = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-`;
-
-export const OrderButton = styled.button`
-  width: 220px;
-  height: 40px;
-  border-radius: 12px;
-  border: none;
-  background-color: #5271ff;
-  color: #fff;
-  font-size: 20px;
-  font-weight: bold;
-  cursor: pointer;
 `;

@@ -1,13 +1,22 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import MyPageNav from "../MyPageNav/MyPageNav";
 import DefaultButton from "../DefaultButton/DefaultButton";
+import { CartItem } from "../../types/ItemType";
+import { useCart } from "../../contexts/CartContext";
+import Swal from "sweetalert2";
+import alertList from "../../utils/Swal";
 
 import {
   Container,
   RightContentArea,
   Title,
   BottomContent,
+  ItemSelectInfoArea,
+  SelectInputBox,
+  InfoText,
+  FundingItemSection,
+  OtherItemSection,
   ItemArea,
   ItemImage,
   CenterContent,
@@ -23,14 +32,21 @@ import {
   DeleteButton,
   EmptyInfomation,
   OrderButtonArea,
-  OrderButton,
 } from "./ShoppingBasketComponentStyle";
-
-import { CartItem } from "../../types/ItemType";
 
 const ShoppingBasketComponent = () => {
   const [fundingItems, setFundingItems] = useState<CartItem[]>([]);
   const [otherItems, setOtherItems] = useState<CartItem[]>([]);
+  const { selectedCategory, setSelectedCategory } = useCart();
+  const navigate = useNavigate();
+
+  const handleCheckboxChange = (category: "funding" | "other") => {
+    if (selectedCategory === category) {
+      setSelectedCategory(null);
+    } else {
+      setSelectedCategory(category);
+    }
+  };
 
   useEffect(() => {
     const fundingData = sessionStorage.getItem("fundingItemsCart");
@@ -149,6 +165,13 @@ const ShoppingBasketComponent = () => {
     ));
   };
 
+  const handleOrderButtonClick = () => {
+    if (!selectedCategory) {
+      Swal.fire(alertList.infoMessage("제품 카테고리를 선택해주세요."));
+    } else {
+      navigate("/checkout");
+    }
+  };
   return (
     <Container>
       <MyPageNav />
@@ -157,17 +180,39 @@ const ShoppingBasketComponent = () => {
         <BottomContent>
           {fundingItems.length + otherItems.length > 0 ? (
             <>
-              {renderItems(fundingItems, "funding")}
-              {renderItems(otherItems, "other")}
+              <ItemSelectInfoArea>
+                <SelectInputBox
+                  type="checkbox"
+                  checked={selectedCategory === "funding"}
+                  onChange={() => handleCheckboxChange("funding")}
+                />
+                <InfoText>펀딩 제품</InfoText>
+              </ItemSelectInfoArea>
+              <FundingItemSection>
+                {fundingItems.length > 0 && (
+                  <>{renderItems(fundingItems, "funding")}</>
+                )}
+              </FundingItemSection>
+              <ItemSelectInfoArea>
+                <SelectInputBox
+                  type="checkbox"
+                  checked={selectedCategory === "other"}
+                  onChange={() => handleCheckboxChange("other")}
+                />
+                <InfoText>기타 제품</InfoText>
+              </ItemSelectInfoArea>
+              <OtherItemSection>
+                {otherItems.length > 0 && (
+                  <>{renderItems(otherItems, "other")}</>
+                )}
+              </OtherItemSection>
             </>
           ) : (
             <EmptyInfomation>장바구니가 비었습니다.</EmptyInfomation>
           )}
         </BottomContent>
         <OrderButtonArea>
-          <Link to={"/checkout"} style={{ textDecoration: "none" }}>
-            <DefaultButton name="주문하기" />
-          </Link>
+          <DefaultButton name="주문하기" onClick={handleOrderButtonClick} />
         </OrderButtonArea>
       </RightContentArea>
     </Container>

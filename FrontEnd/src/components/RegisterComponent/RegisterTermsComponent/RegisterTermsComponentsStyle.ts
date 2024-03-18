@@ -77,7 +77,7 @@ export const AgreeInputArea = styled.div`
   justify-content: flex-end;
   gap: 5px;
 `;
-const checkbox = styled.input.attrs({ type: "checkbox" })`
+export const checkbox = styled.input.attrs({ type: "checkbox" })`
   appearance: none;
   width: 12px;
   height: 12px;

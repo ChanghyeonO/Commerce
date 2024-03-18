@@ -141,48 +141,67 @@ const ProductDetailComponent = () => {
       };
 
       const cartKey = getCartKey();
-
       const currentCart: CartItem[] = JSON.parse(
         sessionStorage.getItem(cartKey) || "[]",
       );
 
-      const existingItemIndex = currentCart.findIndex(
-        (cartItem) =>
-          cartItem.id === newItem.id && cartItem.option === newItem.option,
-      );
-
-      if (existingItemIndex !== -1) {
-        const updatedItem = {
-          ...currentCart[existingItemIndex],
-          count: currentCart[existingItemIndex].count + newItem.count,
-          totalPrice:
-            currentCart[existingItemIndex].totalPrice + newItem.totalPrice,
-        };
-        currentCart[existingItemIndex] = updatedItem;
+      if (cartKey === "fundingItemsCart") {
+        if (currentCart.length > 0) {
+          Swal.fire(
+            alertList.doubleCheckTitkeMsg(
+              "기존 펀딩 제품을 변경하시겠습니까?",
+              "펀딩 제품은 장바구니에 하나만 추가가 가능합니다.",
+            ),
+          ).then((result) => {
+            if (result.isConfirmed) {
+              sessionStorage.setItem(cartKey, JSON.stringify([newItem]));
+              afterCartUpdated(navigateToCart);
+            }
+          });
+        } else {
+          sessionStorage.setItem(cartKey, JSON.stringify([newItem]));
+          afterCartUpdated(navigateToCart);
+        }
       } else {
-        currentCart.push(newItem);
-      }
+        const existingItemIndex = currentCart.findIndex(
+          (cartItem) =>
+            cartItem.id === newItem.id && cartItem.option === newItem.option,
+        );
 
-      sessionStorage.setItem(cartKey, JSON.stringify(currentCart));
-
-      window.dispatchEvent(new Event("sessionStorageChanged"));
-
-      if (navigateToCart) {
-        navigate("/mypage/cart");
-      } else {
-        Swal.fire({
-          ...alertList.doubleCheckMessage("장바구니에 추가되었습니다."),
-          title: `${item.name}가 장바구니에 추가되었습니다.`,
-          confirmButtonText: "장바구니 이동",
-          cancelButtonText: "쇼핑 계속하기",
-        }).then((result) => {
-          if (result.isConfirmed) {
-            navigate("/mypage/cart");
-          }
-        });
+        if (existingItemIndex !== -1) {
+          currentCart[existingItemIndex] = {
+            ...currentCart[existingItemIndex],
+            count: currentCart[existingItemIndex].count + newItem.count,
+            totalPrice:
+              currentCart[existingItemIndex].totalPrice + newItem.totalPrice,
+          };
+        } else {
+          currentCart.push(newItem);
+        }
+        sessionStorage.setItem(cartKey, JSON.stringify(currentCart));
+        afterCartUpdated(navigateToCart);
       }
     }
   };
+
+  function afterCartUpdated(navigateToCart: boolean) {
+    window.dispatchEvent(new Event("sessionStorageChanged"));
+
+    if (navigateToCart) {
+      navigate("/mypage/cart");
+    } else {
+      Swal.fire({
+        ...alertList.doubleCheckMessage("장바구니에 추가되었습니다."),
+        title: `${item?.name}가 장바구니에 추가되었습니다.`,
+        confirmButtonText: "장바구니 이동",
+        cancelButtonText: "쇼핑 계속하기",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          navigate("/mypage/cart");
+        }
+      });
+    }
+  }
 
   const addToCartHandler = () => {
     if (isDeadlinePassed) {
