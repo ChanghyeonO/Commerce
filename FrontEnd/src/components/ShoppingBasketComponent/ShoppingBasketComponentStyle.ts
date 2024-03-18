@@ -34,7 +34,6 @@ export const BottomContent = styled.div`
   border: 2px solid #eee;
   border-radius: 12px;
   box-sizing: border-box;
-  overflow-y: scroll;
 `;
 
 export const ItemSelectInfoArea = styled.div`

@@ -38,7 +38,7 @@ export const InfoText = styled.h3`
 
 export const ShoppingBasketContainer = styled.div`
   width: 80%;
-  height: 400px;
+  height: 350px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -48,7 +48,7 @@ export const ShoppingBasketContainer = styled.div`
 
 export const ShoppingBasket = styled.div`
   width: 100%;
-  height: 200px;
+  height: 150px;
   overflow-y: scroll;
   border: 2px solid #eee;
   border-radius: 12px;

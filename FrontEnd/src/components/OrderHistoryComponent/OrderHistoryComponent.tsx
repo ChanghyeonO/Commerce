@@ -251,7 +251,7 @@ const OrderHistoryComponent = () => {
       <MyPageNav />
       <RightContentArea>
         <Title>주문내역</Title>
-        <BottomContent>
+        <BottomContent style={{ overflowY: "scroll" }}>
           {orderDetails.length > 0 ? (
             orderDetails.map((order, index) => (
               <ItemArea key={index}>

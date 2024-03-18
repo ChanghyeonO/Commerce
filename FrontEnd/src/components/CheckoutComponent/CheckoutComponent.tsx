@@ -67,20 +67,20 @@ const CheckoutComponent = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetchCartData();
-  }, [user, selectedCategory]);
-
-  function fetchCartData() {
     if (!selectedCategory) {
       Swal.fire(
         alertList.infoMessage(
           "선택된 제품 카테고리가 없습니다. 장바구니로 돌아가서 카테고리를 선택해주세요.",
         ),
-      );
-      navigate("/mypage/cart");
+      ).then(() => {
+        navigate("/mypage/cart");
+      });
       return;
     }
+    fetchCartData();
+  }, [user, selectedCategory]);
 
+  function fetchCartData() {
     const sessionKey =
       selectedCategory === "funding" ? "fundingItemsCart" : "otherItemsCart";
     const storedData = sessionStorage.getItem(sessionKey);
@@ -122,8 +122,9 @@ const CheckoutComponent = () => {
     await updateStockForItems(fundingItemsCart, "fundingItems");
     await updateStockForItems(otherItemsCart, "otherItems");
 
-    sessionStorage.removeItem("fundingItemsCart");
-    sessionStorage.removeItem("otherItemsCart");
+    if (selectedCategory) {
+      sessionStorage.removeItem(`${selectedCategory}ItemsCart`);
+    }
   };
 
   const updateStockForItems = async (
