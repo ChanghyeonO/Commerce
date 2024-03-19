@@ -1,16 +1,10 @@
 import React, { useEffect, useState } from "react";
+import { useQuery } from "react-query";
 import { useNavigate } from "react-router-dom";
 import ImageSlider from "../ImageSlider/ImageSlider";
 import { Link } from "react-router-dom";
 import { useUser } from "../../contexts/UserContext";
-import {
-  collection,
-  query,
-  orderBy,
-  limit,
-  getDocs,
-  getFirestore,
-} from "firebase/firestore";
+import { fetchItems } from "../../api/api";
 import Swal from "sweetalert2";
 import alertList from "../../utils/Swal";
 import ImageUpload from "../ImageUpload/ImageUpload";
@@ -34,16 +28,24 @@ import {
   SoldOutInfoText,
 } from "../ItemInfiniteScroll/ItemInfiniteScrollStyle";
 import { Item } from "../../types/ItemType";
+import Loading from "../Loading/Loading";
 
 const MainComponent = () => {
   const [showImageUpload, setShowImageUpload] = useState(false);
-  const [fundingItems, setFundingItems] = useState<Item[]>([]);
-  const [otherItems, setOtherItems] = useState<Item[]>([]);
+  const { data: fundingItems, isLoading: isLoadingFundingItems } = useQuery(
+    ["fundingItems"],
+    () => fetchItems("fundingItems"),
+    { staleTime: 5 * 60 * 1000 },
+  );
+
+  const { data: otherItems, isLoading: isLoadingOtherItems } = useQuery(
+    ["otherItems"],
+    () => fetchItems("otherItems"),
+    { staleTime: 5 * 60 * 1000 },
+  );
 
   const navigate = useNavigate();
-  const db = getFirestore();
   const { user } = useUser();
-
   const isAdmin = user?.admin ?? false;
 
   const checkIfFundingEnded = (item: Item) => {
@@ -53,41 +55,7 @@ const MainComponent = () => {
     return now > deadlineDate;
   };
 
-  useEffect(() => {
-    const fetchItems = async () => {
-      const fundingQuery = query(
-        collection(db, "fundingItems"),
-        orderBy("createdAt", "desc"),
-        limit(4),
-      );
-      const otherQuery = query(
-        collection(db, "otherItems"),
-        orderBy("createdAt", "desc"),
-        limit(4),
-      );
-
-      const fundingSnapshot = await getDocs(fundingQuery);
-      const otherSnapshot = await getDocs(otherQuery);
-
-      const fundingData = fundingSnapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      })) as Item[];
-      const otherData = otherSnapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      })) as Item[];
-
-      setFundingItems(fundingData);
-      setOtherItems(otherData);
-    };
-
-    fetchItems();
-  }, []);
-
-  const handleShowImageUpload = () => {
-    setShowImageUpload(!showImageUpload);
-  };
+  const handleShowImageUpload = () => setShowImageUpload(!showImageUpload);
 
   const handleItemClick = (
     isFunding: boolean,
@@ -101,6 +69,11 @@ const MainComponent = () => {
     const path = isFunding ? `/funding/detail/${id}` : `/other/detail/${id}`;
     navigate(path);
   };
+
+  // 로딩 상태를 처리합니다.
+  if (isLoadingFundingItems || isLoadingOtherItems) {
+    return <Loading />;
+  }
 
   return (
     <Container>
@@ -129,7 +102,7 @@ const MainComponent = () => {
             </Link>
           </IntroArea>
           <ItemArea>
-            {fundingItems.map((item) => (
+            {fundingItems?.items.map((item) => (
               <ItemBox
                 key={item.id}
                 onClick={() =>
@@ -157,7 +130,7 @@ const MainComponent = () => {
             </Link>
           </IntroArea>
           <ItemArea>
-            {otherItems.map((item) => (
+            {otherItems?.items.map((item) => (
               <ItemBox
                 key={item.id}
                 onClick={() =>
