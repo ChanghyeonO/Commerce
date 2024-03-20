@@ -70,7 +70,6 @@ const MainComponent = () => {
     navigate(path);
   };
 
-  // 로딩 상태를 처리합니다.
   if (isLoadingFundingItems || isLoadingOtherItems) {
     return <Loading />;
   }

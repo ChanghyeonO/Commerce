@@ -16,7 +16,7 @@ export const Container = styled.div`
 `;
 
 export const ContentArea = styled.div`
-  max-width: 900px;
+  width: 50%;
   height: auto;
   padding: 20px;
   display: flex;
@@ -27,6 +27,12 @@ export const ContentArea = styled.div`
   background-color: #fff;
   box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
   border-radius: 12px;
+  @media (max-width: 1180px) {
+    width: 80%;
+  }
+  @media (max-width: 800px) {
+    width: 100%;
+  }
 `;
 
 export const CloseButtonArea = styled.div`
@@ -42,9 +48,9 @@ export const ImageUploadArea = styled.div`
   display: flex;
   flex-direction: column;
   gap: 10px;
-  width: 900px;
+  width: 100%;
   height: 550px;
-  overflow: scroll;
+  overflow-y: scroll;
   &::-webkit-scrollbar {
     display: none;
   }
@@ -54,7 +60,7 @@ export const ImageUploadArea = styled.div`
 
 export const ImageContainer = styled.div`
   position: relative;
-  width: 900px;
+  width: 100%;
   height: auto;
 `;
 

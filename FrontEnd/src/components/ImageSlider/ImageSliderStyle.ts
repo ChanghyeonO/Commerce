@@ -32,4 +32,7 @@ export const NavButton = styled.span<ButtonProps>`
   border-radius: 12px;
   background: ${(props) => (props.$isActive ? "#5271ff" : "#fff")};
   border: 1px solid #eee;
+  @media (max-width: 490px) {
+    padding: 10px 20px;
+  }
 `;

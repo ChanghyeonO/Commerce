@@ -78,7 +78,7 @@ export const RegisterButton = styled(LoginRegisterButtonDesign)`
 
 export const UserContent = styled.div`
   position: relative;
-  display: inline-block;
+  display: flex;
   align-items: center;
   justify-content: center;
   width: 35%;

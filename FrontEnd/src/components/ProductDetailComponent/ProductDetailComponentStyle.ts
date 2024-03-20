@@ -64,20 +64,25 @@ export const DropdownSelected = styled.div`
 
 export const DropdownOptions = styled.div`
   position: absolute;
-  top: 83%;
+  top: 88%;
   left: 0;
   right: 0;
   background-color: #eee;
   z-index: 1;
   border-radius: 0 0 10px 10px;
+  overflow: hidden;
 `;
 
 export const DropdownOption = styled.div`
   padding: 15px;
   cursor: pointer;
-  border-bottom: 1px solid #999;
+  border-bottom: 0.1px solid #999;
   &:last-child {
     border-bottom: none;
+  }
+  &:hover {
+    background-color: #38b6ff;
+    color: #fff;
   }
 `;
 
@@ -106,7 +111,6 @@ export const FundingGaugeFiller = styled.div`
   height: 30px;
   background-color: #5271ff;
   border-radius: inherit;
-  transition: width 0.5s ease-in-out;
 `;
 
 export const FundingGaugePercentage = styled.span`

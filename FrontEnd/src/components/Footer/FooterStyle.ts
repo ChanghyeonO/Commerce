@@ -20,8 +20,8 @@ export const LeftContainer = styled.div`
 `;
 
 export const MainLogo = styled.img`
-  width: 200px;
-  height: 200px;
+  width: 170px;
+  height: 170px;
   border-radius: 12px;
   cursor: pointer;
 `;
@@ -42,7 +42,7 @@ export const ContactInfomationText = styled.h1`
 
 export const Contact = styled.div`
   display: flex;
-  gap: 50px;
+  gap: 30px;
   margin-bottom: 30px;
 `;
 

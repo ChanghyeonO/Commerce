@@ -24,6 +24,8 @@ const ButtonDesign = styled.button`
   font-weight: bold;
   transition: 0.2s ease-in;
   background-color: #38b6ff;
+  transition: 0.2s ease-in;
+
   color: #fff;
   &:hover {
     background-color: #5271ff;

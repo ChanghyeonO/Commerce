@@ -23,7 +23,7 @@ export const BottomContent = styled.div`
 
 export const ItemContent = styled.div`
   width: 100%;
-  height: 600px;
+  min-height: 600px;
   margin-bottom: 50px;
 `;
 
@@ -40,11 +40,12 @@ export const IntroTitle = styled.h2`
 `;
 
 export const ItemArea = styled.div`
-  width: 100%;
-  height: auto;
   display: flex;
-  align-items: center;
-  justify-content: space-between;
+  justify-content: space-evenly;
+  flex-wrap: wrap;
+  gap: 80px;
+  width: 100%;
+  height: 100%;
 `;
 
 export const GoProductPageButton = styled.button`
@@ -62,22 +63,32 @@ export const GoProductPageButton = styled.button`
 
 export const CenterButtonArea = styled.div`
   width: 100%;
-  height: 50px;
+  min-height: 50px;
   display: flex;
   justify-content: space-between;
   align-items: center;
+
+  @media (max-width: 800px) {
+    flex-direction: column;
+    gap: 20px;
+  }
 `;
 
 export const SortDropDownArea = styled.div`
-  width: 15%;
+  width: 220px;
   height: 50px;
   justify-content: center;
 `;
 
 export const AddItemButtonArea = styled.div`
   min-width: 20%;
-  height: 50px;
+  min-height: 50px;
   display: flex;
   justify-content: center;
+  align-items: center;
   gap: 20px;
+  @media (max-width: 800px) {
+    flex-direction: column;
+    gap: 20px;
+  }
 `;
