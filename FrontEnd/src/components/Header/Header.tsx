@@ -86,12 +86,6 @@ const Header = () => {
     }
   };
 
-  const mobileMenu = (
-    <Container>
-      <RightContainer></RightContainer>
-    </Container>
-  );
-
   return (
     <>
       {windowWidth > 800 ? (

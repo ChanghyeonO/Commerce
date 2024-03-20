@@ -96,8 +96,8 @@ export const UserLogo = styled.img`
 
 export const CartItemCount = styled.div`
   position: absolute;
-  top: -5px;
-  right: -5px;
+  top: 10px;
+  right: 5px;
   width: 20px;
   height: 20px;
   background-color: #e01040;
