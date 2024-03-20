@@ -8,15 +8,22 @@ export const Container = styled.div`
 export const TopContent = styled.div`
   display: flex;
   justify-content: center;
+  align-items: center;
   gap: 17%;
   width: 100%;
-  height: 500px;
+  min-height: 500px;
   border-bottom: 1px solid #eee;
+  @media (max-width: 1180px) {
+    flex-direction: column;
+  }
 `;
 
 export const LeftContent = styled.div`
   width: 500px;
-  height: 100%;
+  height: 500px;
+  @media (max-width: 1180px) {
+    width: 100%;
+  }
 `;
 
 export const RightContent = styled.div`
@@ -26,6 +33,9 @@ export const RightContent = styled.div`
   align-items: center;
   width: 400px;
   height: 100%;
+  @media (max-width: 1180px) {
+    width: 100%;
+  }
 `;
 
 export const DescriptionArea = styled.div`
@@ -236,18 +246,29 @@ export const BottomContent = styled.div`
 
 export const ProductIntroArea = styled.div`
   width: 100%;
-  height: 500px;
+  min-height: 500px;
   justify-content: center;
   overflow: hidden;
   display: flex;
   gap: 17%;
   border-bottom: 1px solid #eee;
+  justify-content: center;
+  align-items: center;
+  @media (max-width: 1180px) {
+    flex-direction: column;
+  }
 `;
 
 export const ProductImage = styled.img`
-  width: 500px;
+  width: 40%;
   height: 100%;
   object-fit: contain;
+  @media (max-width: 1180px) {
+    width: 60%;
+  }
+  @media (max-width: 800px) {
+    width: 100%;
+  }
 `;
 
 export const ProductDescription = styled.div`
@@ -258,4 +279,12 @@ export const ProductDescription = styled.div`
   justify-content: center;
   font-size: 25px;
   white-space: pre-wrap;
+  @media (max-width: 1180px) {
+    width: 60%;
+    text-align: center;
+  }
+  @media (max-width: 800px) {
+    width: 100%;
+    text-align: center;
+  }
 `;

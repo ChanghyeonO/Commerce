@@ -17,6 +17,9 @@ export const InnerContent = styled.div`
   align-items: center;
   background-color: #fff;
   border-radius: 12px;
+  @media (max-width: 1180px) {
+    width: 99%;
+  }
 `;
 
 export const Title = styled.h1`
@@ -44,6 +47,9 @@ export const ShoppingBasketContainer = styled.div`
   justify-content: center;
   align-items: center;
   border-bottom: 2px solid #eee;
+  @media (max-width: 1180px) {
+    width: 100%;
+  }
 `;
 
 export const ShoppingBasket = styled.div`
@@ -56,7 +62,7 @@ export const ShoppingBasket = styled.div`
 
 export const ShippingAreaContainer = styled.div`
   width: 80%;
-  height: 425px;
+ min- height: 425px;
   display: flex;
   flex-direction: column;
   border-bottom: 2px solid #eee;
@@ -79,8 +85,13 @@ export const NameInput = styled(InputDesign)``;
 export const PhoneNumberInput = styled(InputDesign)``;
 
 export const MainAddressArea = styled.div`
+  width: 100%;
   display: flex;
   gap: 10px;
+  @media (max-width: 510px) {
+    flex-direction: column;
+    gap: 0px;
+  }
 `;
 
 export const AddressInput = styled(InputDesign)``;
@@ -95,10 +106,17 @@ export const FindAddressButton = styled.button`
   font-weight: bold;
   cursor: pointer;
   background-color: #38b6ff;
+  @media (max-width: 510px) {
+    width: 220px;
+    margin-bottom: 20px;
+  }
 `;
 
 export const AddressDetailInput = styled(InputDesign)``;
 
 export const DeliveryRequestInput = styled(InputDesign)`
   width: 290px;
+  @media (max-width: 510px) {
+    width: 90%;
+  }
 `;

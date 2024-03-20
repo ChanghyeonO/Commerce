@@ -9,8 +9,11 @@ export const Container = styled.div`
 `;
 
 export const InnerContent = styled.div`
-  width: 50%;
+  width: 70%;
   margin: 0 auto;
+  @media (max-width: 1180px) {
+    width: 90%;
+  }
 `;
 
 export const Title = styled.h1`
@@ -42,7 +45,7 @@ const InputDesign = styled.input`
 `;
 
 const TextAreaDesign = styled.textarea`
-  width: 100%;
+  width: 320px;
   height: 100px;
   box-sizing: border-box;
   background-color: #eee;
@@ -137,14 +140,20 @@ export const IntroContentArea = styled.div`
   display: flex;
   gap: 10px;
   margin-bottom: 10px;
+  @media (max-width: 1180px) {
+    flex-direction: column;
+  }
 `;
 
 export const ImageArea = styled.div`
   position: relative;
   width: 70%;
-  height: 300px;
+  min-height: 300px;
   background-color: #eee;
   border-radius: 12px;
+  @media (max-width: 1180px) {
+    width: 100%;
+  }
 `;
 
 export const DescriptionImage = styled.img`
@@ -176,6 +185,17 @@ export const AddInput = styled.input.attrs({ type: "file" })`
 export const TextArea = styled.div``;
 
 export const DescriptionText = styled(TextAreaDesign)`
-  height: 300px;
   width: 30%;
+  height: 300px;
+  @media (max-width: 1180px) {
+    width: 100%;
+  }
+`;
+
+export const ButtonArea = styled.div`
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  @media (min-width: 1180px) {
+  }
 `;

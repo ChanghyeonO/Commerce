@@ -13,7 +13,7 @@ export const InnerContainer = styled.div`
   align-items: center;
   flex-direction: column;
   width: 500px;
-  height: 900px;
+ min- height: 900px;
 `;
 
 export const MainLogoArea = styled.div`
@@ -53,6 +53,9 @@ export const InnerContent = styled.div`
   justify-content: center;
   align-items: center;
   margin-left: 90px;
+  @media (max-width: 400px) {
+    margin-left: 0px;
+  }
 `;
 
 export const InputContainer = styled.div`
@@ -90,11 +93,16 @@ const CheckButtonDesign = styled.button`
 const InputAreaDesign = styled.div`
   display: flex;
   gap: 10px;
+
+  @media (max-width: 510px) {
+    flex-direction: column;
+  }
 `;
 
 export const WarningMessage = styled.div`
   color: red;
   font-size: 14px;
+  width: 100%;
 `;
 
 export const EmailInput = styled(InputDesign)``;

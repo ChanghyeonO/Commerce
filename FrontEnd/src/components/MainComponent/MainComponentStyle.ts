@@ -19,6 +19,9 @@ export const BottomContent = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  @media (max-width: 1180px) {
+    padding: 10px;
+  }
 `;
 
 export const ItemContent = styled.div`

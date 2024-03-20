@@ -47,6 +47,7 @@ import {
   ImageArea,
   DescriptionImage,
   DescriptionText,
+  ButtonArea,
 } from "./ProductCreatorComponentStyle";
 import { PostData } from "../../types/ItemType";
 
@@ -131,18 +132,18 @@ const ProductCreatorComponent = () => {
 
   const removeIntroContent = async (id: number) => {
     const contentToRemove = introContents.find((content) => content.id === id);
-    if (contentToRemove && contentToRemove.imageUrl) {
-      const imagePath = extractStoragePathFromUrl(contentToRemove.imageUrl);
-      const imageRef = ref(storage, imagePath);
-      await deleteObject(imageRef).catch((error) =>
-        console.error("Failed to delete image from storage:", error),
-      );
+    if (contentToRemove?.imageUrl) {
+      try {
+        const imagePath = extractStoragePathFromUrl(contentToRemove.imageUrl);
+        if (imagePath) {
+          const imageRef = ref(storage, imagePath);
+          await deleteObject(imageRef);
+        }
+      } catch (error) {
+        console.error("Failed to delete image from storage:", error);
+      }
     }
-
-    const newIntroContents = introContents.filter(
-      (content) => content.id !== id,
-    );
-    setIntroContents(newIntroContents);
+    setIntroContents(introContents.filter((content) => content.id !== id));
   };
 
   const handleIntroContentChange = (id: number, value: string) => {
@@ -156,6 +157,9 @@ const ProductCreatorComponent = () => {
   };
 
   const extractStoragePathFromUrl = (url: string) => {
+    if (!url || !url.includes("/o/")) {
+      return "";
+    }
     const urlParts = url.split("/o/")[1].split("?")[0];
     return decodeURIComponent(urlParts);
   };
@@ -404,18 +408,24 @@ const ProductCreatorComponent = () => {
                   handleIntroContentChange(content.id, e.target.value)
                 }
               />
-              {introContents.length > 1 && (
-                <OptionDeleteButton
-                  onClick={() => removeIntroContent(content.id)}
-                >
-                  삭제
-                </OptionDeleteButton>
-              )}
+              <ButtonArea>
+                {introContents.length > 1 && (
+                  <OptionDeleteButton
+                    onClick={() => removeIntroContent(content.id)}
+                  >
+                    삭제
+                  </OptionDeleteButton>
+                )}
+              </ButtonArea>
             </IntroContentArea>
           ))}
-          {introContents.length < 5 && (
-            <ContentAddButton onClick={addIntroContent}>추가</ContentAddButton>
-          )}
+          <ButtonArea>
+            {introContents.length < 5 && (
+              <ContentAddButton onClick={addIntroContent}>
+                추가
+              </ContentAddButton>
+            )}
+          </ButtonArea>
         </Body>
         <DefaultButton
           name={"제품 추가하기"}
