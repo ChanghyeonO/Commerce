@@ -17,7 +17,6 @@ import {
 } from "firebase/firestore";
 import { db } from "../../api/firebase";
 import { Timestamp } from "firebase/firestore";
-
 import {
   RightContent,
   SelectArea,

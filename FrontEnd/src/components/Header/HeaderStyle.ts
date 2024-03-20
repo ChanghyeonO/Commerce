@@ -29,7 +29,7 @@ export const MainLogo = styled.img`
 
 export const PageLinkButton = styled.button`
   width: 160px;
-  height: 81px;
+  height: 80px;
   border: none;
   cursor: pointer;
   color: #999;
@@ -46,14 +46,18 @@ export const PageLinkButton = styled.button`
 export const RightContainer = styled.div`
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-end;
   height: 100%;
 `;
 
 export const LoginContent = styled.div`
+  width: 160px;
+  height: 80px;
   display: flex;
   font-size: 15px;
   font-weight: bold;
+  justify-content: center;
+  align-items: center;
 `;
 
 const LoginRegisterButtonDesign = styled.button`
@@ -103,4 +107,26 @@ export const CartItemCount = styled.div`
   align-items: center;
   justify-content: center;
   font-size: 12px;
+`;
+
+export const HamburgerMenu = styled.img`
+  width: 30px;
+  height: 30px;
+  border-radius: 12px;
+  cursor: pointer;
+`;
+
+export const DropdownMenu = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  flex-direction: column;
+  position: absolute;
+  background-color: white;
+  top: 82px;
+  right: 0;
+  width: 250px;
+  height: 30%;
+  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.1);
+  z-index: 55;
 `;
