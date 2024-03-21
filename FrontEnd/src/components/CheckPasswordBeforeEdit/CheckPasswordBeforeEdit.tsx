@@ -14,8 +14,6 @@ import {
   InnerContent,
   PasswordInputArea,
   PasswordInput,
-  LoginButtonArea,
-  LoginButton,
 } from "./CheckPasswordBeforeEditStyle";
 import { FirebaseError } from "firebase/app";
 

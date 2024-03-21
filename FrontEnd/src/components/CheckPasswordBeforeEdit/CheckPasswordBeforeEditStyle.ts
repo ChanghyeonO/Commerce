@@ -8,6 +8,10 @@ export const Container = styled.div`
   justify-content: center;
   gap: 50px;
   background-color: #eee;
+  @media (max-width: 1180px) {
+    flex-direction: column;
+    gap: 30px;
+  }
 `;
 
 export const RightContent = styled.div`
@@ -19,6 +23,12 @@ export const RightContent = styled.div`
   justify-content: start;
   border-radius: 12px;
   background-color: #fff;
+  @media (max-width: 1180px) {
+    width: 80%;
+  }
+  @media (max-width: 500px) {
+    width: 100%;
+  }
 `;
 
 export const Title = styled.h1`
@@ -52,27 +62,4 @@ export const PasswordInput = styled.input`
   background-color: #eee;
   font-size: 15px;
   font-weight: bold;
-`;
-
-export const LoginButtonArea = styled.div`
-  width: 100%;
-  height: 50px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  gap: 10px;
-`;
-
-export const LoginButton = styled.button`
-  width: 220px;
-  height: 40px;
-  border-radius: 12px;
-  border: none;
-  background-color: #eee;
-  font-size: 20px;
-  font-weight: bold;
-  cursor: pointer;
-  background-color: #5271ff;
-  color: #fff;
 `;

@@ -18,6 +18,7 @@ import {
   FundingItemSection,
   OtherItemSection,
   ItemArea,
+  LeftContent,
   ItemImage,
   CenterContent,
   ItemTitle,
@@ -122,24 +123,26 @@ const ShoppingBasketComponent = () => {
   const renderItems = (items: CartItem[], category: "funding" | "other") => {
     return items.map((item, index) => (
       <ItemArea key={`${item.id}-${item.option}-${index}`}>
-        <ItemImage src={item.image} alt={`Product ${item.id}`} />
-        <CenterContent>
-          <ItemTitle>
-            {item.name.length > 15
-              ? `${item.name.substring(0, 15)}...`
-              : item.name}
-          </ItemTitle>
-          <ItemOption>
-            {item.option && item.option.length > 20
-              ? `${item.option.substring(0, 20)}...`
-              : item.option}
-          </ItemOption>
-          <ItemDescription>
-            {item.description && item.description.length > 15
-              ? `${item.description.substring(0, 20)}...`
-              : item.description || ""}
-          </ItemDescription>
-        </CenterContent>
+        <LeftContent>
+          <ItemImage src={item.image} alt={`Product ${item.id}`} />
+          <CenterContent>
+            <ItemTitle>
+              {item.name.length > 15
+                ? `${item.name.substring(0, 15)}...`
+                : item.name}
+            </ItemTitle>
+            <ItemOption>
+              {item.option && item.option.length > 20
+                ? `${item.option.substring(0, 20)}...`
+                : item.option}
+            </ItemOption>
+            <ItemDescription>
+              {item.description && item.description.length > 15
+                ? `${item.description.substring(0, 20)}...`
+                : item.description || ""}
+            </ItemDescription>
+          </CenterContent>
+        </LeftContent>
         <RightContent>
           <DeleteButton
             onClick={() => handleDelete(item.id, item.option, category)}

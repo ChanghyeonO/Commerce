@@ -34,6 +34,7 @@ import {
   ItemDescription,
   EmptyInfomation,
   DeleteButton,
+  LeftContent,
 } from "../ShoppingBasketComponent/ShoppingBasketComponentStyle";
 
 import { OrderDetail } from "../../types/PortOneType";
@@ -254,53 +255,58 @@ const OrderHistoryComponent = () => {
           {orderDetails.length > 0 ? (
             orderDetails.map((order, index) => (
               <ItemArea key={index}>
-                <CenterContent>
-                  <ItemDescription>주문번호 : {order.imp_uid}</ItemDescription>
-                  <ItemDescription>
-                    주문시각 : {formatDate(order.created_at)}
-                  </ItemDescription>
-                  <ItemTitle onClick={() => toggleVisibility(order.id)}>
-                    {order.name}
-                  </ItemTitle>
+                <LeftContent>
+                  <CenterContent>
+                    <ItemDescription>
+                      주문번호 : {order.imp_uid}
+                    </ItemDescription>
+                    <ItemDescription>
+                      주문시각 : {formatDate(order.created_at)}
+                    </ItemDescription>
+                    <ItemTitle onClick={() => toggleVisibility(order.id)}>
+                      {order.name}
+                    </ItemTitle>
 
-                  <ItemDescription>
-                    결제상태 :{" "}
-                    {isAdmin ? (
-                      <SelectArea
-                        value={order.order_status}
-                        onChange={(e) =>
-                          updateOrderStatus(order.id, e.target.value)
-                        }
-                      >
-                        <option value="주문완료">주문완료</option>
-                        <option value="배송준비중">배송준비중</option>
-                        <option value="배송중">배송중</option>
-                        <option value="배송완료">배송완료</option>
-                        <option value="취소요청">취소요청</option>
-                        <option value="주문취소">주문취소</option>
-                      </SelectArea>
-                    ) : (
-                      order.order_status
-                    )}
-                  </ItemDescription>
-                  <ItemDescription>
-                    결제금액 : {order.amount.toLocaleString()}원
-                  </ItemDescription>
-                </CenterContent>
-                <RightContent>
-                  <ItemDescription>
-                    주문자 이름 : {order.buyer_name}
-                  </ItemDescription>
-                  <ItemDescription>
-                    주문자 전화번호 : {order.buyer_tel}
-                  </ItemDescription>
-                  <ItemDescription>
-                    배송지 주소 : {order.buyer_addr}
-                  </ItemDescription>
-                  <ItemDescription>
-                    배송 요청사항 : {order.delivery_request}
-                  </ItemDescription>
-                </RightContent>
+                    <ItemDescription>
+                      결제상태 :{" "}
+                      {isAdmin ? (
+                        <SelectArea
+                          value={order.order_status}
+                          onChange={(e) =>
+                            updateOrderStatus(order.id, e.target.value)
+                          }
+                        >
+                          <option value="주문완료">주문완료</option>
+                          <option value="배송준비중">배송준비중</option>
+                          <option value="배송중">배송중</option>
+                          <option value="배송완료">배송완료</option>
+                          <option value="취소요청">취소요청</option>
+                          <option value="주문취소">주문취소</option>
+                        </SelectArea>
+                      ) : (
+                        order.order_status
+                      )}
+                    </ItemDescription>
+                    <ItemDescription>
+                      결제금액 : {order.amount.toLocaleString()}원
+                    </ItemDescription>
+                  </CenterContent>
+
+                  <RightContent>
+                    <ItemDescription>
+                      주문자 이름 : {order.buyer_name}
+                    </ItemDescription>
+                    <ItemDescription>
+                      주문자 전화번호 : {order.buyer_tel}
+                    </ItemDescription>
+                    <ItemDescription>
+                      배송지 주소 : {order.buyer_addr}
+                    </ItemDescription>
+                    <ItemDescription>
+                      배송 요청사항 : {order.delivery_request}
+                    </ItemDescription>
+                  </RightContent>
+                </LeftContent>
                 {isAdmin ? (
                   <CancelDeleteContent>
                     <DeleteButton onClick={() => handleDelete(order.id)}>

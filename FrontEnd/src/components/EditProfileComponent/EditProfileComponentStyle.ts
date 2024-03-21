@@ -8,6 +8,10 @@ export const Container = styled.div`
   justify-content: center;
   gap: 50px;
   background-color: #eee;
+  @media (max-width: 1180px) {
+    flex-direction: column;
+    gap: 30px;
+  }
 `;
 
 export const WarningMessage = styled.div`
@@ -24,6 +28,12 @@ export const RightContent = styled.div`
   justify-content: start;
   border-radius: 12px;
   background-color: #fff;
+  @media (max-width: 1180px) {
+    width: 80%;
+  }
+  @media (max-width: 500px) {
+    width: 100%;
+  }
 `;
 
 export const Title = styled.h1`

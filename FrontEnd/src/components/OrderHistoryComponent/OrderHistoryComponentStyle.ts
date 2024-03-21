@@ -8,6 +8,10 @@ export const Container = styled.div`
   justify-content: center;
   gap: 50px;
   background-color: #eee;
+  @media (max-width: 1180px) {
+    flex-direction: column;
+    gap: 30px;
+  }
 `;
 
 export const RightContentArea = styled.div`
@@ -19,6 +23,9 @@ export const RightContentArea = styled.div`
   justify-content: start;
   border-radius: 12px;
   background-color: #fff;
+  @media (max-width: 1180px) {
+    justify-content: center;
+  }
 `;
 
 export const Title = styled.h1`
@@ -28,12 +35,16 @@ export const Title = styled.h1`
 `;
 
 export const RightContent = styled.div`
-  width: 29%;
+  width: 50%;
   height: 100%;
   display: flex;
   flex-direction: column;
   align-items: start;
-  justify-content: space-around;
+  gap: 15px;
+  @media (max-width: 1180px) {
+    width: 100%;
+    align-items: center;
+  }
 `;
 
 export const SelectArea = styled.select`
@@ -46,22 +57,32 @@ export const SelectArea = styled.select`
 
 export const CancelDeleteContent = styled.div`
   width: 30%;
-  height: 90%;
+  height: 100%;
   display: flex;
   flex-direction: column;
   align-items: end;
   justify-content: space-between;
+  gap: 50px;
+
+  @media (max-width: 1180px) {
+    align-items: center;
+    width: 100%;
+    gap: 20px;
+  }
 `;
 
 export const CancelButton = styled.button`
   margin-top: auto;
   width: 80px;
   height: 35px;
-  border-radius: 12px;
+  border-radius: 7px;
   border: none;
   font-size: 15px;
   font-weight: bold;
   cursor: pointer;
   color: #fff;
   background-color: #e01040;
+  @media (max-width: 1180px) {
+    width: 170px;
+  }
 `;

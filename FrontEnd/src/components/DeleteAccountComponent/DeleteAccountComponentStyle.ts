@@ -8,6 +8,10 @@ export const Container = styled.div`
   justify-content: center;
   gap: 50px;
   background-color: #eee;
+  @media (max-width: 1180px) {
+    flex-direction: column;
+    gap: 30px;
+  }
 `;
 
 export const RightContent = styled.div`
@@ -19,6 +23,12 @@ export const RightContent = styled.div`
   justify-content: start;
   border-radius: 12px;
   background-color: #fff;
+  @media (max-width: 1180px) {
+    width: 80%;
+  }
+  @media (max-width: 500px) {
+    width: 100%;
+  }
 `;
 
 export const Title = styled.h1`
@@ -28,11 +38,17 @@ export const Title = styled.h1`
 `;
 
 export const InnerContent = styled.div`
-  width: 50%;
+  width: 60%;
   height: 71.8%;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   gap: 30px;
+  @media (max-width: 1180px) {
+    width: 80%;
+  }
+  @media (max-width: 500px) {
+    width: 95%;
+  }
 `;

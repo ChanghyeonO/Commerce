@@ -10,7 +10,6 @@ import {
   ProductPrice,
 } from "./OrderHistoryDetailStyle";
 
-import { Item } from "../../types/ItemType";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../../api/firebase";
 
