@@ -1,105 +1,220 @@
+import React, { Suspense, lazy } from "react";
 import { createBrowserRouter } from "react-router-dom";
 import ProtectedRoute from "../components/ProtectedRoute/ProtectedRoute";
+import Loading from "../components/Loading/Loading";
+
 import Main from "../pages/Main/Main";
-import FundingProduct from "../pages/Product/FundingProduct";
-import OtherProduct from "../pages/Product/OtherProduct";
-import FundingProductDetail from "../pages/ProductDetail/FundingProductDetail";
-import OtherProductDetail from "../pages/ProductDetail/OtherProductDetail";
-import FundingProductCreator from "../pages/ProductCreator/FundingProductCreator";
-import OtherProductCreator from "../pages/ProductCreator/OtherProductCreator";
-import CheckPassword from "../pages/MyPage/CheckPassword";
-import EditProfile from "../pages/MyPage/EditProfile";
-import OrderHistory from "../pages/MyPage/OrderHistory";
-import ShoppingBasket from "../pages/MyPage/ShoppingBasket";
-import DeleteAccount from "../pages/MyPage/DeleteAccount";
-import Checkout from "../pages/Checkout/Checkout";
-import Login from "../pages/Login/Login";
-import FindEmail from "../pages/FindAccount/FindEmail";
-import FindEmailSuccess from "../pages/FindAccount/FindEmailSuccess";
-import FindPasswordSuccess from "../pages/FindAccount/FindPasswordSuccess";
-import FindPassword from "../pages/FindAccount/FindPassword";
-import RegisterTerms from "../pages/Register/RegisterTerms";
-import RegisterDetail from "../pages/Register/RegisterDetail";
-import RegisterSuccess from "../pages/Register/RegisterSuccess";
+const FundingProduct = lazy(() => import("../pages/Product/FundingProduct"));
+const OtherProduct = lazy(() => import("../pages/Product/OtherProduct"));
+const FundingProductDetail = lazy(
+  () => import("../pages/ProductDetail/FundingProductDetail"),
+);
+const OtherProductDetail = lazy(
+  () => import("../pages/ProductDetail/OtherProductDetail"),
+);
+const FundingProductCreator = lazy(
+  () => import("../pages/ProductCreator/FundingProductCreator"),
+);
+const OtherProductCreator = lazy(
+  () => import("../pages/ProductCreator/OtherProductCreator"),
+);
+const CheckPassword = lazy(() => import("../pages/MyPage/CheckPassword"));
+const EditProfile = lazy(() => import("../pages/MyPage/EditProfile"));
+const OrderHistory = lazy(() => import("../pages/MyPage/OrderHistory"));
+const ShoppingBasket = lazy(() => import("../pages/MyPage/ShoppingBasket"));
+const DeleteAccount = lazy(() => import("../pages/MyPage/DeleteAccount"));
+const Checkout = lazy(() => import("../pages/Checkout/Checkout"));
+const Login = lazy(() => import("../pages/Login/Login"));
+const FindEmail = lazy(() => import("../pages/FindAccount/FindEmail"));
+const FindEmailSuccess = lazy(
+  () => import("../pages/FindAccount/FindEmailSuccess"),
+);
+const FindPasswordSuccess = lazy(
+  () => import("../pages/FindAccount/FindPasswordSuccess"),
+);
+const FindPassword = lazy(() => import("../pages/FindAccount/FindPassword"));
+const RegisterTerms = lazy(() => import("../pages/Register/RegisterTerms"));
+const RegisterDetail = lazy(() => import("../pages/Register/RegisterDetail"));
+const RegisterSuccess = lazy(() => import("../pages/Register/RegisterSuccess"));
 
 const router = createBrowserRouter([
   { path: "/", element: <Main /> },
-  { path: "/funding", element: <FundingProduct /> },
-  { path: "/other", element: <OtherProduct /> },
-  { path: "/funding/detail/:id", element: <FundingProductDetail /> },
-  { path: "other/detail/:id", element: <OtherProductDetail /> },
+  {
+    path: "/funding",
+    element: (
+      <Suspense fallback={<Loading />}>
+        <FundingProduct />
+      </Suspense>
+    ),
+  },
+  {
+    path: "/other",
+    element: (
+      <Suspense fallback={<Loading />}>
+        <OtherProduct />
+      </Suspense>
+    ),
+  },
+  {
+    path: "/funding/detail/:id",
+    element: (
+      <Suspense fallback={<Loading />}>
+        <FundingProductDetail />
+      </Suspense>
+    ),
+  },
+  {
+    path: "other/detail/:id",
+    element: (
+      <Suspense fallback={<Loading />}>
+        <OtherProductDetail />
+      </Suspense>
+    ),
+  },
   {
     path: "/funding/create",
     element: (
-      <ProtectedRoute>
-        <FundingProductCreator />
-      </ProtectedRoute>
+      <Suspense fallback={<Loading />}>
+        <ProtectedRoute>
+          <FundingProductCreator />
+        </ProtectedRoute>
+      </Suspense>
     ),
   },
   {
     path: "other/create",
     element: (
-      <ProtectedRoute>
-        <OtherProductCreator />
-      </ProtectedRoute>
+      <Suspense fallback={<Loading />}>
+        <ProtectedRoute>
+          <OtherProductCreator />
+        </ProtectedRoute>
+      </Suspense>
     ),
   },
   {
     path: "mypage/check-password",
     element: (
-      <ProtectedRoute>
-        <CheckPassword />
-      </ProtectedRoute>
+      <Suspense fallback={<Loading />}>
+        <ProtectedRoute>
+          <CheckPassword />
+        </ProtectedRoute>
+      </Suspense>
     ),
   },
   {
     path: "mypage/edit-profile",
     element: (
-      <ProtectedRoute>
-        <EditProfile />
-      </ProtectedRoute>
+      <Suspense fallback={<Loading />}>
+        <ProtectedRoute>
+          <EditProfile />
+        </ProtectedRoute>
+      </Suspense>
     ),
   },
   {
     path: "mypage/order-history",
     element: (
-      <ProtectedRoute>
-        <OrderHistory />
-      </ProtectedRoute>
+      <Suspense fallback={<Loading />}>
+        <ProtectedRoute>
+          <OrderHistory />
+        </ProtectedRoute>
+      </Suspense>
     ),
   },
   {
     path: "mypage/cart",
     element: (
-      <ProtectedRoute>
-        <ShoppingBasket />
-      </ProtectedRoute>
+      <Suspense fallback={<Loading />}>
+        <ProtectedRoute>
+          <ShoppingBasket />
+        </ProtectedRoute>
+      </Suspense>
     ),
   },
   {
     path: "mypage/delete-account",
     element: (
-      <ProtectedRoute>
-        <DeleteAccount />
-      </ProtectedRoute>
+      <Suspense fallback={<Loading />}>
+        <ProtectedRoute>
+          <DeleteAccount />
+        </ProtectedRoute>
+      </Suspense>
     ),
   },
   {
     path: "checkout",
     element: (
-      <ProtectedRoute>
-        <Checkout />
-      </ProtectedRoute>
+      <Suspense fallback={<Loading />}>
+        <ProtectedRoute>
+          <Checkout />
+        </ProtectedRoute>
+      </Suspense>
     ),
   },
-  { path: "/login", element: <Login /> },
-  { path: "/find-email", element: <FindEmail /> },
-  { path: "/find-password", element: <FindPassword /> },
-  { path: "/find-email/success", element: <FindEmailSuccess /> },
-  { path: "/find-password/success", element: <FindPasswordSuccess /> },
-  { path: "/register-terms", element: <RegisterTerms /> },
-  { path: "/register-detail", element: <RegisterDetail /> },
-  { path: "/register-success", element: <RegisterSuccess /> },
+  {
+    path: "/login",
+    element: (
+      <Suspense fallback={<Loading />}>
+        <Login />
+      </Suspense>
+    ),
+  },
+  {
+    path: "/find-email",
+    element: (
+      <Suspense fallback={<Loading />}>
+        <FindEmail />
+      </Suspense>
+    ),
+  },
+  {
+    path: "/find-password",
+    element: (
+      <Suspense fallback={<Loading />}>
+        <FindPassword />
+      </Suspense>
+    ),
+  },
+  {
+    path: "/find-email/success",
+    element: (
+      <Suspense fallback={<Loading />}>
+        <FindEmailSuccess />
+      </Suspense>
+    ),
+  },
+  {
+    path: "/find-password/success",
+    element: (
+      <Suspense fallback={<Loading />}>
+        <FindPasswordSuccess />
+      </Suspense>
+    ),
+  },
+  {
+    path: "/register-terms",
+    element: (
+      <Suspense fallback={<Loading />}>
+        <RegisterTerms />
+      </Suspense>
+    ),
+  },
+  {
+    path: "/register-detail",
+    element: (
+      <Suspense fallback={<Loading />}>
+        <RegisterDetail />
+      </Suspense>
+    ),
+  },
+  {
+    path: "/register-success",
+    element: (
+      <Suspense fallback={<Loading />}>
+        <RegisterSuccess />
+      </Suspense>
+    ),
+  },
 ]);
 
 export default router;

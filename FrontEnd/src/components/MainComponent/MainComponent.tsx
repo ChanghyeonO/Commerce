@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, Suspense, lazy } from "react";
 import { useQuery } from "react-query";
 import { useNavigate } from "react-router-dom";
 import ImageSlider from "../ImageSlider/ImageSlider";
@@ -7,8 +7,9 @@ import { useUser } from "../../contexts/UserContext";
 import { fetchItems } from "../../api/api";
 import Swal from "sweetalert2";
 import alertList from "../../utils/Swal";
-import ImageUpload from "../ImageUpload/ImageUpload";
+const ImageUpload = lazy(() => import("../ImageUpload/ImageUpload"));
 import DefaultButton from "../DefaultButton/DefaultButton";
+import Loading from "../Loading/Loading";
 import {
   Container,
   TopContent,
@@ -28,7 +29,6 @@ import {
   SoldOutInfoText,
 } from "../ItemInfiniteScroll/ItemInfiniteScrollStyle";
 import { Item } from "../../types/ItemType";
-import Loading from "../Loading/Loading";
 
 const MainComponent = () => {
   const [showImageUpload, setShowImageUpload] = useState(false);
@@ -69,10 +69,6 @@ const MainComponent = () => {
     const path = isFunding ? `/funding/detail/${id}` : `/other/detail/${id}`;
     navigate(path);
   };
-
-  if (isLoadingFundingItems || isLoadingOtherItems) {
-    return <Loading />;
-  }
 
   return (
     <Container>
@@ -148,7 +144,9 @@ const MainComponent = () => {
         </ItemContent>
       </BottomContent>
       {showImageUpload && (
-        <ImageUpload onClose={() => setShowImageUpload(false)} />
+        <Suspense fallback={<Loading />}>
+          <ImageUpload onClose={() => setShowImageUpload(false)} />
+        </Suspense>
       )}
     </Container>
   );

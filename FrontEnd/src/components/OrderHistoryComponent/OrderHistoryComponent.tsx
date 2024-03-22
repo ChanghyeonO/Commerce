@@ -1,8 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { Suspense, lazy, useEffect, useState } from "react";
 import axios from "axios";
 import { useUser } from "../../contexts/UserContext";
 import MyPageNav from "../MyPageNav/MyPageNav";
-import OrderHistoryDetail from "../OrderHistoryDetail/OrderHistoryDetail";
+const OrderHistoryDetail = lazy(
+  () => import("../OrderHistoryDetail/OrderHistoryDetail"),
+);
 import Loading from "../Loading/Loading";
 import {
   collection,
@@ -345,13 +347,15 @@ const OrderHistoryComponent = () => {
         </BottomContent>
       </RightContentArea>
       {openOrderDetail && (
-        <OrderHistoryDetail
-          items={
-            orderDetails.find((order) => order.id === openOrderDetail)?.items ||
-            []
-          }
-          onClose={() => setOpenOrderDetail(null)}
-        />
+        <Suspense fallback={<Loading />}>
+          <OrderHistoryDetail
+            items={
+              orderDetails.find((order) => order.id === openOrderDetail)
+                ?.items || []
+            }
+            onClose={() => setOpenOrderDetail(null)}
+          />
+        </Suspense>
       )}
       {isLoading && <Loading />}
     </Container>

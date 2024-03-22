@@ -61,4 +61,6 @@ export const TelephoneNumber = styled(ContactLogoDesign)``;
 export const CopyRight = styled.div`
   font-size: 12.5px;
   margin-bottom: 10px;
+  width: 100%;
+  height: 20px;
 `;
