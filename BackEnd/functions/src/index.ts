@@ -32,20 +32,13 @@ export const getUserEmail = functions.https.onRequest((request, response) => {
         return;
       }
 
-      const userDocId = snapshot.docs[0].id;
-      admin
-        .auth()
-        .getUser(userDocId)
-        .then((userRecord) => {
-          response.send({ email: userRecord.email });
-        })
-        .catch((error) => {
-          console.error(
-            "Firebase Auth에서 사용자 정보를 조회하는 중 오류 발생: ",
-            error,
-          );
-          response.status(500).send("사용자 정보 조회 중 오류가 발생했습니다.");
-        });
+      const userEmail = snapshot.docs[0].data().email;
+
+      if (!userEmail) {
+        response.status(404).send("사용자 이메일 정보를 찾을 수 없습니다.");
+      } else {
+        response.send({ email: userEmail });
+      }
     } catch (error) {
       console.error(
         "Firestore에서 사용자 정보를 조회하는 중 오류 발생: ",

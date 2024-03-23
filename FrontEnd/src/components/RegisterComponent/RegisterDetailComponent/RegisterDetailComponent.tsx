@@ -1,7 +1,14 @@
 import { ChangeEvent, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { auth, db } from "../../../api/firebase";
-import { doc, setDoc } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDocs,
+  query,
+  setDoc,
+  where,
+} from "firebase/firestore";
 import { FirebaseError } from "firebase/app";
 import {
   createUserWithEmailAndPassword,
@@ -198,12 +205,25 @@ const RegisterDetailComponent = () => {
 
   const handleRegister = async () => {
     setIsLoading(true);
+
     if (!validateInputs()) {
       setIsLoading(false);
       return;
     }
 
     try {
+      const usersRef = collection(db, "users");
+      const q = query(usersRef, where("phoneNumber", "==", phoneNumber));
+
+      const querySnapshot = await getDocs(q);
+      if (querySnapshot.docs.length > 0) {
+        setIsLoading(false);
+        setPhoneNumberError("이미 가입된 전화번호입니다.");
+        return;
+      }
+
+      setPhoneNumberError("");
+
       const userCredential = await createUserWithEmailAndPassword(
         auth,
         email,
