@@ -13,7 +13,7 @@
 
 #### 프로젝트 기간 : 2023년 2월 ~ 3월
 
-### [🌎 웹사이트 바로가기](https://web-commerce-qrd2als3zw3jc.sel5.cloudtype.app/)
+### [🌎 웹사이트 바로가기](https://www.fundit.world/)
 
 <br />
 
