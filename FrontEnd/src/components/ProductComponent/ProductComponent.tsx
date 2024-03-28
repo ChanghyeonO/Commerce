@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, Suspense, lazy } from "react";
 import { Link, useLocation } from "react-router-dom";
 import ImageSlider from "../ImageSlider/ImageSlider";
 import ItemInfiniteScroll from "../ItemInfiniteScroll/ItemInfiniteScroll";
-import ImageUpload from "../ImageUpload/ImageUpload";
+import Loading from "../Loading/Loading";
+const ImageUpload = lazy(() => import("../ImageUpload/ImageUpload"));
 import DefaultButton from "../DefaultButton/DefaultButton";
 import { useSort } from "../../contexts/SortContext";
 import { useUser } from "../../contexts/UserContext";
@@ -107,7 +108,9 @@ const ProductComponent = () => {
         <ItemInfiniteScroll />
       </BottomContent>
       {showImageUpload && (
-        <ImageUpload onClose={() => setShowImageUpload(false)} />
+        <Suspense fallback={<Loading />}>
+          <ImageUpload onClose={() => setShowImageUpload(false)} />
+        </Suspense>
       )}
     </Container>
   );
