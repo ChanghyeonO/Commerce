@@ -54,7 +54,7 @@ TypeScript
 
 | **Frontend** |
 
-React, StyledComponents, Context API, Tanstack Query
+React, StyledComponents, Context API, React-Query
 
 | **Backend** |
 
@@ -62,7 +62,7 @@ Firebase(Auth, DB, Storage, Functions)
 
 | **Release** |
 
-CloudType(AWS S3로 변경 예정)
+AWS S3 + CloudFront + Route53
 
 <br/>
 

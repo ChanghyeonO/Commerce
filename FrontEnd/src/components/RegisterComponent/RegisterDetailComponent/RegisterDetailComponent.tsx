@@ -151,6 +151,7 @@ const RegisterDetailComponent = () => {
     new window.daum.Postcode({
       oncomplete: function (data) {
         setAddress(data.address);
+        setAddressError("");
       },
     }).open();
   };
@@ -212,17 +213,27 @@ const RegisterDetailComponent = () => {
     }
 
     try {
-      const usersRef = collection(db, "users");
-      const q = query(usersRef, where("phoneNumber", "==", phoneNumber));
+      const emailQuery = query(
+        collection(db, "users"),
+        where("email", "==", email),
+      );
+      const emailQuerySnapshot = await getDocs(emailQuery);
+      if (emailQuerySnapshot.docs.length > 0) {
+        setIsLoading(false);
+        setEmailError("이미 가입된 이메일입니다.");
+        return;
+      }
 
-      const querySnapshot = await getDocs(q);
-      if (querySnapshot.docs.length > 0) {
+      const phoneQuery = query(
+        collection(db, "users"),
+        where("phoneNumber", "==", phoneNumber),
+      );
+      const phoneQuerySnapshot = await getDocs(phoneQuery);
+      if (phoneQuerySnapshot.docs.length > 0) {
         setIsLoading(false);
         setPhoneNumberError("이미 가입된 전화번호입니다.");
         return;
       }
-
-      setPhoneNumberError("");
 
       const userCredential = await createUserWithEmailAndPassword(
         auth,
@@ -231,7 +242,7 @@ const RegisterDetailComponent = () => {
       );
       await sendEmailVerification(userCredential.user);
 
-      const userData: User = {
+      const userData = {
         userId: userCredential.user.uid,
         name,
         phoneNumber,
@@ -246,15 +257,8 @@ const RegisterDetailComponent = () => {
       navigate("/register-success");
     } catch (error) {
       setIsLoading(false);
-      let errorMessage = "회원가입 중 오류가 발생했습니다.";
       if (error instanceof FirebaseError) {
-        switch (error.code) {
-          case "auth/email-already-in-use":
-            errorMessage = "이미 가입 된 이메일입니다.";
-            break;
-          default:
-            errorMessage = "회원가입 중 문제가 발생했습니다.";
-        }
+        let errorMessage = "회원가입 중 문제가 발생했습니다.";
         Swal.fire(alertList.errorMessage(errorMessage));
       } else {
         Swal.fire(alertList.errorMessage("알 수 없는 오류가 발생했습니다."));
