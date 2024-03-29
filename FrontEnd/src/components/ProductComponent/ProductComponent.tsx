@@ -1,5 +1,5 @@
 import React, { useState, Suspense, lazy } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 import ImageSlider from "../ImageSlider/ImageSlider";
 import ItemInfiniteScroll from "../ItemInfiniteScroll/ItemInfiniteScroll";
 import Loading from "../Loading/Loading";
@@ -23,23 +23,18 @@ import {
   DropdownSelected,
 } from "../ProductDetailComponent/ProductDetailComponentStyle";
 
-const ProductComponent = () => {
+import { ProductComponentProps } from "../../types/PagePropsType";
+
+const ProductComponent = ({ pageType }: ProductComponentProps) => {
   const [showImageUpload, setShowImageUpload] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const { sortOption, handleSortChange } = useSort();
 
-  const location = useLocation();
   const { user } = useUser();
 
   const isAdmin = user?.admin ?? false;
 
-  let linkPath = "/funding/create";
-
-  if (location.pathname.includes("/funding")) {
-    linkPath = "/funding/create";
-  } else if (location.pathname.includes("/other")) {
-    linkPath = "/other/create";
-  }
+  let linkPath = pageType === "funding" ? "/funding/create" : "/other/create";
 
   const handleShowImageUpload = () => {
     setShowImageUpload(!showImageUpload);
@@ -105,7 +100,7 @@ const ProductComponent = () => {
             </AddItemButtonArea>
           )}
         </CenterButtonArea>
-        <ItemInfiniteScroll />
+        <ItemInfiniteScroll pageType={pageType} />
       </BottomContent>
       {showImageUpload && (
         <Suspense fallback={<Loading />}>

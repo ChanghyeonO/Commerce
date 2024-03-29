@@ -6,7 +6,7 @@ const OtherProduct = () => {
   return (
     <>
       <Header />
-      <ProductComponent />
+      <ProductComponent pageType="other" />
       <Footer />
     </>
   );

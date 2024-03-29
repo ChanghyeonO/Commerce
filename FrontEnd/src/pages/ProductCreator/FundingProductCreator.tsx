@@ -6,7 +6,7 @@ const FundingProductCreator = () => {
   return (
     <>
       <Header />
-      <ProductCreatorComponent />
+      <ProductCreatorComponent pageType="funding" />
       <Footer />
     </>
   );

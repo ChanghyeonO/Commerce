@@ -5,7 +5,7 @@ const FindPasswordSuccess = () => {
   return (
     <>
       <Header />
-      <FindAccountSuccessComponent />
+      <FindAccountSuccessComponent pageType="password" />
     </>
   );
 };

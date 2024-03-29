@@ -5,7 +5,7 @@ const FindEmailSuccess = () => {
   return (
     <>
       <Header />
-      <FindAccountSuccessComponent />
+      <FindAccountSuccessComponent pageType="email" />
     </>
   );
 };

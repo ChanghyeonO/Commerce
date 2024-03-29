@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
 import { db } from "../../api/firebase";
 import { doc, onSnapshot } from "firebase/firestore";
 import {
@@ -12,12 +11,11 @@ import {
 const ImageSlider = ({ images: propImages }: { images?: string[] }) => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [images, setImages] = useState<string[]>([]);
-  const location = useLocation();
-
-  const isDetailPage = location.pathname.includes("/detail");
 
   useEffect(() => {
-    if (!isDetailPage) {
+    if (propImages && propImages.length > 0) {
+      setImages(propImages);
+    } else {
       const docRef = doc(db, "slideImages", "main");
       const unsubscribe = onSnapshot(docRef, (doc) => {
         if (doc.exists()) {
@@ -27,12 +25,8 @@ const ImageSlider = ({ images: propImages }: { images?: string[] }) => {
         }
       });
       return () => unsubscribe();
-    } else {
-      if (propImages) {
-        setImages(propImages);
-      }
     }
-  }, [isDetailPage, propImages]);
+  }, [propImages]);
 
   useEffect(() => {
     if (images.length > 1) {

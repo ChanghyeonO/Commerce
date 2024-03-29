@@ -6,7 +6,7 @@ const OtherProductDetail = () => {
   return (
     <>
       <Header />
-      <MainDetailComponent />
+      <MainDetailComponent pageType="other" />
       <Footer />
     </>
   );

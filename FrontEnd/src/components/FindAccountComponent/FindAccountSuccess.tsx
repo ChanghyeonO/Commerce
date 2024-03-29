@@ -14,28 +14,24 @@ import {
 } from "./FindAccountStyle";
 import FUNDITLOGO from "../../assets/icons/FUNDIT.png";
 import DefaultButton from "../DefaultButton/DefaultButton";
+import { FindAccountComponentProps } from "../../types/PagePropsType";
 
-const FindAccountSuccessComponent = () => {
+const FindAccountSuccessComponent = ({
+  pageType,
+}: FindAccountComponentProps) => {
   const location = useLocation();
-
-  const successType = location.pathname.includes("/find-email/success")
-    ? "emailSuccess"
-    : location.pathname.includes("/find-password/success")
-    ? "passwordSuccess"
-    : null;
+  const email = location.state?.email || "이메일 정보 없음";
 
   const getMessage = () => {
-    switch (successType) {
-      case "emailSuccess":
+    switch (pageType) {
+      case "email":
         return "이메일 찾기 성공!";
-      case "passwordSuccess":
+      case "password":
         return "비밀번호 재설정 이메일 전송 완료!";
       default:
         return "성공!";
     }
   };
-
-  const email = location.state?.email || "이메일 정보 없음";
 
   return (
     <Container>
@@ -47,7 +43,7 @@ const FindAccountSuccessComponent = () => {
           <IntroText>{getMessage()}</IntroText>
         </IntroTextArea>
         <InnerContent>
-          {successType === "emailSuccess" && (
+          {pageType === "email" && (
             <InputContainer>
               <EmailInput
                 type="text"
@@ -61,7 +57,7 @@ const FindAccountSuccessComponent = () => {
             <Link to="/login" style={{ textDecoration: "none" }}>
               <DefaultButton name="로그인" />
             </Link>
-            {successType === "emailSuccess" ? (
+            {pageType === "email" ? (
               <Link to="/find-password" style={{ textDecoration: "none" }}>
                 <DefaultButton name="비밀번호 찾기" />
               </Link>

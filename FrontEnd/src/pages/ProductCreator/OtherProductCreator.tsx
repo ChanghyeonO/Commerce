@@ -6,7 +6,7 @@ const OtherProductCreator = () => {
   return (
     <>
       <Header />
-      <ProductCreatorComponent />
+      <ProductCreatorComponent pageType="other" />
       <Footer />
     </>
   );

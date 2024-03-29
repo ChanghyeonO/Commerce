@@ -6,7 +6,7 @@ const FundingProduct = () => {
   return (
     <>
       <Header />
-      <ProductComponent />
+      <ProductComponent pageType="funding" />
       <Footer />
     </>
   );

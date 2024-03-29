@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useQueryClient } from "react-query";
 import { db, storage } from "../../api/firebase";
 import {
@@ -50,6 +50,7 @@ import {
   ButtonArea,
 } from "./ProductCreatorComponentStyle";
 import { PostData } from "../../types/ItemType";
+import { ProductComponentProps } from "../../types/PagePropsType";
 
 interface IntroContent {
   id: number;
@@ -61,7 +62,7 @@ interface IntroContent {
 type ValuePiece = Date | null;
 type Value = ValuePiece | [ValuePiece, ValuePiece];
 
-const ProductCreatorComponent = () => {
+const ProductCreatorComponent = ({ pageType }: ProductComponentProps) => {
   const queryClient = useQueryClient();
   const [options, setOptions] = useState([{ id: 1, value: "" }]);
   const [introContents, setIntroContents] = useState<IntroContent[]>([
@@ -78,7 +79,6 @@ const ProductCreatorComponent = () => {
   const tomorrow = new Date(today);
   tomorrow.setDate(tomorrow.getDate() + 1);
 
-  const location = useLocation();
   const navigate = useNavigate();
 
   const handleDateChange = (newDate: Value) => {
@@ -86,15 +86,10 @@ const ProductCreatorComponent = () => {
   };
 
   const getCollectionName = () => {
-    if (location.pathname.includes("/funding/create")) {
-      return "fundingItems";
-    } else if (location.pathname.includes("/other/create")) {
-      return "otherItems";
-    }
-    return "defaultCollection";
+    return pageType === "funding" ? "fundingItems" : "otherItems";
   };
 
-  const isFundingCreatePage = location.pathname.includes("/funding/create");
+  const isFundingCreatePage = pageType === "funding";
 
   const addOption = () => {
     if (options.length < 6) {

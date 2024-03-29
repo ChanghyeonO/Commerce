@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams, useNavigate, useLocation } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import alertList from "../../utils/Swal";
 import ImageSlider from "../ImageSlider/ImageSlider";
@@ -41,8 +41,9 @@ import {
   ProductImage,
   ProductDescription,
 } from "./ProductDetailComponentStyle";
+import { ProductComponentProps } from "../../types/PagePropsType";
 
-const ProductDetailComponent = () => {
+const ProductDetailComponent = ({ pageType }: ProductComponentProps) => {
   const [item, setItem] = useState<Item>();
   const [isDeadlinePassed, setIsDeadlinePassed] = useState(false);
   const [totalPrice, setTotalPrice] = useState(0);
@@ -53,17 +54,16 @@ const ProductDetailComponent = () => {
   );
   const { id } = useParams();
   const navigate = useNavigate();
-  const location = useLocation();
 
   const getCollectionName = () => {
-    if (location.pathname.includes("funding")) {
+    if (pageType == "funding") {
       return "fundingItems";
     } else {
       return "otherItems";
     }
   };
 
-  const isFundingPage = location.pathname.includes("/funding");
+  const isFundingPage = pageType === "funding";
 
   useEffect(() => {
     if (item && item.deadLine) {

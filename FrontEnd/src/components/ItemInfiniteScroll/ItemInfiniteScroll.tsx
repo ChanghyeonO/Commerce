@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useUser } from "../../contexts/UserContext";
 import { useSort } from "../../contexts/SortContext";
 import { useInfiniteQuery, useQueryClient } from "react-query";
@@ -23,17 +23,19 @@ import {
 } from "./ItemInfiniteScrollStyle";
 import { DeleteButton } from "../ImageUpload/ImageUploadStyle";
 
-const ItemInfiniteScroll = () => {
+import { ProductComponentProps } from "../../types/PagePropsType";
+
+const ItemInfiniteScroll = ({ pageType }: ProductComponentProps) => {
   const { ref, inView } = useInView();
   const navigate = useNavigate();
-  const location = useLocation();
   const queryClient = useQueryClient();
   const { sortOption } = useSort();
   const { user } = useUser();
 
   const isAdmin = user?.admin ?? false;
 
-  const isFundingPage = location.pathname.includes("/funding");
+  const isFundingPage = pageType === "funding";
+  const collectionName = isFundingPage ? "fundingItems" : "otherItems";
 
   const checkIfFundingEnded = (item: Item) => {
     if (!item.deadLine) return false;
@@ -41,10 +43,6 @@ const ItemInfiniteScroll = () => {
     const deadlineDate = item.deadLine.toDate();
     return now > deadlineDate;
   };
-
-  const collectionName = location.pathname.includes("/funding")
-    ? "fundingItems"
-    : "otherItems";
 
   const fetchItemsWithCursor = async ({ pageParam = null }) => {
     let sortBy = "createdAt";
