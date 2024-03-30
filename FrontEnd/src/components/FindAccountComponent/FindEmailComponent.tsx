@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useState } from "react";
+import React, { ChangeEvent, useState, KeyboardEvent } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
@@ -90,6 +90,13 @@ const FindEmailComponent = () => {
         setLoading(false);
       });
   };
+
+  const handleKeyPress = (event: KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Enter") {
+      handleFindEmail();
+    }
+  };
+
   return (
     <Container>
       <InnerContainer>
@@ -106,12 +113,14 @@ const FindEmailComponent = () => {
               placeholder="이름"
               value={name}
               onChange={(e) => setName(e.target.value)}
+              onKeyDown={handleKeyPress}
             />
             <PasswordInput
               type="text"
               placeholder="전화번호"
               value={phoneNumber}
               onChange={handlePhoneNumberChange}
+              onKeyDown={handleKeyPress}
             />
           </InputContainer>
           <DefaultButton name="이메일 찾기" onClick={handleFindEmail} />

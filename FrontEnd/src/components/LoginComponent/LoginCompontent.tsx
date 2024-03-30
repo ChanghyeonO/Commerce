@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, KeyboardEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import alertList from "../../utils/Swal";
@@ -99,6 +99,9 @@ const LoginComponent = () => {
           case "auth/invalid-email":
             errorMessage = "유효하지 않은 이메일 형식입니다.";
             break;
+          case "auth/missing-password":
+            errorMessage = "비밀번호를 입력해주세요.";
+            break;
           case "auth/wrong-password":
             errorMessage = "비밀번호를 다시 확인해주세요.";
             break;
@@ -164,6 +167,12 @@ const LoginComponent = () => {
     }
   };
 
+  const handleKeyPress = (event: KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Enter") {
+      handleLogin();
+    }
+  };
+
   return (
     <Container>
       <InnerContainer>
@@ -180,12 +189,14 @@ const LoginComponent = () => {
               placeholder="이메일"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              onKeyDown={handleKeyPress}
             />
             <PasswordInput
               type="password"
               placeholder="패스워드"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              onKeyDown={handleKeyPress}
             />
           </InputContainer>
           <FindAccountArea>

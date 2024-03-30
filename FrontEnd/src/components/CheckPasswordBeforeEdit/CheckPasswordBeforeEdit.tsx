@@ -1,4 +1,4 @@
-import React, { useState, ChangeEvent } from "react";
+import React, { useState, ChangeEvent, KeyboardEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import { auth } from "../../api/firebase";
 import { reauthenticateWithCredential, EmailAuthProvider } from "firebase/auth";
@@ -52,6 +52,12 @@ const CheckPasswordBeforeEdit = () => {
     }
   };
 
+  const handleKeyPress = (event: KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Enter") {
+      handleReauthenticate();
+    }
+  };
+
   return (
     <Container>
       <MyPageNav />
@@ -64,6 +70,7 @@ const CheckPasswordBeforeEdit = () => {
               placeholder="패스워드"
               value={password}
               onChange={handlePasswordChange}
+              onKeyDown={handleKeyPress}
             />
           </PasswordInputArea>
           <DefaultButton name={"확인"} onClick={handleReauthenticate} />
