@@ -8,7 +8,13 @@ import React, {
 import { onAuthStateChanged } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
 import { auth, db } from "../api/firebase";
-import { User, UserContextType } from "../types/UserDataType";
+import { User } from "../types/UserDataType";
+
+interface UserContextType {
+  user: User | null;
+  setUser: (user: User | null) => void;
+  loading: boolean;
+}
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
@@ -44,16 +50,14 @@ const UserProvider = ({ children }: UserProviderProps) => {
     return () => unsubscribe();
   }, []);
 
-  return (
-    <UserContext.Provider value={{ user, loading }}>
-      {children}
-    </UserContext.Provider>
-  );
+  const value = { user, setUser, loading };
+
+  return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
 };
 
 export const useUser = () => {
   const context = useContext(UserContext);
-  if (!context) {
+  if (context === undefined) {
     throw new Error("useUser는 UserProvider 내부에서 사용되어야 합니다.");
   }
   return context;

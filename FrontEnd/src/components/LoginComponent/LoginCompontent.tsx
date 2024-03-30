@@ -18,6 +18,7 @@ import {
 } from "firebase/firestore";
 import { FirebaseError } from "firebase/app";
 import { db, auth } from "../../api/firebase";
+import { useUser } from "../../contexts/UserContext";
 import Loading from "../Loading/Loading";
 import DefaultButton from "../DefaultButton/DefaultButton";
 import FUNDITLOGO from "../../assets/icons/FUNDIT.png";
@@ -43,6 +44,7 @@ import {
 } from "./LoginComponentStyle";
 
 const LoginComponent = () => {
+  const { setUser } = useUser();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -54,11 +56,22 @@ const LoginComponent = () => {
     try {
       const docSnap = await getDoc(docRef);
       if (docSnap.exists()) {
+        const docData = docSnap.data();
+        const userData = {
+          userId: userId,
+          email: docData.email,
+          name: docData.name || "",
+          phoneNumber: docData.phoneNumber || "",
+          address: docData.address || "",
+          addressDetail: docData.addressDetail || "",
+          admin: docData.admin || false,
+        };
+        setUser(userData);
       } else {
-        console.log("No user data found for user:", userId);
+        console.log("유저 데이터를 찾을 수 없음:", userId);
       }
     } catch (error) {
-      console.error("Error fetching user data:", error);
+      console.error("유저 데이터를 받아오는 중 오류 발생:", error);
     }
   };
 
@@ -70,13 +83,12 @@ const LoginComponent = () => {
         email,
         password,
       );
+
       if (!userCredential.user.emailVerified) {
         Swal.fire(alertList.infoMessage("이메일 인증 후 이용 가능합니다."));
-        setIsLoading(false);
       } else {
         fetchUserData(userCredential.user.uid);
         Swal.fire(alertList.successMessage("로그인에 성공했습니다."));
-        setIsLoading(false);
         navigate("/");
       }
     } catch (error) {
@@ -84,31 +96,29 @@ const LoginComponent = () => {
       if (error instanceof FirebaseError) {
         console.log("Firebase 에러 코드:", error.code);
         switch (error.code) {
+          case "auth/invalid-email":
+            errorMessage = "유효하지 않은 이메일 형식입니다.";
+            break;
           case "auth/wrong-password":
             errorMessage = "비밀번호를 다시 확인해주세요.";
-            setIsLoading(false);
             break;
           case "auth/user-not-found":
             errorMessage = "등록된 계정을 찾을 수 없습니다.";
-            setIsLoading(false);
-            break;
-          case "auth/invalid-email":
-            errorMessage = "유효하지 않은 이메일 형식입니다.";
-            setIsLoading(false);
             break;
           default:
             errorMessage = "로그인 중 문제가 발생했습니다.";
-            setIsLoading(false);
         }
-      } else {
-        Swal.fire(alertList.errorMessage(errorMessage));
       }
+      Swal.fire(alertList.errorMessage(errorMessage));
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const handleGoogleLogin = async () => {
     setIsLoading(true);
     const provider = new GoogleAuthProvider();
+
     try {
       const result = await signInWithPopup(auth, provider);
       const userEmail = result.user.email;
@@ -122,38 +132,35 @@ const LoginComponent = () => {
         Swal.fire(alertList.successMessage("로그인에 성공했습니다."));
         navigate("/");
       } else {
-        Swal.fire(alertList.errorMessage("기존에 등록된 이메일이 없습니다."));
         await signOut(auth);
+        await result.user.delete();
+        Swal.fire(alertList.errorMessage("최초 회원가입이 필요합니다."));
       }
     } catch (error) {
       let errorMessage = "Google 로그인에 실패했습니다.";
       if (error instanceof FirebaseError) {
         switch (error.code) {
           case "auth/account-exists-with-different-credential":
-            errorMessage =
-              "이미 다른 인증 방법으로 가입된<br>이메일 주소입니다.";
-            setIsLoading(false);
+            errorMessage = "이미 다른 인증 방법으로 가입된 이메일 주소입니다.";
             break;
           case "auth/popup-closed-by-user":
-            errorMessage = "로그인 팝업 창이 사용자에 의해<br>닫혔습니다.";
-            setIsLoading(false);
+            errorMessage = "로그인 팝업 창이 사용자에 의해 닫혔습니다.";
             break;
           case "auth/cancelled-popup-request":
-            errorMessage = "팝업 요청이 취소되었습니다.<br>다시 시도해 주세요.";
-            setIsLoading(false);
+            errorMessage = "팝업 요청이 취소되었습니다. 다시 시도해 주세요.";
             break;
           case "auth/popup-blocked":
             errorMessage =
-              "팝업 창이 차단되었습니다.<br>팝업 차단을 해제하고 다시 시도해 주세요.";
-            setIsLoading(false);
+              "팝업 창이 차단되었습니다. 팝업 차단을 해제하고 다시 시도해 주세요.";
             break;
           default:
             errorMessage = error.message;
         }
       }
-      setIsLoading(false);
       console.error("Google 로그인 실패:", error);
       Swal.fire(alertList.errorMessage(errorMessage));
+    } finally {
+      setIsLoading(false);
     }
   };
 
