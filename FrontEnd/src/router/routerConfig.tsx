@@ -1,6 +1,7 @@
 import React, { Suspense, lazy } from "react";
 import { createBrowserRouter } from "react-router-dom";
-import ProtectedRoute from "../components/ProtectedRoute/ProtectedRoute";
+import ProtectedRoute from "../components/AuthRoute/ProtectedRoute";
+import PublicRoute from "../components/AuthRoute/PublicRoute";
 import Loading from "../components/Loading/Loading";
 
 import Main from "../pages/Main/Main";
@@ -155,7 +156,9 @@ const router = createBrowserRouter([
     path: "/login",
     element: (
       <Suspense fallback={<Loading />}>
-        <Login />
+        <PublicRoute>
+          <Login />
+        </PublicRoute>
       </Suspense>
     ),
   },
@@ -163,7 +166,9 @@ const router = createBrowserRouter([
     path: "/find-email",
     element: (
       <Suspense fallback={<Loading />}>
-        <FindEmail />
+        <PublicRoute>
+          <FindEmail />
+        </PublicRoute>
       </Suspense>
     ),
   },
@@ -171,7 +176,9 @@ const router = createBrowserRouter([
     path: "/find-password",
     element: (
       <Suspense fallback={<Loading />}>
-        <FindPassword />
+        <PublicRoute>
+          <FindPassword />
+        </PublicRoute>
       </Suspense>
     ),
   },
@@ -179,7 +186,9 @@ const router = createBrowserRouter([
     path: "/find-email/success",
     element: (
       <Suspense fallback={<Loading />}>
-        <FindEmailSuccess />
+        <PublicRoute>
+          <FindEmailSuccess />
+        </PublicRoute>
       </Suspense>
     ),
   },
@@ -187,7 +196,9 @@ const router = createBrowserRouter([
     path: "/find-password/success",
     element: (
       <Suspense fallback={<Loading />}>
-        <FindPasswordSuccess />
+        <PublicRoute>
+          <FindPasswordSuccess />
+        </PublicRoute>
       </Suspense>
     ),
   },
@@ -195,7 +206,9 @@ const router = createBrowserRouter([
     path: "/register-terms",
     element: (
       <Suspense fallback={<Loading />}>
-        <RegisterTerms />
+        <PublicRoute>
+          <RegisterTerms />
+        </PublicRoute>
       </Suspense>
     ),
   },
@@ -203,7 +216,9 @@ const router = createBrowserRouter([
     path: "/register-detail",
     element: (
       <Suspense fallback={<Loading />}>
-        <RegisterDetail />
+        <PublicRoute>
+          <RegisterDetail />
+        </PublicRoute>
       </Suspense>
     ),
   },
@@ -211,7 +226,9 @@ const router = createBrowserRouter([
     path: "/register-success",
     element: (
       <Suspense fallback={<Loading />}>
-        <RegisterSuccess />
+        <PublicRoute>
+          <RegisterSuccess />
+        </PublicRoute>
       </Suspense>
     ),
   },
