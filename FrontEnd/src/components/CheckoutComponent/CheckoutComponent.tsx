@@ -1,9 +1,8 @@
 import React, { ChangeEvent, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 import { db } from "../../api/firebase";
 import { useUser } from "../../contexts/UserContext";
-import { useCart } from "../../contexts/CartContext";
 import {
   collection,
   doc,
@@ -57,7 +56,6 @@ const CheckoutComponent = () => {
   const [totalAmount, setTotalAmount] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const { user } = useUser();
-  const { selectedCategory } = useCart();
   const [localUser, setLocalUser] = useState({
     name: user?.name || "",
     phoneNumber: user?.phoneNumber || "",
@@ -65,6 +63,9 @@ const CheckoutComponent = () => {
     addressDetail: user?.addressDetail || "",
   });
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const { selectedCategory } = location.state || { selectedCategory: null };
 
   useEffect(() => {
     if (!selectedCategory) {

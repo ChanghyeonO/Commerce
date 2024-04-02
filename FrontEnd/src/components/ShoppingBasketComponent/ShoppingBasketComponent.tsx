@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import MyPageNav from "../MyPageNav/MyPageNav";
 import DefaultButton from "../DefaultButton/DefaultButton";
 import { CartItem } from "../../types/ItemType";
-import { useCart } from "../../contexts/CartContext";
 import Swal from "sweetalert2";
 import alertList from "../../utils/Swal";
 
@@ -38,7 +37,9 @@ import {
 const ShoppingBasketComponent = () => {
   const [fundingItems, setFundingItems] = useState<CartItem[]>([]);
   const [otherItems, setOtherItems] = useState<CartItem[]>([]);
-  const { selectedCategory, setSelectedCategory } = useCart();
+  const [selectedCategory, setSelectedCategory] = useState<
+    "funding" | "other" | null
+  >(null);
   const navigate = useNavigate();
 
   const handleCheckboxChange = (category: "funding" | "other") => {
@@ -172,9 +173,10 @@ const ShoppingBasketComponent = () => {
     if (!selectedCategory) {
       Swal.fire(alertList.infoMessage("제품 카테고리를 선택해주세요."));
     } else {
-      navigate("/checkout");
+      navigate("/checkout", { state: { selectedCategory } });
     }
   };
+
   return (
     <Container>
       <MyPageNav />
