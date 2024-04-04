@@ -42,9 +42,9 @@
 
 <br />
 
-## 📌 시연 영상
+<!-- ## 📌 시연 영상
 
-### [▶️ 시연 영상 바로가기](https://www.youtube.com/watch?v=1TeH3DO5bOA)
+### [▶️ 시연 영상 바로가기](https://www.youtube.com/watch?v=1TeH3DO5bOA) -->
 
 ## 📌 기술 스택
 

@@ -46,6 +46,9 @@ import alertList from "../../utils/Swal";
 const OrderHistoryComponent = () => {
   const [orderDetails, setOrderDetails] = useState<OrderDetail[]>([]);
   const [openOrderDetail, setOpenOrderDetail] = useState<string | null>(null);
+  const [cancelReasons, setCancelReasons] = useState<{
+    [orderId: string]: string;
+  }>({});
   const [isLoading, setIsLoading] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const { user } = useUser();
@@ -222,8 +225,11 @@ const OrderHistoryComponent = () => {
           cancel_reason: cancelReason,
           order_status: "취소요청",
         });
+        setCancelReasons((prevState) => ({
+          ...prevState,
+          [orderId]: cancelReason,
+        }));
         Swal.fire(alertList.successMessage("취소 요청이 완료되었습니다."));
-      } else {
         setIsLoading(false);
       }
     } catch (error) {
@@ -327,11 +333,12 @@ const OrderHistoryComponent = () => {
                   </CancelDeleteContent>
                 ) : (
                   <CancelDeleteContent>
-                    {order.cancel_reason && (
+                    {order.cancel_reason || cancelReasons[order.id] ? (
                       <ItemDescription>
-                        취소 요청 (사유) :{order.cancel_reason}
+                        취소 요청 (사유) :{" "}
+                        {order.cancel_reason || cancelReasons[order.id]}
                       </ItemDescription>
-                    )}
+                    ) : null}
                     <CancelButton
                       onClick={() => requestOrderCancellation(order.id)}
                     >
