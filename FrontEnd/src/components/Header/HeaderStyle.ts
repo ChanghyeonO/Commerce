@@ -66,6 +66,10 @@ const LoginRegisterButtonDesign = styled.button`
   font-size: 17px;
   font-weight: bold;
   background-color: transparent;
+  transition: transform 0.3s ease;
+  &:hover {
+    transform: scale(1.1);
+  }
 `;
 
 export const LoginLogoutButton = styled(LoginRegisterButtonDesign)`

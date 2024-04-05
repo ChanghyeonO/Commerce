@@ -12,7 +12,7 @@ export const Container = styled.div`
 
 export const ItemBox = styled.div`
   border: 1.5px solid #eee;
-  border-radius: 12px;
+  border-radius: 20px;
   padding: 20px;
   text-align: center;
   cursor: pointer;
@@ -21,6 +21,11 @@ export const ItemBox = styled.div`
   height: 450px;
   position: relative;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+  &:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
 `;
 
 export const SoldOutInfoText = styled.div`
@@ -44,7 +49,7 @@ export const SoldOutInfoText = styled.div`
 export const ItemImage = styled.img`
   width: 100%;
   height: 300px;
-  border-radius: 9px;
+  border-radius: 15px;
   background: #fff;
   border: 2px solid #eee;
 `;
