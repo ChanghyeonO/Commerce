@@ -11,9 +11,18 @@ import GlobalFont from "./styles/GlobalFont";
 
 const queryClient = new QueryClient();
 
+function handleHashbangInUrl() {
+  if (window.location.hash.startsWith("#!/")) {
+    const newPath = window.location.hash.substring(3);
+    window.history.replaceState(null, "", newPath);
+  }
+}
+
 const rootElement = document.getElementById("root");
 
 if (rootElement) {
+  handleHashbangInUrl();
+
   ReactDOM.createRoot(rootElement).render(
     <React.StrictMode>
       <QueryClientProvider client={queryClient}>
