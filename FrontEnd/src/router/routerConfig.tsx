@@ -1,5 +1,5 @@
 import React, { Suspense, lazy } from "react";
-import { createBrowserRouter } from "react-router-dom";
+import { createBrowserRouter, Navigate } from "react-router-dom";
 import ProtectedRoute from "../components/AuthRoute/ProtectedRoute";
 import PublicRoute from "../components/AuthRoute/PublicRoute";
 import Loading from "../components/Loading/Loading";
@@ -231,6 +231,10 @@ const router = createBrowserRouter([
         </PublicRoute>
       </Suspense>
     ),
+  },
+  {
+    path: "*",
+    element: <Navigate to="/" replace />,
   },
 ]);
 

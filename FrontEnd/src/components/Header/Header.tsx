@@ -12,11 +12,12 @@ import {
   Container,
   LeftContainer,
   MainLogo,
-  PageLinkButton,
+  PageLink,
   RightContainer,
   LoginContent,
-  LoginLogoutButton,
-  RegisterButton,
+  LoginLink,
+  LogoutButton,
+  RegisterLink,
   UserContent,
   UserLogo,
   CartItemCount,
@@ -94,19 +95,13 @@ const Header = () => {
             <Link to={"/"}>
               <MainLogo src={FUNDITLOGO} alt="FUNDIT 로고" />
             </Link>
-            <Link to={"/funding"}>
-              <PageLinkButton>펀딩 상품 모아보기</PageLinkButton>
-            </Link>
-            <Link to={"/other"}>
-              <PageLinkButton>기타 상품 모아보기</PageLinkButton>
-            </Link>
+            <PageLink to={"/funding"}>펀딩 상품 모아보기</PageLink>
+            <PageLink to={"/other"}>기타 상품 모아보기</PageLink>
           </LeftContainer>
           <RightContainer>
             {user ? (
               <LoginContent>
-                <LoginLogoutButton onClick={handleLogout}>
-                  로그아웃
-                </LoginLogoutButton>
+                <LogoutButton onClick={handleLogout}>로그아웃</LogoutButton>
                 <UserContent>
                   <Link to={"/mypage/check-password"}>
                     <UserLogo src={UserImage} alt="유저 이미지" />
@@ -118,13 +113,8 @@ const Header = () => {
               </LoginContent>
             ) : (
               <LoginContent>
-                <Link to={"/login"}>
-                  <LoginLogoutButton>로그인</LoginLogoutButton>
-                </Link>
-                |
-                <Link to={"/register-terms"}>
-                  <RegisterButton>회원가입</RegisterButton>
-                </Link>
+                <LoginLink to={"/login"}>로그인</LoginLink>|
+                <RegisterLink to={"/register-terms"}>회원가입</RegisterLink>
               </LoginContent>
             )}
           </RightContainer>
@@ -139,17 +129,11 @@ const Header = () => {
           <HamburgerMenu onClick={toggleMenu} src={HamburgerIcon} alt="Menu" />
           {isMenuOpen && (
             <DropdownMenu>
-              <Link to="/funding">
-                <PageLinkButton>펀딩 상품</PageLinkButton>
-              </Link>
-              <Link to="/other">
-                <PageLinkButton>기타 상품</PageLinkButton>
-              </Link>
+              <PageLink to="/funding">펀딩 상품</PageLink>
+              <PageLink to="/other">기타 상품</PageLink>
               {user ? (
                 <LoginContent>
-                  <LoginLogoutButton onClick={handleLogout}>
-                    로그아웃
-                  </LoginLogoutButton>
+                  <LogoutButton onClick={handleLogout}>로그아웃</LogoutButton>
                   <UserContent>
                     <Link to={"/mypage/check-password"}>
                       <UserLogo src={UserImage} alt="유저 이미지" />
@@ -161,13 +145,8 @@ const Header = () => {
                 </LoginContent>
               ) : (
                 <LoginContent>
-                  <Link to={"/login"}>
-                    <LoginLogoutButton>로그인</LoginLogoutButton>
-                  </Link>
-                  |
-                  <Link to={"/register-terms"}>
-                    <RegisterButton>회원가입</RegisterButton>
-                  </Link>
+                  <LoginLink to={"/login"}>로그인</LoginLink>|
+                  <RegisterLink to={"/register-terms"}>회원가입</RegisterLink>
                 </LoginContent>
               )}
             </DropdownMenu>

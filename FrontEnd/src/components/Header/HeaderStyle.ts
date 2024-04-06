@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { Link } from "react-router-dom";
 
 export const Container = styled.div`
   display: flex;
@@ -27,16 +28,20 @@ export const MainLogo = styled.img`
   cursor: pointer;
 `;
 
-export const PageLinkButton = styled.button`
+export const PageLink = styled(Link)`
   width: 160px;
-  height: 80px;
-  border: none;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
   color: #999;
   font-size: 20px;
   font-weight: bold;
+  text-decoration: none;
   background-color: transparent;
   transition: border-bottom 0.3s ease-in;
+
   &:hover {
     border-bottom: 3px solid #5271ff;
     color: #000;
@@ -52,7 +57,7 @@ export const RightContainer = styled.div`
 
 export const LoginContent = styled.div`
   width: 160px;
-  height: 80px;
+  height: 100%;
   display: flex;
   font-size: 15px;
   font-weight: bold;
@@ -60,24 +65,40 @@ export const LoginContent = styled.div`
   align-items: center;
 `;
 
-const LoginRegisterButtonDesign = styled.button`
+const LoginRegisterButtonDesign = styled(Link)`
   border: none;
   cursor: pointer;
   font-size: 17px;
   font-weight: bold;
   background-color: transparent;
   transition: transform 0.3s ease;
+  text-decoration: none;
+  color: #000;
   &:hover {
     transform: scale(1.1);
   }
 `;
 
-export const LoginLogoutButton = styled(LoginRegisterButtonDesign)`
+export const LoginLink = styled(LoginRegisterButtonDesign)`
   margin-right: 10px;
 `;
 
-export const RegisterButton = styled(LoginRegisterButtonDesign)`
+export const RegisterLink = styled(LoginRegisterButtonDesign)`
   margin-left: 10px;
+`;
+
+export const LogoutButton = styled.button`
+  border: none;
+  cursor: pointer;
+  font-size: 17px;
+  font-weight: bold;
+  background-color: transparent;
+  transition: transform 0.3s ease;
+  text-decoration: none;
+  color: #000;
+  &:hover {
+    transform: scale(1.1);
+  }
 `;
 
 export const UserContent = styled.div`
