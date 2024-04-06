@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import alertList from "../../utils/Swal";
 import ImageSlider from "../ImageSlider/ImageSlider";
+import FundingGauge from "../FundingGauge/FundingGauge";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../../api/firebase";
 import { Item, CartItem } from "../../types/ItemType";
@@ -227,11 +228,6 @@ const ProductDetailComponent = ({ pageType }: ProductComponentProps) => {
     setIsOpen(false);
   };
 
-  const fundingProgress =
-    item && item.targetSales > 0
-      ? (item.salesCount / item.targetSales) * 100
-      : 0;
-
   return (
     <Container>
       <TopContent>
@@ -264,7 +260,7 @@ const ProductDetailComponent = ({ pageType }: ProductComponentProps) => {
               )}
             </DropdownContainer>
           </OptionArea>
-          {isFundingPage && (
+          {isFundingPage && item && (
             <>
               <IntroDeadLineArea>
                 <IntroDeadLine>
@@ -275,12 +271,10 @@ const ProductDetailComponent = ({ pageType }: ProductComponentProps) => {
                   목표 판매량 :{item?.targetSales} 개
                 </IntroDeadLine>
               </IntroDeadLineArea>
-              <FundingGaugeContainer>
-                <FundingGaugeFiller style={{ width: `${fundingProgress}%` }} />
-                <FundingGaugePercentage>
-                  {fundingProgress.toFixed(2)}%
-                </FundingGaugePercentage>
-              </FundingGaugeContainer>
+              <FundingGauge
+                salesCount={item.salesCount}
+                targetSales={item.targetSales}
+              />
             </>
           )}
           <IntroProductCountArea>

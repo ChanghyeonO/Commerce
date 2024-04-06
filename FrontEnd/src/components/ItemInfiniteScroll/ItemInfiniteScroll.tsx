@@ -10,6 +10,7 @@ import { doc, deleteDoc } from "firebase/firestore";
 import { ref as storageRef, deleteObject } from "firebase/storage";
 import Swal from "sweetalert2";
 import alertList from "../../utils/Swal";
+import FundingGauge from "../FundingGauge/FundingGauge";
 import { Item } from "../../types/ItemType";
 
 import {
@@ -165,6 +166,12 @@ const ItemInfiniteScroll = ({ pageType }: ProductComponentProps) => {
                   }
                   alt={`Product ${item.id}`}
                 />
+                {isFundingPage && (
+                  <FundingGauge
+                    salesCount={item.salesCount}
+                    targetSales={item.targetSales}
+                  />
+                )}
                 <ItemName>{item.name}</ItemName>
                 <ItemPrice>{item.price.toLocaleString()} 원</ItemPrice>
               </ItemBox>

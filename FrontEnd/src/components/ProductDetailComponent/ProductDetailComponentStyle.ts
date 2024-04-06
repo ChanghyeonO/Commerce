@@ -39,7 +39,10 @@ export const RightContent = styled.div`
 `;
 
 export const DescriptionArea = styled.div`
-  width: 80%;
+  width: 100%;
+  @media (max-width: 1180px) {
+    width: 90%;
+  }
 `;
 
 export const Title = styled.h1`
@@ -52,7 +55,10 @@ export const Description = styled.p`
 `;
 
 export const OptionArea = styled.div`
-  width: 80%;
+  width: 100%;
+  @media (max-width: 1180px) {
+    width: 90%;
+  }
 `;
 
 export const DropdownContainer = styled.div`
@@ -97,12 +103,15 @@ export const DropdownOption = styled.div`
 `;
 
 export const IntroDeadLineArea = styled.div`
-  width: 80%;
+  width: 100%;
   height: 30px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 20px;
+  @media (max-width: 1180px) {
+    width: 90%;
+  }
 `;
 
 export const IntroDeadLine = styled.div`
@@ -110,34 +119,16 @@ export const IntroDeadLine = styled.div`
   font-weight: bold;
 `;
 
-export const FundingGaugeContainer = styled.div`
-  position: relative;
-  width: 80%;
-  background-color: #eee;
-  border-radius: 8px;
-`;
-
-export const FundingGaugeFiller = styled.div`
-  height: 30px;
-  background-color: #5271ff;
-  border-radius: inherit;
-`;
-
-export const FundingGaugePercentage = styled.span`
-  position: absolute;
-  right: 5px;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 14px;
-`;
-
 export const IntroProductCountArea = styled.div`
-  width: 80%;
+  width: 100%;
   height: 60px;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 20px;
+  @media (max-width: 1180px) {
+    width: 90%;
+  }
 `;
 
 export const IntroProductCount = styled.div`
@@ -150,8 +141,11 @@ export const ProductCountArea = styled.div`
   align-items: center;
   justify-content: center;
   gap: 10px;
-  width: 80%;
+  width: 100%;
   height: 60px;
+  @media (max-width: 1180px) {
+    width: 90%;
+  }
 `;
 
 const PlusMinusButtonDesign = styled.button`
@@ -195,11 +189,14 @@ export const CountInput = styled.input`
 export const PlusButton = styled(PlusMinusButtonDesign)``;
 
 export const TotalPriceArea = styled.div`
-  width: 80%;
+  width: 100%;
   height: 60px;
   display: flex;
   align-items: center;
   justify-content: center;
+  @media (max-width: 1180px) {
+    width: 90%;
+  }
 `;
 
 export const TotalPrice = styled.div`
@@ -213,12 +210,15 @@ export const TotalPrice = styled.div`
 `;
 
 export const CheckoutButtonArea = styled.div`
-  width: 80%;
+  width: 100%;
   height: 60px;
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 10px;
+  @media (max-width: 1180px) {
+    width: 90%;
+  }
 `;
 
 const CheckoutButton = styled.button`
@@ -250,7 +250,7 @@ export const ProductIntroArea = styled.div`
   justify-content: center;
   overflow: hidden;
   display: flex;
-  gap: 17%;
+  gap: 100px;
   border-bottom: 1px solid #eee;
   justify-content: center;
   align-items: center;

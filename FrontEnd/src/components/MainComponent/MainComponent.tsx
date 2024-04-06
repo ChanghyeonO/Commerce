@@ -1,8 +1,7 @@
 import React, { useState, Suspense, lazy } from "react";
 import { useQuery } from "react-query";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import ImageSlider from "../ImageSlider/ImageSlider";
-import { Link } from "react-router-dom";
 import { useUser } from "../../contexts/UserContext";
 import { fetchItems } from "../../api/api";
 import Swal from "sweetalert2";
@@ -10,6 +9,8 @@ import alertList from "../../utils/Swal";
 const ImageUpload = lazy(() => import("../ImageUpload/ImageUpload"));
 import DefaultButton from "../DefaultButton/DefaultButton";
 import Loading from "../Loading/Loading";
+import FundingGauge from "../FundingGauge/FundingGauge";
+
 import {
   Container,
   TopContent,
@@ -96,27 +97,36 @@ const MainComponent = () => {
               <GoProductPageButton>더보기 {">"}</GoProductPageButton>
             </Link>
           </IntroArea>
-          <ItemArea>
-            {fundingItems?.items.map((item) => (
-              <ItemBox
-                key={item.id}
-                onClick={() =>
-                  handleItemClick(true, item.id, item.productCount)
-                }
-              >
-                {checkIfFundingEnded(item) && (
-                  <SoldOutInfoText>펀딩 마감</SoldOutInfoText>
-                )}
-                {item.productCount < 1 && !checkIfFundingEnded(item) && (
-                  <SoldOutInfoText>품절</SoldOutInfoText>
-                )}
-                <ItemImage src={item.itemDescription[0].imageUrl} />
-                <ItemName>{item.name}</ItemName>
-                <ItemPrice>{item.price.toLocaleString()} 원</ItemPrice>
-              </ItemBox>
-            ))}
-          </ItemArea>
+          {isLoadingFundingItems ? (
+            <Loading />
+          ) : (
+            <ItemArea>
+              {fundingItems?.items.map((item) => (
+                <ItemBox
+                  key={item.id}
+                  onClick={() =>
+                    handleItemClick(true, item.id, item.productCount)
+                  }
+                >
+                  {checkIfFundingEnded(item) && (
+                    <SoldOutInfoText>펀딩 마감</SoldOutInfoText>
+                  )}
+                  {item.productCount < 1 && !checkIfFundingEnded(item) && (
+                    <SoldOutInfoText>품절</SoldOutInfoText>
+                  )}
+                  <ItemImage src={item.itemDescription[0].imageUrl} />
+                  <FundingGauge
+                    salesCount={item.salesCount}
+                    targetSales={item.targetSales}
+                  />
+                  <ItemName>{item.name}</ItemName>
+                  <ItemPrice>{item.price.toLocaleString()} 원</ItemPrice>
+                </ItemBox>
+              ))}
+            </ItemArea>
+          )}
         </ItemContent>
+
         <ItemContent>
           <IntroArea>
             <IntroTitle>기타 상품 목록</IntroTitle>
@@ -124,23 +134,27 @@ const MainComponent = () => {
               <GoProductPageButton>더보기 {">"}</GoProductPageButton>
             </Link>
           </IntroArea>
-          <ItemArea>
-            {otherItems?.items.map((item) => (
-              <ItemBox
-                key={item.id}
-                onClick={() =>
-                  handleItemClick(false, item.id, item.productCount)
-                }
-              >
-                {item.productCount < 1 && (
-                  <SoldOutInfoText>품절</SoldOutInfoText>
-                )}
-                <ItemImage src={item.itemDescription[0].imageUrl} />
-                <ItemName>{item.name}</ItemName>
-                <ItemPrice>{item.price.toLocaleString()} 원</ItemPrice>
-              </ItemBox>
-            ))}
-          </ItemArea>
+          {isLoadingOtherItems ? (
+            <Loading />
+          ) : (
+            <ItemArea>
+              {otherItems?.items.map((item) => (
+                <ItemBox
+                  key={item.id}
+                  onClick={() =>
+                    handleItemClick(false, item.id, item.productCount)
+                  }
+                >
+                  {item.productCount < 1 && (
+                    <SoldOutInfoText>품절</SoldOutInfoText>
+                  )}
+                  <ItemImage src={item.itemDescription[0].imageUrl} />
+                  <ItemName>{item.name}</ItemName>
+                  <ItemPrice>{item.price.toLocaleString()} 원</ItemPrice>
+                </ItemBox>
+              ))}
+            </ItemArea>
+          )}
         </ItemContent>
       </BottomContent>
       {showImageUpload && (
