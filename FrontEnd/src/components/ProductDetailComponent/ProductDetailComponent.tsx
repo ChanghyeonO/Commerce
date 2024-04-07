@@ -23,6 +23,7 @@ import {
   DropdownOption,
   IntroDeadLineArea,
   IntroDeadLine,
+  FundingGaugeArea,
   IntroProductCountArea,
   IntroProductCount,
   ProductCountArea,
@@ -268,10 +269,12 @@ const ProductDetailComponent = ({ pageType }: ProductComponentProps) => {
                   목표 판매량 :{item?.targetSales} 개
                 </IntroDeadLine>
               </IntroDeadLineArea>
-              <FundingGauge
-                salesCount={item.salesCount}
-                targetSales={item.targetSales}
-              />
+              <FundingGaugeArea>
+                <FundingGauge
+                  salesCount={item.salesCount}
+                  targetSales={item.targetSales}
+                />
+              </FundingGaugeArea>
             </>
           )}
           <IntroProductCountArea>

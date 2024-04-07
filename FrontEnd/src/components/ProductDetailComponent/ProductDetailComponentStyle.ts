@@ -119,6 +119,13 @@ export const IntroDeadLine = styled.div`
   font-weight: bold;
 `;
 
+export const FundingGaugeArea = styled.div`
+  width: 100%;
+  @media (max-width: 1180px) {
+    width: 90%;
+  }
+`;
+
 export const IntroProductCountArea = styled.div`
   width: 100%;
   height: 60px;
