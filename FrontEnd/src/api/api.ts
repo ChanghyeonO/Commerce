@@ -17,7 +17,6 @@ export const fetchItems = async (
   sortDirection: "asc" | "desc" = "desc",
   itemsPerPage: number = 4,
 ) => {
-  console.log(`다음 컬렉션으로 부터 데이터 로드 ${collectionName}`);
   const itemsRef = collection(db, collectionName);
 
   let itemsQuery = query(

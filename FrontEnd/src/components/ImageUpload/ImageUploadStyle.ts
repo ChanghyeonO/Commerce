@@ -83,8 +83,8 @@ export const AddInput = styled.input.attrs({ type: "file" })`
 
 export const DeleteButton = styled.button`
   position: absolute;
-  top: 0;
-  right: 0;
+  top: -10px;
+  right: -10px;
   width: 50px;
   height: 50px;
   background-image: url(${DeleteButtonIcon});
