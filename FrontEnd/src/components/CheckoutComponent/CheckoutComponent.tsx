@@ -1,4 +1,5 @@
 import React, { ChangeEvent, useEffect, useState } from "react";
+import { useQueryClient } from "react-query";
 import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 import { db } from "../../api/firebase";
@@ -10,7 +11,6 @@ import {
   setDoc,
   serverTimestamp,
   updateDoc,
-  DocumentReference,
 } from "firebase/firestore";
 import Swal from "sweetalert2";
 import alertList from "../../utils/Swal";
@@ -45,9 +45,8 @@ import {
   TotalPrice,
   OrderButtonArea,
 } from "../ShoppingBasketComponent/ShoppingBasketComponentStyle";
-
 import Loading from "../Loading/Loading";
-import { CartItem, PostData } from "../../types/ItemType";
+import { CartItem } from "../../types/ItemType";
 import { PaymentDetails } from "../../types/PortOneType";
 
 const CheckoutComponent = () => {
@@ -64,6 +63,7 @@ const CheckoutComponent = () => {
   });
   const navigate = useNavigate();
   const location = useLocation();
+  const queryClient = useQueryClient();
 
   const { selectedCategory } = location.state || { selectedCategory: null };
 
@@ -112,55 +112,33 @@ const CheckoutComponent = () => {
     }).open();
   };
 
-  const updateStocksAfterPayment = async () => {
-    const fundingItemsCart: CartItem[] = JSON.parse(
-      sessionStorage.getItem("fundingItemsCart") || "[]",
+  const updateStocksAndSalesAfterPayment = async () => {
+    const cartKey =
+      selectedCategory === "funding" ? "fundingItemsCart" : "otherItemsCart";
+    const items: CartItem[] = JSON.parse(
+      sessionStorage.getItem(cartKey) || "[]",
     );
-    const otherItemsCart: CartItem[] = JSON.parse(
-      sessionStorage.getItem("otherItemsCart") || "[]",
-    );
 
-    await updateStockForItems(fundingItemsCart, "fundingItems");
-    await updateStockForItems(otherItemsCart, "otherItems");
-
-    if (selectedCategory) {
-      sessionStorage.removeItem(`${selectedCategory}ItemsCart`);
-    }
-  };
-
-  const updateStockForItems = async (
-    items: CartItem[],
-    collectionName: string,
-  ) => {
     for (const item of items) {
+      const collectionName = cartKey.replace("Cart", "");
       const productRef = doc(db, collectionName, item.id);
-      await updateSalesCount(productRef, item.count);
+      const docSnap = await getDoc(productRef);
 
-      if (collectionName === "fundingItems") {
-        const expiredProductRef = doc(db, "expiredFundingItems", item.id);
-        await updateSalesCount(expiredProductRef, item.count);
+      if (docSnap.exists()) {
+        const data = docSnap.data();
+        const newSales = (data.salesCount || 0) + item.count;
+        const newStock = (data.productCount || 0) - item.count;
+
+        await updateDoc(productRef, {
+          salesCount: newSales,
+          productCount: newStock,
+        });
+      } else {
+        console.error(`제품 정보 없음: ${item.id}`);
       }
     }
-  };
 
-  const updateSalesCount = async (
-    documentRef: DocumentReference,
-    itemCount: number,
-  ) => {
-    const docSnap = await getDoc(documentRef);
-
-    if (docSnap.exists()) {
-      const data = docSnap.data() as PostData;
-      const currentSales = data.salesCount || 0;
-      const newSales = currentSales + itemCount;
-
-      await updateDoc(documentRef, {
-        salesCount: newSales,
-      });
-      console.log(`재고 및 판매량 업데이트 성공: ${data.name}`);
-    } else {
-      console.error(`제품 정보 없음: ${documentRef.id}`);
-    }
+    sessionStorage.removeItem(cartKey);
   };
 
   const processPayment = async () => {
@@ -217,7 +195,13 @@ const CheckoutComponent = () => {
               created_at: serverTimestamp(),
             });
 
-            await updateStocksAfterPayment();
+            await updateStocksAndSalesAfterPayment();
+
+            if (selectedCategory === "funding") {
+              queryClient.invalidateQueries(["items", "fundingItems"]);
+            } else if (selectedCategory === "otherItems") {
+              queryClient.invalidateQueries(["items", "otherItems"]);
+            }
 
             Swal.fire(alertList.successMessage("결제가 완료되었습니다."));
             setIsLoading(false);
