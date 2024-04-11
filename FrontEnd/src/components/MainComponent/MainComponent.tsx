@@ -34,13 +34,13 @@ import { Item } from "../../types/ItemType";
 const MainComponent = () => {
   const [showImageUpload, setShowImageUpload] = useState(false);
   const { data: fundingItems, isLoading: isLoadingFundingItems } = useQuery(
-    ["fundingItems"],
+    ["items", "fundingItems"],
     () => fetchItems("fundingItems"),
     { staleTime: 5 * 60 * 1000 },
   );
 
   const { data: otherItems, isLoading: isLoadingOtherItems } = useQuery(
-    ["otherItems"],
+    ["items", "otherItems"],
     () => fetchItems("otherItems"),
     { staleTime: 5 * 60 * 1000 },
   );
